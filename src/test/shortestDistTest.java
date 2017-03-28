@@ -3,6 +3,7 @@ import uk.ac.bris.cs.gamekit.graph.Graph;
 import uk.ac.bris.cs.scotlandyard.model.Player;
 import uk.ac.bris.cs.scotlandyard.ui.ai.MyAI;
 
+import static org.junit.Assert.assertEquals;
 import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
 
 /**
@@ -15,8 +16,9 @@ public class shortestDistTest extends AITestBase{
         Graph graph = defaultGraph();
 
         MyAI testAI = new MyAI();
-        Player testPlayer = testAI.createPlayer(Black);
 
-        assertEquals(testAI.shortestDist())
+        assertEquals(0, testAI.dijkstra(graph, 3, 3));
+        assertEquals(1, testAI.dijkstra(graph, 69, 86));
+        assertEquals(4, testAI.dijkstra(graph, 69, 129));
     }
 }

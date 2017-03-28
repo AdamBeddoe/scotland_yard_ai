@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e7429d6d-4543-43da-9f43-ceb4f8b5bc6f" name="Default" comment="Started testing">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/AITestBase.java" />
+    <list default="true" id="e7429d6d-4543-43da-9f43-ceb4f8b5bc6f" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/uk/ac/bris/cs/scotlandyard/ui/ai/MyAI.java" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/bris/cs/scotlandyard/ui/ai/MyAI.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/shortestDistTest.java" afterPath="$PROJECT_DIR$/src/test/shortestDistTest.java" />
@@ -23,12 +22,12 @@
           <file leaf-file-name="MyAI.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/bris/cs/scotlandyard/ui/ai/MyAI.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="585">
-                  <caret line="39" column="5" lean-forward="true" selection-start-line="39" selection-start-column="5" selection-end-line="39" selection-end-column="5" />
+                <state relative-caret-position="688">
+                  <caret line="79" column="12" lean-forward="false" selection-start-line="79" selection-start-column="12" selection-end-line="79" selection-end-column="12" />
                   <folding>
                     <element signature="imports" expanded="true" />
-                    <element signature="e#702#703#0" expanded="true" />
-                    <element signature="e#730#731#0" expanded="true" />
+                    <element signature="e#740#741#0" expanded="true" />
+                    <element signature="e#768#769#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -51,8 +50,8 @@
           <file leaf-file-name="shortestDistTest.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/test/shortestDistTest.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="285">
-                  <caret line="19" column="41" lean-forward="false" selection-start-line="19" selection-start-column="41" selection-end-line="19" selection-end-column="41" />
+                <state relative-caret-position="315">
+                  <caret line="21" column="22" lean-forward="false" selection-start-line="21" selection-start-column="22" selection-end-line="21" selection-end-column="22" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -127,8 +126,8 @@
         <option value="$PROJECT_DIR$/src/test/test1.java" />
         <option value="$PROJECT_DIR$/src/test/AITest.java" />
         <option value="$PROJECT_DIR$/src/test/AITestBase.java" />
-        <option value="$PROJECT_DIR$/src/main/java/uk/ac/bris/cs/scotlandyard/ui/ai/MyAI.java" />
         <option value="$PROJECT_DIR$/src/test/shortestDistTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/uk/ac/bris/cs/scotlandyard/ui/ai/MyAI.java" />
       </list>
     </option>
   </component>
@@ -645,38 +644,45 @@
       <option name="project" value="LOCAL" />
       <updated>1490715662601</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Started testing">
+      <created>1490717807545</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1490717807545</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="All_in_cw-ai - 2017.03.28 at 16h 20m 20s.xml">
+    <history-entry file="All_in_cw-ai - 2017.03.28 at 18h 52m 26s.xml">
       <configuration name="All in cw-ai" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="All_in_cw-ai - 2017.03.28 at 16h 22m 10s.xml">
+    <history-entry file="All_in_cw-ai - 2017.03.28 at 18h 54m 40s.xml">
       <configuration name="All in cw-ai" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="All_in_cw-ai - 2017.03.28 at 16h 23m 35s.xml">
+    <history-entry file="All_in_cw-ai - 2017.03.28 at 18h 57m 07s.xml">
       <configuration name="All in cw-ai" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="All_in_cw-ai - 2017.03.28 at 16h 24m 32s.xml">
+    <history-entry file="All_in_cw-ai - 2017.03.28 at 18h 57m 50s.xml">
       <configuration name="All in cw-ai" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="All_in_cw-ai - 2017.03.28 at 16h 25m 31s.xml">
+    <history-entry file="All_in_cw-ai - 2017.03.28 at 19h 01m 39s.xml">
       <configuration name="All in cw-ai" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="All_in_cw-ai - 2017.03.28 at 16h 25m 34s.xml">
+    <history-entry file="All_in_cw-ai - 2017.03.28 at 19h 02m 24s.xml">
       <configuration name="All in cw-ai" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="All_in_cw-ai - 2017.03.28 at 16h 47m 46s.xml">
+    <history-entry file="All_in_cw-ai - 2017.03.28 at 19h 06m 12s.xml">
       <configuration name="All in cw-ai" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="All_in_cw-ai - 2017.03.28 at 16h 51m 37s.xml">
+    <history-entry file="All_in_cw-ai - 2017.03.28 at 19h 06m 35s.xml">
       <configuration name="All in cw-ai" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="All_in_cw-ai - 2017.03.28 at 17h 00m 25s.xml">
+    <history-entry file="All_in_cw-ai - 2017.03.28 at 19h 08m 03s.xml">
       <configuration name="All in cw-ai" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="All_in_cw-ai - 2017.03.28 at 17h 01m 15s.xml">
+    <history-entry file="All_in_cw-ai - 2017.03.28 at 19h 08m 39s.xml">
       <configuration name="All in cw-ai" configurationId="JUnit" />
     </history-entry>
   </component>
@@ -693,7 +699,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936803" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32936803" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936803" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -875,18 +881,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/bris/cs/scotlandyard/ui/ai/MyAI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="39" column="5" lean-forward="true" selection-start-line="39" selection-start-column="5" selection-end-line="39" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#702#703#0" expanded="true" />
-            <element signature="e#730#731#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/AITestBase.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
@@ -901,10 +895,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/shortestDistTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="41" lean-forward="false" selection-start-line="19" selection-start-column="41" selection-end-line="19" selection-end-column="41" />
+        <state relative-caret-position="315">
+          <caret line="21" column="22" lean-forward="false" selection-start-line="21" selection-start-column="22" selection-end-line="21" selection-end-column="22" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/ac/bris/cs/scotlandyard/ui/ai/MyAI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="688">
+          <caret line="79" column="12" lean-forward="false" selection-start-line="79" selection-start-column="12" selection-end-line="79" selection-end-column="12" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#740#741#0" expanded="true" />
+            <element signature="e#768#769#0" expanded="true" />
           </folding>
         </state>
       </provider>

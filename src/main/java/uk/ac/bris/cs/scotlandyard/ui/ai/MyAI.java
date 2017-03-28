@@ -13,6 +13,8 @@ import uk.ac.bris.cs.scotlandyard.model.Move;
 import uk.ac.bris.cs.scotlandyard.model.Player;
 import uk.ac.bris.cs.scotlandyard.model.ScotlandYardView;
 
+import static java.util.Arrays.fill;
+
 // TODO name the AI
 @ManagedAI("Name me!")
 public class MyAI implements PlayerFactory {
@@ -35,26 +37,48 @@ public class MyAI implements PlayerFactory {
 			// picks a random move
 			callback.accept(new ArrayList<>(moves).get(random.nextInt(moves.size())));
 
+			//Graph graph = view.getGraph();
 		}
 
 	}
 
-	public int shortestDist(ScotlandYardView view, int src, int dest) {
-		Graph graph = view.getGraph();
-		Node srcNode = graph.getNode(src);
-		Node destNode = graph.getNode(dest);
-		Collection<Edge> edgesOut = graph.getEdgesFrom(srcNode);
-		int count = 1;
+	public int dijkstra(Graph graph, int src, int dest) {
+		int[] distances = new int[graph.size()+1];
+		Arrays.fill(distances, Integer.MAX_VALUE);
+		boolean[] inPath = new boolean[graph.size()+1];
+		Arrays.fill(inPath, false);
 
-		for (Edge e : edgesOut) {
-			if (e.destination().equals(dest)) {
-				return 0;
+		distances[src] = 0;
+		int current = src;
+
+
+		while (current != dest) {
+			inPath[current] = true;
+
+			Collection<Edge> edgesOut = graph.getEdgesFrom(new Node(current));
+
+			for (Edge e : edgesOut) {
+				if (distances[current] + 1 < distances[(int) e.destination().value()]){
+					distances[(int) e.destination().value()] = distances[current] + 1;
+				}
 			}
-			else {
-				count = count + shortestDist(view, (int) e.destination().value(), dest);
 
+			current = findSmallest(distances, inPath);
+		}
+
+		return distances[current];
+	}
+
+	private int findSmallest(int[] distances, boolean[] inPath) {
+		int current = Integer.MAX_VALUE;
+		int node = -1;
+		for (int n = 1; n<distances.length; n++) {
+
+			if ((distances[n] < current) && !inPath[n]) {
+				current = distances[n];
+				node = n;
 			}
 		}
-		return count;
+		return node;
 	}
 }
