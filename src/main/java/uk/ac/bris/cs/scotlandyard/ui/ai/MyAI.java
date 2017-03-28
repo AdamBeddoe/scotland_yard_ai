@@ -1,10 +1,11 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
+import uk.ac.bris.cs.gamekit.graph.Edge;
+import uk.ac.bris.cs.gamekit.graph.Graph;
+import uk.ac.bris.cs.gamekit.graph.Node;
 import uk.ac.bris.cs.scotlandyard.ai.ManagedAI;
 import uk.ac.bris.cs.scotlandyard.ai.PlayerFactory;
 import uk.ac.bris.cs.scotlandyard.model.Colour;
@@ -35,5 +36,26 @@ public class MyAI implements PlayerFactory {
 			callback.accept(new ArrayList<>(moves).get(random.nextInt(moves.size())));
 
 		}
+
+		private int shortestDist(ScotlandYardView view, int src, int dest) {
+			Graph graph = view.getGraph();
+			Node srcNode = graph.getNode(src);
+			Node destNode = graph.getNode(dest);
+			Collection<Edge> edgesOut = graph.getEdgesFrom(srcNode);
+			int count = 1;
+
+			for (Edge e : edgesOut) {
+				if (e.destination().equals(dest)) {
+					return 0;
+				}
+				else {
+					count = count + shortestDist(view, (int) e.destination().value(), dest);
+
+				}
+			}
+			return count;
+		}
+
+
 	}
 }
