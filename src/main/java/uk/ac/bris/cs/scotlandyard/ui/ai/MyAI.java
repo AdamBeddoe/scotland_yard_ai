@@ -37,25 +37,24 @@ public class MyAI implements PlayerFactory {
 
 		}
 
-		private int shortestDist(ScotlandYardView view, int src, int dest) {
-			Graph graph = view.getGraph();
-			Node srcNode = graph.getNode(src);
-			Node destNode = graph.getNode(dest);
-			Collection<Edge> edgesOut = graph.getEdgesFrom(srcNode);
-			int count = 1;
+	}
 
-			for (Edge e : edgesOut) {
-				if (e.destination().equals(dest)) {
-					return 0;
-				}
-				else {
-					count = count + shortestDist(view, (int) e.destination().value(), dest);
+	public int shortestDist(ScotlandYardView view, int src, int dest) {
+		Graph graph = view.getGraph();
+		Node srcNode = graph.getNode(src);
+		Node destNode = graph.getNode(dest);
+		Collection<Edge> edgesOut = graph.getEdgesFrom(srcNode);
+		int count = 1;
 
-				}
+		for (Edge e : edgesOut) {
+			if (e.destination().equals(dest)) {
+				return 0;
 			}
-			return count;
+			else {
+				count = count + shortestDist(view, (int) e.destination().value(), dest);
+
+			}
 		}
-
-
+		return count;
 	}
 }
