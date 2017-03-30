@@ -8,10 +8,7 @@ import uk.ac.bris.cs.gamekit.graph.Graph;
 import uk.ac.bris.cs.gamekit.graph.Node;
 import uk.ac.bris.cs.scotlandyard.ai.ManagedAI;
 import uk.ac.bris.cs.scotlandyard.ai.PlayerFactory;
-import uk.ac.bris.cs.scotlandyard.model.Colour;
-import uk.ac.bris.cs.scotlandyard.model.Move;
-import uk.ac.bris.cs.scotlandyard.model.Player;
-import uk.ac.bris.cs.scotlandyard.model.ScotlandYardView;
+import uk.ac.bris.cs.scotlandyard.model.*;
 
 import static java.util.Arrays.fill;
 
@@ -42,34 +39,47 @@ public class MyAI implements PlayerFactory {
 
 	}
 
-	public int dijkstra(Graph graph, int src, int dest) {
+
+	public static int scoreBoard(ScotlandYardView view) {
+		int total = 0;
+		int mrXLocation = view.getPlayerLocation(Colour.Black);
+		for (Colour colour : view.getPlayers()) {
+			total =+ (dijkstra(view.getGraph(), mrXLocation, view.getPlayerLocation(colour)))^2;
+			if (dijkstra(view.getGraph(), mrXLocation, view.getPlayerLocation(colour)) == 0) total =- 1000;
+		}
+		return total;
+	}
+
+	public static int dijkstra(Graph graph, int src, int dest) {
 		int[] distances = new int[graph.size()+1];
 		Arrays.fill(distances, Integer.MAX_VALUE);
-		boolean[] inPath = new boolean[graph.size()+1];
-		Arrays.fill(inPath, false);
+		boolean[] checked = new boolean[graph.size()+1];
+		Arrays.fill(checked, false);
 
 		distances[src] = 0;
 		int current = src;
+		int[] cameFrom = new int[graph.size()+1];
+		Arrays.fill(cameFrom, -1);
 
 
 		while (current != dest) {
-			inPath[current] = true;
+			checked[current] = true;
 
 			Collection<Edge> edgesOut = graph.getEdgesFrom(new Node(current));
 
 			for (Edge e : edgesOut) {
+				cameFrom[(int) e.destination().value()] = current;
 				if (distances[current] + 1 < distances[(int) e.destination().value()]){
 					distances[(int) e.destination().value()] = distances[current] + 1;
 				}
 			}
-
-			current = findSmallest(distances, inPath);
+			current = findSmallest(distances, checked);
 		}
 
 		return distances[current];
 	}
 
-	private int findSmallest(int[] distances, boolean[] inPath) {
+	private static int findSmallest(int[] distances, boolean[] inPath) {
 		int current = Integer.MAX_VALUE;
 		int node = -1;
 		for (int n = 1; n<distances.length; n++) {
@@ -82,3 +92,4 @@ public class MyAI implements PlayerFactory {
 		return node;
 	}
 }
+
