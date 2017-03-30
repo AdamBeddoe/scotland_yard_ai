@@ -17,5 +17,6 @@ public class scoreBoardTests extends AITestBase{
         Graph graph = defaultGraph();
 
         MyAI testAI = new MyAI();
+
     }
 }

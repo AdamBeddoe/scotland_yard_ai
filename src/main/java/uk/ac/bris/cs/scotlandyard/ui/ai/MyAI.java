@@ -32,7 +32,8 @@ public class MyAI implements PlayerFactory {
 				Consumer<Move> callback) {
 			// TODO do something interesting here; find the best move
 			// picks a random move
-            System.out.println("Move scores: " + scoreBoard(view, location));
+			GameState state = new GameState(view, location);
+            System.out.println("Move scores: " + scoreBoard(state));
 			callback.accept(new ArrayList<>(moves).get(random.nextInt(moves.size())));
 
 			//Graph graph = view.getGraph();
@@ -41,13 +42,14 @@ public class MyAI implements PlayerFactory {
 	}
 
 
-	public static int scoreBoard(ScotlandYardView view, int mrXLocation) {
+	public static int scoreBoard(GameState state) {
 		int total = 0;
-		for (Colour colour : view.getPlayers()) {
-			if (colour != Colour.Black) {
-				total = +(dijkstra(view.getGraph(), mrXLocation, view.getPlayerLocation(colour))) ^ 2;
-				if (dijkstra(view.getGraph(), mrXLocation, view.getPlayerLocation(colour)) == 0) total = -1000;
-			}
+		Graph graph = state.getGraph();
+		int mrXLocation = state.getMrXLocation();
+		for (Colour colour : state.getDetectives()) {
+			System.out.println("Called dijkstra on " + mrXLocation + " " + state.getDetectiveLocation(colour));
+			total = +(dijkstra(graph, mrXLocation, state.getDetectiveLocation(colour))) ^ 2;
+				if (dijkstra(graph, mrXLocation, state.getDetectiveLocation(colour)) == 0) total = -1000;
 		}
 		return total;
 	}
