@@ -14,7 +14,7 @@ import static uk.ac.bris.cs.scotlandyard.model.Ticket.Secret;
 /**
  * Created by Adam on 30/03/2017.
  */
-public class GameState {
+public class GameState implements MoveVisitor {
     private Graph graph;
     private Map<Colour,Integer> detectives = new HashMap<>();
     private MrX mrX = new MrX();
@@ -41,6 +41,40 @@ public class GameState {
         else {
 
         }
+    }
+
+    public GameState(ScotlandYardView view, int location, Move move) {
+        this.graph = view.getGraph();
+        this.revealRound = view.isRevealRound();
+        if (view.getCurrentPlayer().isMrX()) {
+            this.mrX.setLocation(location);
+            for (Colour colour : view.getPlayers()) {
+                if (colour != Black) detectives.put(colour,view.getPlayerLocation(colour));
+            }
+            this.mrX.setLastKnownLocation(view.getPlayerLocation(Black));
+        }
+
+        else {
+
+        }
+
+        move.visit(this);
+    }
+
+    public int getDetectiveLocation(Colour colour) {
+        return this.detectives.get(colour);
+    }
+
+    public Set<Colour> getDetectives() {
+        return this.detectives.keySet();
+    }
+
+    public int getMrXLocation() {
+        return this.mrX.getLocation();
+    }
+
+    public Graph getGraph() {
+        return this.graph;
     }
 
     public Set<Move> validMoves(Colour colour) {
@@ -125,20 +159,16 @@ public class GameState {
         }
         return false;
     }
-
-    public int getDetectiveLocation(Colour colour) {
-        return this.detectives.get(colour);
+    public void visit(TicketMove move) {
+        this.mrX.setLocation(move.destination());
     }
 
-    public Set<Colour> getDetectives() {
-        return this.detectives.keySet();
+    public void visit(DoubleMove move) {
+        this.mrX.setLocation(move.finalDestination());
     }
 
-    public int getMrXLocation() {
-        return this.mrX.getLocation();
+    public void visit(PassMove move) {
+
     }
 
-    public Graph getGraph() {
-        return this.graph;
-    }
 }
