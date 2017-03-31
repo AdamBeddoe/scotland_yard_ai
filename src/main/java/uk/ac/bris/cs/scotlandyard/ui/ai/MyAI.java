@@ -41,16 +41,15 @@ public class MyAI implements PlayerFactory {
 
             if (view.getCurrentPlayer().isMrX()) {
             	int highestScore = 0;
-            	Move selectedMove = (Move)moves.toArray()[0];
-            	for (Move move : moves) {
-					System.out.println("      "+scoreBoard(new GameState(view, location, move)));
-					System.out.println("       "+move);
-					if (scoreBoard(new GameState(view, location, move)) > highestScore) {
-						selectedMove = move;
-						highestScore = scoreBoard(new GameState(view,location,move));
+            	GameTree bestTree = tree.getChildTrees().get(0);
+            	for (GameTree currentTree : tree.getChildTrees()) {
+					if (currentTree.getScore() > highestScore) {
+						bestTree = currentTree;
+						highestScore = bestTree.getScore();
 					}
 				}
-				System.out.println( selectedMove + "\n" );
+
+				Move selectedMove = tree.getMove(bestTree);
 
 				//System.out.println("Move scores: " + scoreBoard(state));
 				callback.accept(selectedMove);

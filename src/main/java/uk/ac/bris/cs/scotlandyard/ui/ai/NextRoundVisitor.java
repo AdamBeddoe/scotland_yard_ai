@@ -17,7 +17,7 @@ public class NextRoundVisitor extends TreeVisitor {
 
     public void visit(GameTree tree) {
         for (Move move : this.moves) {
-            tree.addChild(new GameState(tree.getState(), move));
+            tree.addChild(new GameState(tree.getState(), move),move);
         }
 
     }

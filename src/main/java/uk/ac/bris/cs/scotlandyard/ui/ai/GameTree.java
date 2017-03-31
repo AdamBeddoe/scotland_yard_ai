@@ -11,6 +11,7 @@ import java.util.Set;
  */
 public class GameTree {
     private List<GameTree> childTrees = new ArrayList();
+    private List<Move> childMoves = new ArrayList();
     private GameState state;
     private int score;
 
@@ -18,12 +19,17 @@ public class GameTree {
         this.state = state;
     }
 
-    public void addChild(GameState state) {
+    public void addChild(GameState state, Move move) {
         this.childTrees.add(new GameTree(state));
+        this.childMoves.add(move);
     }
 
     public List<GameTree> getChildTrees() {
         return this.childTrees;
+    }
+
+    public Move getMove(GameTree tree) {
+        return childMoves.get(childTrees.indexOf(tree));
     }
 
     public void setScore(int score) {
