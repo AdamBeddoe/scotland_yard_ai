@@ -32,11 +32,14 @@ public class MyAI implements PlayerFactory {
 				Consumer<Move> callback) {
 			// TODO do something interesting here; find the best move
 			// picks a random move
-			GameState state = new GameState(view, location);
-            if (view.getCurrentPlayer().isMrX()) System.out.println("Move scores: " + scoreBoard(state));
-			callback.accept(new ArrayList<>(moves).get(random.nextInt(moves.size())));
-
-			//Graph graph = view.getGraph();
+            if (view.getCurrentPlayer().isMrX()) {
+				GameState state = new GameState(view, location);
+				System.out.println("Move scores: " + scoreBoard(state));
+				callback.accept(new ArrayList<>(moves).get(random.nextInt(moves.size())));
+			}
+			else {
+				callback.accept(new ArrayList<>(moves).get(random.nextInt(moves.size())));
+			}
 		}
 
 	}
