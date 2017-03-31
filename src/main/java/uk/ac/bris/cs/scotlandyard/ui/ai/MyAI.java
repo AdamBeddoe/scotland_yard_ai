@@ -30,8 +30,15 @@ public class MyAI implements PlayerFactory {
 		@Override
 		public void makeMove(ScotlandYardView view, int location, Set<Move> moves,
 				Consumer<Move> callback) {
-			// TODO do something interesting here; find the best move
-			// picks a random move
+
+
+			GameTree tree = new GameTree(new GameState(view, location));
+			NextRoundVisitor tilo = new NextRoundVisitor(moves);
+			tree.accept(tilo);
+			ScoreVisitor nick = new ScoreVisitor();
+			tree.accept(nick);
+
+
             if (view.getCurrentPlayer().isMrX()) {
             	int highestScore = 0;
             	Move selectedMove = (Move)moves.toArray()[0];

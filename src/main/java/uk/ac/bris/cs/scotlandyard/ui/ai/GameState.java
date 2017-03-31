@@ -18,8 +18,6 @@ public class GameState implements MoveVisitor {
     private Graph graph;
     private Map<Colour,Integer> detectives = new HashMap<>();
     private MrX mrX = new MrX();
-    private boolean mrXTurn;
-    private boolean revealRound;
 
     public GameState(Graph graph, Map<Colour,Integer> detectives, int mrXLocation) {
         this.graph = graph;
@@ -29,7 +27,6 @@ public class GameState implements MoveVisitor {
 
     public GameState(ScotlandYardView view, int location) {
         this.graph = view.getGraph();
-        this.revealRound = view.isRevealRound();
         if (view.getCurrentPlayer().isMrX()) {
             this.mrX.setLocation(location);
             for (Colour colour : view.getPlayers()) {
@@ -56,6 +53,17 @@ public class GameState implements MoveVisitor {
         else {
 
         }
+
+        move.visit(this);
+    }
+
+    public GameState(GameState state, Move move) {
+        this.graph = state.getGraph();
+        for (Colour colour : state.getDetectives()) {
+            if (colour != Black) detectives.put(colour,state.getDetectiveLocation(colour));
+        }
+        this.mrX.setLocation(state.getMrXLocation());
+        this.mrX.setLastKnownLocation(state.getMrXLocation());
 
         move.visit(this);
     }
