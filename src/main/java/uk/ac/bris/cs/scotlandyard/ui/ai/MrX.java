@@ -1,5 +1,7 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
+import uk.ac.bris.cs.scotlandyard.model.ScotlandYardPlayer;
+
 /**
  * Created by Adam on 30/03/2017.
  */
