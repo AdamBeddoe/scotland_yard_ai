@@ -33,7 +33,7 @@ public class MyAI implements PlayerFactory {
 			// TODO do something interesting here; find the best move
 			// picks a random move
 			GameState state = new GameState(view, location);
-            System.out.println("Move scores: " + scoreBoard(state));
+            if (view.getCurrentPlayer().isMrX()) System.out.println("Move scores: " + scoreBoard(state));
 			callback.accept(new ArrayList<>(moves).get(random.nextInt(moves.size())));
 
 			//Graph graph = view.getGraph();
@@ -43,15 +43,14 @@ public class MyAI implements PlayerFactory {
 
 
 	public static int scoreBoard(GameState state) {
-		int total = 0;
+		double total = 0;
 		Graph graph = state.getGraph();
 		int mrXLocation = state.getMrXLocation();
 		for (Colour colour : state.getDetectives()) {
-			System.out.println("Called dijkstra on " + mrXLocation + " " + state.getDetectiveLocation(colour));
-			total = +(dijkstra(graph, mrXLocation, state.getDetectiveLocation(colour))) ^ 2;
+			total = total + (Math.pow((dijkstra(graph, mrXLocation, state.getDetectiveLocation(colour))), 2));
 				if (dijkstra(graph, mrXLocation, state.getDetectiveLocation(colour)) == 0) total = -1000;
 		}
-		return total;
+		return (int) total;
 	}
 
 	public static int dijkstra(Graph graph, int src, int dest) {
@@ -62,8 +61,6 @@ public class MyAI implements PlayerFactory {
 
 		distances[src] = 0;
 		int current = src;
-		int[] cameFrom = new int[graph.size()+1];
-		Arrays.fill(cameFrom, -1);
 
 
 		while (current != dest) {
@@ -71,7 +68,6 @@ public class MyAI implements PlayerFactory {
 			Collection<Edge> edgesOut = graph.getEdgesFrom(new Node(current));
 
 			for (Edge e : edgesOut) {
-				cameFrom[(int) e.destination().value()] = current;
 				if (distances[current] + 1 < distances[(int) e.destination().value()]){
 					distances[(int) e.destination().value()] = distances[current] + 1;
 				}
