@@ -33,9 +33,20 @@ public class MyAI implements PlayerFactory {
 			// TODO do something interesting here; find the best move
 			// picks a random move
             if (view.getCurrentPlayer().isMrX()) {
-				GameState state = new GameState(view, location);
-				System.out.println("Move scores: " + scoreBoard(state));
-				callback.accept(new ArrayList<>(moves).get(random.nextInt(moves.size())));
+            	int highestScore = 0;
+            	Move selectedMove = (Move)moves.toArray()[0];
+            	for (Move move : moves) {
+					System.out.println("      "+scoreBoard(new GameState(view, location, move)));
+					System.out.println("       "+move);
+					if (scoreBoard(new GameState(view, location, move)) > highestScore) {
+						selectedMove = move;
+						highestScore = scoreBoard(new GameState(view,location,move));
+					}
+				}
+				System.out.println( selectedMove + "\n" );
+
+				//System.out.println("Move scores: " + scoreBoard(state));
+				callback.accept(selectedMove);
 			}
 			else {
 				callback.accept(new ArrayList<>(moves).get(random.nextInt(moves.size())));

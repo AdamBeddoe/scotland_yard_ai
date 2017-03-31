@@ -45,7 +45,6 @@ public class GameState implements MoveVisitor {
 
     public GameState(ScotlandYardView view, int location, Move move) {
         this.graph = view.getGraph();
-        this.revealRound = view.isRevealRound();
         if (view.getCurrentPlayer().isMrX()) {
             this.mrX.setLocation(location);
             for (Colour colour : view.getPlayers()) {
