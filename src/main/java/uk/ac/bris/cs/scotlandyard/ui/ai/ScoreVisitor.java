@@ -8,11 +8,22 @@ import static uk.ac.bris.cs.scotlandyard.ui.ai.MyAI.scoreBoard;
 public class ScoreVisitor extends TreeVisitor {
 
     public void visit(GameTree tree) {
-        int bestScore = Integer.MIN_VALUE;
-        for (GameTree childTree : tree.getChildTrees()) {
-            visit(childTree);
-            if (childTree.getScore() > bestScore) tree.setScore(childTree.getScore());
+        if (tree.isMrXRound()) {
+            int bestScore = Integer.MIN_VALUE;
+            for (GameTree childTree : tree.getChildTrees()) {
+                visit(childTree);
+                if (childTree.getScore() > bestScore) tree.setScore(childTree.getScore());
+            }
+            if (tree.getChildTrees().isEmpty()) tree.setScore(scoreBoard(tree.getState()));
         }
-        if (tree.getChildTrees().isEmpty()) tree.setScore(scoreBoard(tree.getState()));
+
+        else {
+            int worstScore = Integer.MAX_VALUE;
+            for (GameTree childTree : tree.getChildTrees()) {
+                visit(childTree);
+                if (childTree.getScore() < worstScore) tree.setScore(childTree.getScore());
+            }
+            if (tree.getChildTrees().isEmpty()) tree.setScore(scoreBoard(tree.getState()));
+        }
     }
 }

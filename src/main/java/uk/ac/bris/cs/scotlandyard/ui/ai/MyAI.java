@@ -16,6 +16,8 @@ import static java.util.Arrays.fill;
 @ManagedAI("Name me!")
 public class MyAI implements PlayerFactory {
 
+
+
 	@Override
 	public Player createPlayer(Colour colour) {
 		if (colour.isMrX()) return new MrX();

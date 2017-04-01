@@ -4,7 +4,6 @@ import uk.ac.bris.cs.scotlandyard.model.Move;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Adam on 31/03/2017.
@@ -14,14 +13,20 @@ public class GameTree {
     private List<Move> childMoves = new ArrayList();
     private GameState state;
     private int score;
+    private boolean isMrXRound;
 
-    public GameTree(GameState state) {
+    public GameTree(GameState state, boolean isMrXRound) {
         this.state = state;
+        this.isMrXRound = isMrXRound;
     }
 
     public void addChild(GameState state, Move move) {
-        this.childTrees.add(new GameTree(state));
+        this.childTrees.add(new GameTree(state,!this.isMrXRound));
         this.childMoves.add(move);
+    }
+
+    public boolean isMrXRound() {
+        return this.isMrXRound;
     }
 
     public List<GameTree> getChildTrees() {
