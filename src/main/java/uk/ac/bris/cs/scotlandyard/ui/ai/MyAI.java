@@ -1,5 +1,9 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -16,21 +20,38 @@ import static java.util.Arrays.fill;
 @ManagedAI("Name me!")
 public class MyAI implements PlayerFactory {
 
+	int graphDistances[][] = new int[200][200];
 
+	public MyAI() {
+		try {
+			Graph defaultGraph = ScotlandYardGraphReader.fromLines(Files.readAllLines(
+					Paths.get(MyAI.class.getResource("/game_graph.txt").toURI())));
+			for (int i = 1; i < 200; i++) {
+				for (int j = 1; j < 200; j++) {
+					this.graphDistances[i][j] = dijkstra(defaultGraph,i,j);
+				}
+			}
+		} catch (IOException | URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
+
+
+	}
 
 	@Override
 	public Player createPlayer(Colour colour) {
-		if (colour.isMrX()) return new MrX();
+		if (colour.isMrX()) return new MrX(this);
 		else return new Detective();
 	}
 
-	public static int scoreBoard(GameState state) {
+	public int scoreBoard(GameState state) {
 		double total = 0;
 		Graph graph = state.getGraph();
 		int mrXLocation = state.getMrXLocation();
 		for (Colour colour : state.getDetectives()) {
-			total = total + (Math.pow((dijkstra(graph, mrXLocation, state.getDetectiveLocation(colour))), 2));
-				if (dijkstra(graph, mrXLocation, state.getDetectiveLocation(colour)) == 0) total = -1000;
+			int distance = this.graphDistances[mrXLocation][state.getDetectiveLocation(colour)];
+			total = total + (Math.pow(distance, 2));
+			if (distance == 0) total = -1000;
 		}
 		return (int) total;
 	}

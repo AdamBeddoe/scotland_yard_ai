@@ -8,7 +8,6 @@ import uk.ac.bris.cs.scotlandyard.model.*;
 import java.util.*;
 
 import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
-import static uk.ac.bris.cs.scotlandyard.model.Ticket.Double;
 import static uk.ac.bris.cs.scotlandyard.model.Ticket.Secret;
 
 /**
