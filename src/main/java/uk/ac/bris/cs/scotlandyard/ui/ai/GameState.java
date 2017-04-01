@@ -17,22 +17,21 @@ import static uk.ac.bris.cs.scotlandyard.model.Ticket.Secret;
 public class GameState implements MoveVisitor {
     private Graph graph;
     private Map<Colour,Integer> detectives = new HashMap<>();
-    private MrX mrX = new MrX();
+    private int mrXLocation;
 
     public GameState(Graph graph, Map<Colour,Integer> detectives, int mrXLocation) {
         this.graph = graph;
-        this.mrX.setLocation(mrXLocation);
+        this.mrXLocation = mrXLocation;
         this.detectives = detectives;
     }
 
     public GameState(ScotlandYardView view, int location) {
         this.graph = view.getGraph();
         if (view.getCurrentPlayer().isMrX()) {
-            this.mrX.setLocation(location);
+            this.mrXLocation = location;
             for (Colour colour : view.getPlayers()) {
                 if (colour != Black) detectives.put(colour,view.getPlayerLocation(colour));
             }
-            this.mrX.setLastKnownLocation(view.getPlayerLocation(Black));
         }
 
         else {
@@ -43,11 +42,10 @@ public class GameState implements MoveVisitor {
     public GameState(ScotlandYardView view, int location, Move move) {
         this.graph = view.getGraph();
         if (view.getCurrentPlayer().isMrX()) {
-            this.mrX.setLocation(location);
+            this.mrXLocation = location;
             for (Colour colour : view.getPlayers()) {
                 if (colour != Black) detectives.put(colour,view.getPlayerLocation(colour));
             }
-            this.mrX.setLastKnownLocation(view.getPlayerLocation(Black));
         }
 
         else {
@@ -62,8 +60,7 @@ public class GameState implements MoveVisitor {
         for (Colour colour : state.getDetectives()) {
             if (colour != Black) detectives.put(colour,state.getDetectiveLocation(colour));
         }
-        this.mrX.setLocation(state.getMrXLocation());
-        this.mrX.setLastKnownLocation(state.getMrXLocation());
+        this.mrXLocation = state.getMrXLocation();
 
         move.visit(this);
     }
@@ -77,7 +74,7 @@ public class GameState implements MoveVisitor {
     }
 
     public int getMrXLocation() {
-        return this.mrX.getLocation();
+        return this.mrXLocation;
     }
 
     public Graph getGraph() {
@@ -88,7 +85,7 @@ public class GameState implements MoveVisitor {
         Set<Move> validMoves = new HashSet<>();
         int loc;
 
-        if (colour.isMrX()) loc = this.mrX.getLocation();
+        if (colour.isMrX()) loc = this.mrXLocation;
         else {
             loc = this.detectives.get(colour);
         }
@@ -167,11 +164,11 @@ public class GameState implements MoveVisitor {
         return false;
     }
     public void visit(TicketMove move) {
-        this.mrX.setLocation(move.destination());
+        this.mrXLocation = move.destination();
     }
 
     public void visit(DoubleMove move) {
-        this.mrX.setLocation(move.finalDestination());
+        this.mrXLocation = move.finalDestination();
     }
 
     public void visit(PassMove move) {

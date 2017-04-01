@@ -16,51 +16,11 @@ import static java.util.Arrays.fill;
 @ManagedAI("Name me!")
 public class MyAI implements PlayerFactory {
 
-	// TODO create a new player here
 	@Override
 	public Player createPlayer(Colour colour) {
-		return new MyPlayer();
+		if (colour.isMrX()) return new MrX();
+		else return new Detective();
 	}
-
-	// TODO A sample player that selects a random move
-	private static class MyPlayer implements Player {
-
-		private final Random random = new Random();
-
-		@Override
-		public void makeMove(ScotlandYardView view, int location, Set<Move> moves,
-				Consumer<Move> callback) {
-
-
-			GameTree tree = new GameTree(new GameState(view, location));
-			NextRoundVisitor tilo = new NextRoundVisitor(moves);
-			tree.accept(tilo);
-			ScoreVisitor nick = new ScoreVisitor();
-			tree.accept(nick);
-
-
-            if (view.getCurrentPlayer().isMrX()) {
-            	int highestScore = 0;
-            	GameTree bestTree = tree.getChildTrees().get(0);
-            	for (GameTree currentTree : tree.getChildTrees()) {
-					if (currentTree.getScore() > highestScore) {
-						bestTree = currentTree;
-						highestScore = bestTree.getScore();
-					}
-				}
-
-				Move selectedMove = tree.getMove(bestTree);
-
-				//System.out.println("Move scores: " + scoreBoard(state));
-				callback.accept(selectedMove);
-			}
-			else {
-				callback.accept(new ArrayList<>(moves).get(random.nextInt(moves.size())));
-			}
-		}
-
-	}
-
 
 	public static int scoreBoard(GameState state) {
 		double total = 0;
