@@ -29,7 +29,7 @@ public class NextRoundVisitor extends TreeVisitor {
         }
 
         for (GameTree childTree : tree.getChildTrees()) {
-            if (levels > 0) {
+            if (levels > 0 && !childTree.isDeadNode()) {
                 if (childTree.isMrXRound()) { // know for all
                     NextRoundVisitor visitor = new NextRoundVisitor(childTree.getState().validMoves(Black), (levels-1)); // valid moves only needed at the bottom
                     childTree.accept(visitor);

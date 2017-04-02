@@ -25,18 +25,25 @@ public class MrX implements Player {
 
         GameTree tree = new GameTree(new GameState(view, location),true);
 
-        NextRoundVisitor tilo = new NextRoundVisitor(moves, 3);
-        long startTime = System.nanoTime();
-        tree.accept(tilo);
-        long endTime = System.nanoTime();
-        System.out.println("Tilo Time: "+(endTime-startTime)/1000000);
+        for (int i = 1; i <= 4; i++) {
+            NextRoundVisitor tilo = new NextRoundVisitor(moves, i);
+            long startTime = System.nanoTime();
+            tree.accept(tilo);
+            long endTime = System.nanoTime();
+            System.out.println("Tilo Time: "+(endTime-startTime)/1000000);
 
-        ScoreVisitor nick = new ScoreVisitor(this.ai);
 
-        long startTimeNick = System.nanoTime();
-        tree.accept(nick);
-        long endTimeNick = System.nanoTime();
-        System.out.println("Nick nacs: "+(endTimeNick-startTimeNick)/1000000);
+            ScoreVisitor nick = new ScoreVisitor(this.ai);
+
+            long startTimeNick = System.nanoTime();
+            tree.accept(nick);
+            long endTimeNick = System.nanoTime();
+            System.out.println("Nick nacs: "+(endTimeNick-startTimeNick)/1000000);
+
+            PruneVisitor bigPrune = new PruneVisitor(1);
+            tree.accept(bigPrune);
+        }
+
 
         callback.accept(selectMove(tree));
     }

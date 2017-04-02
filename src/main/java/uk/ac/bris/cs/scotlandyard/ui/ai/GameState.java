@@ -1,5 +1,6 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
+import org.glassfish.grizzly.streams.Stream;
 import uk.ac.bris.cs.gamekit.graph.Edge;
 import uk.ac.bris.cs.gamekit.graph.Graph;
 import uk.ac.bris.cs.gamekit.graph.Node;
@@ -81,6 +82,14 @@ public class GameState implements MoveVisitor {
     }
 
     public Set<Move> validMoves(Colour colour) {
+        /*
+        Set<Move> newValidMovesMrX = this.graph.getEdgesFrom(graph.getNode(this.mrXLocation))
+                                                .parallelStream()
+                                                .filter(edge -> !nodeOccupied((Edge) edge))
+                                                .filter(Edge.class::isInstance)
+                                                .map(Edge.class::cast)
+                                                .map(edge -> TicketMove(Black,edge,edge.destination.value()));
+        */
         Set<Move> validMoves = new HashSet<>();
         int loc;
 

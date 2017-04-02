@@ -16,10 +16,12 @@ public class GameTree {
     private GameState state;
     private int score;
     private boolean isMrXRound;
+    private boolean isDeadNode;
 
     public GameTree(GameState state, boolean isMrXRound) {
         this.state = state;
         this.isMrXRound = isMrXRound;
+        this.isDeadNode = false;
     }
 
     public void addChild(GameState state, Move move) {
@@ -51,7 +53,15 @@ public class GameTree {
         return this.state;
     }
 
+    public boolean isDeadNode() {
+        return this.isDeadNode;
+    }
+
     public void accept(TreeVisitor visitor) {
         visitor.visit(this);
+    }
+
+    public void isDeadNode(boolean isDeadNode) {
+        this.isDeadNode = isDeadNode;
     }
 }
