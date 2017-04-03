@@ -1,12 +1,14 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
 import org.glassfish.grizzly.streams.Stream;
+import sun.security.jca.GetInstance;
 import uk.ac.bris.cs.gamekit.graph.Edge;
 import uk.ac.bris.cs.gamekit.graph.Graph;
 import uk.ac.bris.cs.gamekit.graph.Node;
 import uk.ac.bris.cs.scotlandyard.model.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
 import static uk.ac.bris.cs.scotlandyard.model.Ticket.Secret;
@@ -82,86 +84,39 @@ public class GameState implements MoveVisitor {
     }
 
     public Set<Move> validMoves(Colour colour) {
-        /*
-        Set<Move> newValidMovesMrX = this.graph.getEdgesFrom(graph.getNode(this.mrXLocation))
-                                                .parallelStream()
-                                                .filter(edge -> !nodeOccupied((Edge) edge))
-                                                .filter(Edge.class::isInstance)
-                                                .map(Edge.class::cast)
-                                                .map(edge -> TicketMove(Black,edge,edge.destination.value()));
-        */
+
+        Collection<Edge<Integer,Transport>> edgesFrom;
+        if (colour.isMrX()) edgesFrom = this.graph.getEdgesFrom(graph.getNode(this.mrXLocation));
+        else edgesFrom = this.graph.getEdgesFrom(graph.getNode(detectives.get(colour)));
+
+        Set<TicketMove> firstMoves = edgesFrom.parallelStream()
+                .filter(edge -> !nodeOccupied(edge))
+                //.filter(edge -> player.hasTickets(Ticket.fromTransport(edge.data())))
+                .map(edge -> new TicketMove(colour, Ticket.fromTransport(edge.data()), edge.destination().value()))
+                .collect(Collectors.toSet());
+
+        Set<DoubleMove> doubleMoves = firstMoves.parallelStream()
+                .map(move -> doubleMovesFrom(move))
+                .flatMap(moveSet -> moveSet.stream())
+                .collect(Collectors.toSet());
+
         Set<Move> validMoves = new HashSet<>();
-        int loc;
+        validMoves.addAll(firstMoves);
+        validMoves.addAll(doubleMoves);
 
-        if (colour.isMrX()) loc = this.mrXLocation;
-        else {
-            loc = this.detectives.get(colour);
-        }
-
-
-        Node node = this.graph.getNode(loc);
-        Collection<Edge> edges = this.graph.getEdgesFrom(node);
-
-        for (Edge edge : edges) {
-            Transport t = (Transport) edge.data();
-            Ticket ticket = Ticket.fromTransport(t);
-            if (/*player.hasTickets(ticket) &&*/ !nodeOccupied(edge)) {
-                Move move = new TicketMove(colour, ticket, (Integer) edge.destination().value());
-                validMoves.add(move);
-            }
-        }
-
-        if (colour.isMrX()) {
-            Set<Move> secondMoves = new HashSet<>();
-            //Node node = this.graph.getNode(loc);
-
-            Collection<Edge> firstEdges = this.graph.getEdgesFrom(node);
-            for (Edge firstEdge : firstEdges) {
-                if (/*this.mrX.hasTickets(Secret) && */!nodeOccupied(firstEdge)) {
-                    Move regularMove = new TicketMove(Black, Secret, (Integer) firstEdge.destination().value());
-                    validMoves.add(regularMove);
-                }
-
-                //if (this.mrX.hasTickets(Double) && this.roundNum <= (rounds.size()-2)) {
-                for (Move firstMove : validMoves) {
-                    for (Move secondMove : validMovesFrom(firstMove)) {
-                        Move doubleMove = new DoubleMove(Black, (TicketMove) firstMove, (TicketMove) secondMove);
-                        secondMoves.add(doubleMove);
-                    }
-                }
-                //}
-            }
-            validMoves.addAll(secondMoves);
-        }
         return validMoves;
     }
 
-    private Set<Move> validMovesFrom(Move move) {
-        Set<Move> validMoves = new HashSet<>();
-        if (move instanceof TicketMove) {
-            Node node = this.graph.getNode(((TicketMove) move).destination());
-            Collection<Edge> edges = this.graph.getEdgesFrom(node);
-            int numTickets;
+    private Set<DoubleMove> doubleMovesFrom(TicketMove firstMove) {
+        Collection<Edge<Integer,Transport>> edgesFrom = this.graph.getEdgesFrom(graph.getNode(firstMove.destination()));
 
-            for (Edge edge : edges) {
-                Transport t = (Transport) edge.data();
-                Ticket ticket = Ticket.fromTransport(t);
-                if (((TicketMove) move).ticket().equals(ticket)) numTickets = 2;
-                else numTickets = 1;
+        Set<DoubleMove> doubleMovesFrom = edgesFrom.parallelStream()
+                .filter(edge -> !nodeOccupied(edge))
+                .map(edge -> new TicketMove(firstMove.colour(), Ticket.fromTransport(edge.data()), edge.destination().value()))
+                .map(secondMove -> new DoubleMove(firstMove.colour(), firstMove, secondMove))
+                .collect(Collectors.toSet());
 
-                if (/*currentPlayer.hasTickets(ticket, numTickets)  &&*/ !nodeOccupied(edge)) {
-                    Move newMove = new TicketMove(Black, ticket, (Integer) edge.destination().value());
-                    //TODO Fix this usage of black ^^
-
-                    validMoves.add(newMove);
-                    //if (currentPlayer.hasTickets(Secret)) {
-                        Move secretMove = new TicketMove(Black, Secret, (Integer) edge.destination().value());
-                        validMoves.add(secretMove);
-                    //}
-                }
-            }
-        }
-        return validMoves;
+        return doubleMovesFrom;
     }
 
     // Returns true if the destination of an edge is occupied by a detective.
@@ -171,6 +126,7 @@ public class GameState implements MoveVisitor {
         }
         return false;
     }
+
     public void visit(TicketMove move) {
         this.mrXLocation = move.destination();
     }
