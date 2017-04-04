@@ -46,11 +46,11 @@ public class MyAI implements PlayerFactory {
 
 	public int scoreBoard(GameState state) {
 		double total = 0;
-		Graph graph = state.getGraph();
 		int mrXLocation = state.getMrXLocation();
 		for (Colour colour : state.getDetectives()) {
 			int distance = this.graphDistances[mrXLocation][state.getDetectiveLocation(colour)];
 			total = total + (Math.pow(distance, 2));
+			total = total + state.validMoves(colour).size();
 			if (distance == 0) total = -1000;
 		}
 		return (int) total;
