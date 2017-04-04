@@ -131,11 +131,8 @@ public class GameState implements MoveVisitor {
     }
 
     // Returns true if the destination of an edge is occupied by a detective.
-    private Boolean nodeOccupied(Edge edge) {
-        for (Colour colour : detectives.keySet()) {
-            if (edge.destination().value() == detectives.get(colour)) return true;
-        }
-        return false;
+    private boolean nodeOccupied(Edge edge) {
+        return (detectives.containsValue(edge.destination().value()));
     }
 
     public void visit(TicketMove move) {
