@@ -35,8 +35,9 @@ public class ScoreVisitor extends TreeVisitor {
                     worstScore = childTree.getScore();
                 }
             }
+            if (tree.getChildTrees().isEmpty()) System.out.println("Assigning score (detective) " + this.ai.scoreBoard(tree.getState()));
             if (tree.getChildTrees().isEmpty()) tree.setScore(this.ai.scoreBoard(tree.getState()));
         }
-        System.out.println("                      Visiting");
+        //System.out.println("                      Visiting");
     }
 }

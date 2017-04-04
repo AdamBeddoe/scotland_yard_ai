@@ -47,6 +47,6 @@ public class scoreBoardTests extends AITestBase{
         detectives.put(Blue, 20);
 
         GameState testState = new GameState(graph, detectives, 20);
-        assertEquals(testAI.scoreBoard(testState), -1000);
+        assertEquals(-1000, testAI.scoreBoard(testState));
     }
 }

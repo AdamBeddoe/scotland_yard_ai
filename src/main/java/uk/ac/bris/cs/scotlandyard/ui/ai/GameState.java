@@ -136,7 +136,10 @@ public class GameState implements MoveVisitor {
     }
 
     public void visit(TicketMove move) {
-        this.mrXLocation = move.destination();
+        if (move.colour().isMrX()) this.mrXLocation = move.destination();
+        else {
+            this.detectives.replace(move.colour(), move.destination());
+        }
     }
 
     public void visit(DoubleMove move) {

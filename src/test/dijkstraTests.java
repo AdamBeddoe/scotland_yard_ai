@@ -16,10 +16,10 @@ public class dijkstraTests extends AITestBase{
         Graph graph = defaultGraph();
         MyAI testAI = new MyAI();
 
-        assertEquals(1, testAI.dijkstra(graph, 69, 86));
-        assertEquals(4, testAI.dijkstra(graph, 69, 129));
-        assertEquals(4, testAI.dijkstra(graph, 1, 99));
-        assertEquals(5, testAI.dijkstra(graph, 1, 199));
+        assertEquals(1, MyAI.dijkstra(graph, 69, 86));
+        assertEquals(4, MyAI.dijkstra(graph, 69, 129));
+        assertEquals(4, MyAI.dijkstra(graph, 1, 99));
+        assertEquals(5, MyAI.dijkstra(graph, 1, 199));
     }
 
     @Test
@@ -29,12 +29,12 @@ public class dijkstraTests extends AITestBase{
 
 
         // First node
-        assertEquals(0, testAI.dijkstra(graph, 1, 1));
+        assertEquals(0, MyAI.dijkstra(graph, 1, 1));
         // Random nodes
-        assertEquals(0, testAI.dijkstra(graph, 3, 3));
-        assertEquals(0, testAI.dijkstra(graph, 69, 69));
+        assertEquals(0, MyAI.dijkstra(graph, 3, 3));
+        assertEquals(0, MyAI.dijkstra(graph, 69, 69));
         // Last node
-        assertEquals(0, testAI.dijkstra(graph, 199, 199));
+        assertEquals(0, MyAI.dijkstra(graph, 199, 199));
     }
 
 
