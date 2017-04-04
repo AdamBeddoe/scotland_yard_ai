@@ -71,39 +71,40 @@ public class GameState implements MoveVisitor {
     public Set<Move> validMoves(Colour colour) {
 
         Collection<Edge<Integer,Transport>> edgesFrom;
+        Set<Move> validMoves = new HashSet<>();
 
         if (colour.isMrX()) edgesFrom = this.graph.getEdgesFrom(graph.getNode(mrXLocation));
         else edgesFrom = this.graph.getEdgesFrom(graph.getNode(detectives.get(colour)));
 
-        Set<Move> firstMoves = edgesFrom.stream() // Should be ticket move
+        Set<TicketMove> firstMoves = edgesFrom.stream() // Should be ticket move
                 .filter(edge -> !nodeOccupied(edge))
                 .map(edge -> new TicketMove(colour, Ticket.fromTransport(edge.data()), edge.destination().value()))
                 //.flatMap(ticketMove -> addSecretMoves(ticketMove, player).stream())
                 //.filter(move -> player.hasTickets(move.ticket()))
                 .collect(Collectors.toSet());
 
+        validMoves.addAll(firstMoves);
 
-        /*
-        Set<DoubleMove> doubleMoves = firstMoves.stream()
-                .flatMap(move -> doubleMovesFrom(move, player).stream())
-                .filter(doubleMove -> canUseDouble(doubleMove, player))
-                .collect(Collectors.toSet());
-        */
-        //Set<Move> validMoves = new HashSet<>();
-        //validMoves.addAll(firstMoves);
-        //validMoves.addAll(doubleMoves);
+        if (colour.isMrX()) {
+            Set<DoubleMove> doubleMoves = firstMoves.stream()
+                    .flatMap(move -> doubleMovesFrom(move, colour).stream())
+                    //.filter(doubleMove -> canUseDouble(doubleMove, colour))
+                    .collect(Collectors.toSet());
 
-        return firstMoves;
+            validMoves.addAll(doubleMoves);
+        }
+
+        return validMoves;
     }
 
     // Returns all double moves from the firstMove
-    private Set<DoubleMove> doubleMovesFrom(TicketMove firstMove, ScotlandYardPlayer player) {
+    private Set<DoubleMove> doubleMovesFrom(TicketMove firstMove, Colour colour) {
         Collection<Edge<Integer,Transport>> edgesFrom = this.graph.getEdgesFrom(graph.getNode(firstMove.destination()));
 
         Set<DoubleMove> doubleMovesFrom = edgesFrom.stream()
                 .filter(edge -> !nodeOccupied(edge))
                 .map(edge -> new TicketMove(firstMove.colour(), Ticket.fromTransport(edge.data()), edge.destination().value()))
-                .flatMap(ticketMove -> addSecretMoves(ticketMove, player).stream())
+                //.flatMap(ticketMove -> addSecretMoves(ticketMove, player).stream())
                 .map(secondMove -> new DoubleMove(firstMove.colour(), firstMove, secondMove))
                 .collect(Collectors.toSet());
 
@@ -119,16 +120,16 @@ public class GameState implements MoveVisitor {
     }
 
     // Returns true if the player is able to use the double ticket
-    private boolean canUseDouble(DoubleMove doubleMove, ScotlandYardPlayer player) {
-        boolean sameTicketValid = true;
-        if (doubleMove.hasSameTicket()) {
-            sameTicketValid = player.hasTickets(doubleMove.firstMove().ticket(),2);
-        }
-        return (player.hasTickets(doubleMove.firstMove().ticket())
-                && player.hasTickets(doubleMove.secondMove().ticket())
-                && player.hasTickets(Double)
-                && sameTicketValid);
-    }
+//    private boolean canUseDouble(DoubleMove doubleMove, Colour player) {
+//        boolean sameTicketValid = true;
+//        if (doubleMove.hasSameTicket()) {
+//            sameTicketValid = player.hasTickets(doubleMove.firstMove().ticket(),2);
+//        }
+//        return (player.hasTickets(doubleMove.firstMove().ticket())
+//                && player.hasTickets(doubleMove.secondMove().ticket())
+//                && player.hasTickets(Double)
+//                && sameTicketValid);
+//    }
 
     // Returns true if the destination of an edge is occupied by a detective.
     private boolean nodeOccupied(Edge edge) {
