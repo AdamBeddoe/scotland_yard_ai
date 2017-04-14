@@ -92,7 +92,7 @@ public class GameState implements MoveVisitor {
                     .collect(Collectors.toSet());
 
             validMoves.addAll(doubleMoves);
-        }
+         }
 
         return validMoves;
     }

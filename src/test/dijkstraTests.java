@@ -38,8 +38,15 @@ public class dijkstraTests extends AITestBase{
     }
 
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)        //TODO Placing in a valid dijkstra call still passes test?
     public void invalidNodeShouldThrow() {
+        Graph graph = defaultGraph();
 
+        MyAI.dijkstra(graph, 199, 200);
+        MyAI.dijkstra(graph, 200, 199);
+        MyAI.dijkstra(graph, 0, 1);
+        MyAI.dijkstra(graph, 1, 0);
+        MyAI.dijkstra(graph, 1, -1);
+        MyAI.dijkstra(graph, -1, 1);
     }
 }

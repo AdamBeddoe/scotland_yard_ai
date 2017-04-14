@@ -58,6 +58,9 @@ public class MyAI implements PlayerFactory {
 	}
 
 	public static int dijkstra(Graph graph, int src, int dest) {
+		if(src>199 || src<1) throw new IllegalArgumentException("Source node not in graph");
+		if(dest>199 || src<1) throw new IllegalArgumentException("Destination node not in graph");
+
 		int[] distances = new int[graph.size()+1];
 		Arrays.fill(distances, Integer.MAX_VALUE);
 		boolean[] checked = new boolean[graph.size()+1];
