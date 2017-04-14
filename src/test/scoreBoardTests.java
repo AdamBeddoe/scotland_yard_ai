@@ -74,8 +74,6 @@ public class scoreBoardTests extends AITestBase{
     public void flatMrXAndDetectiveScoresCorrect() {
         Graph graph = flatTaxiGraph();
 
-        MyAI testAI = new MyAI();
-
         Map<Colour,Integer> detectives = new HashMap<>();
         detectives.put(Blue, 4);
 
