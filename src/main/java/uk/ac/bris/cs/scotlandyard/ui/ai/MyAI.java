@@ -49,12 +49,16 @@ public class MyAI implements PlayerFactory {
 		double total = 0;
 		int mrXLocation = state.getMrXLocation();
 		total = total + state.validMoves(Black).size();
+		boolean captured = false;
+
 		for (Colour colour : state.getDetectives()) {
 			int distance = this.graphDistances[mrXLocation][state.getDetectiveLocation(colour)];
 			total = total + (Math.pow(distance, 2));
-			if (distance == 0) total = -1000; // Won't always be -1000 if it's not last player who's further away.
+			if (distance == 0) captured = true;
 		}
-		return (int) total;
+
+		if (captured) return -1000;
+		else return (int) total;
 	}
 
 	public static int dijkstra(Graph graph, int src, int dest) {
