@@ -51,7 +51,7 @@ public class scoreBoardTests extends AITestBase{
 
         Map<Colour,Integer> detectives = new HashMap<>();
         detectives.put(Blue, 20);
-        detectives.put(Blue, 30);
+        detectives.put(Red, 30);
 
         GameState testState = new GameState(graph, detectives, 20);
         assertEquals(-1000, testAI.scoreBoard(testState));

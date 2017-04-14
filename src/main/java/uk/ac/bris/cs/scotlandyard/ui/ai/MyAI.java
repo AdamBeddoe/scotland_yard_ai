@@ -55,6 +55,7 @@ public class MyAI implements PlayerFactory {
 			int distance = this.graphDistances[mrXLocation][state.getDetectiveLocation(colour)];
 			total = total + (Math.pow(distance, 2));
 			if (distance == 0) captured = true;
+			System.out.println(distance);
 		}
 
 		if (captured) return -1000;

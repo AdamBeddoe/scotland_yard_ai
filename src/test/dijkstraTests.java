@@ -14,19 +14,17 @@ public class dijkstraTests extends AITestBase{
     @Test
     public void testStandardCaseDijkstra() {
         Graph graph = defaultGraph();
-        MyAI testAI = new MyAI();
 
         assertEquals(1, MyAI.dijkstra(graph, 69, 86));
         assertEquals(4, MyAI.dijkstra(graph, 69, 129));
         assertEquals(4, MyAI.dijkstra(graph, 1, 99));
+        assertEquals(8, MyAI.dijkstra(graph, 20, 30));
         assertEquals(5, MyAI.dijkstra(graph, 1, 199));
     }
 
     @Test
     public void trivialDistanceTest() {
         Graph graph = defaultGraph();
-        MyAI testAI = new MyAI();
-
 
         // First node
         assertEquals(0, MyAI.dijkstra(graph, 1, 1));
