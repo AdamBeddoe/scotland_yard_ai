@@ -43,17 +43,20 @@ public abstract class AITestBase {
 
     private static void generateFlatTaxiGraph() {
         flatTaxiGraph = new UndirectedGraph();
+        //TODO sort thing out
         flatTaxiGraph.addNode(new Node<>(1));
         flatTaxiGraph.addNode(new Node<>(2));
         flatTaxiGraph.addNode(new Node<>(3));
         flatTaxiGraph.addNode(new Node<>(4));
         flatTaxiGraph.addNode(new Node<>(5));
         flatTaxiGraph.addNode(new Node<>(6));
+        flatTaxiGraph.addNode(new Node<>(7));
         flatTaxiGraph.addEdge(new Edge<Integer,Transport>(new Node(1), new Node<>(2),Taxi));
         flatTaxiGraph.addEdge(new Edge<Integer,Transport>(new Node(2), new Node<>(3),Taxi));
         flatTaxiGraph.addEdge(new Edge<Integer,Transport>(new Node(3), new Node<>(4),Taxi));
         flatTaxiGraph.addEdge(new Edge<Integer,Transport>(new Node(4), new Node<>(5),Taxi));
         flatTaxiGraph.addEdge(new Edge<Integer,Transport>(new Node(5), new Node<>(6),Taxi));
+        flatTaxiGraph.addEdge(new Edge<Integer,Transport>(new Node(6), new Node<>(7),Taxi));
     }
 
 

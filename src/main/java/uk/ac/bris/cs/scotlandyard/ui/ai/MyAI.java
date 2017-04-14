@@ -21,8 +21,10 @@ import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
 @ManagedAI("Name me!")
 public class MyAI implements PlayerFactory {
 
-	int graphDistances[][] = new int[200][200];
+	private final int graphDistances[][] = new int[200][200];
 
+
+	//TODO take out of constructor
 	public MyAI() {
 		try {
 			Graph defaultGraph = ScotlandYardGraphReader.fromLines(Files.readAllLines(
@@ -52,14 +54,17 @@ public class MyAI implements PlayerFactory {
 		boolean captured = false;
 
 		for (Colour colour : state.getDetectives()) {
-			int distance = this.graphDistances[mrXLocation][state.getDetectiveLocation(colour)];
+			int distance = getGraphDistances(mrXLocation,state.getDetectiveLocation(colour));
 			total = total + (Math.pow(distance, 2));
 			if (distance == 0) captured = true;
-			System.out.println(distance);
 		}
 
 		if (captured) return -1000;
 		else return (int) total;
+	}
+
+	public int getGraphDistances(int x, int y) {
+		return this.graphDistances[x][y];
 	}
 
 	public static int dijkstra(Graph graph, int src, int dest) {
