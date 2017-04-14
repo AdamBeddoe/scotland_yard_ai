@@ -15,6 +15,7 @@ import uk.ac.bris.cs.scotlandyard.ai.PlayerFactory;
 import uk.ac.bris.cs.scotlandyard.model.*;
 
 import static java.util.Arrays.fill;
+import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
 
 // TODO name the AI
 @ManagedAI("Name me!")
@@ -47,11 +48,11 @@ public class MyAI implements PlayerFactory {
 	public int scoreBoard(GameState state) {
 		double total = 0;
 		int mrXLocation = state.getMrXLocation();
+		total = total + state.validMoves(Black).size();
 		for (Colour colour : state.getDetectives()) {
 			int distance = this.graphDistances[mrXLocation][state.getDetectiveLocation(colour)];
 			total = total + (Math.pow(distance, 2));
-			total = total + state.validMoves(colour).size();
-			if (distance == 0) total = -1000;
+			if (distance == 0) total = -1000; // Won't always be -1000 if it's not last player who's further away.
 		}
 		return (int) total;
 	}

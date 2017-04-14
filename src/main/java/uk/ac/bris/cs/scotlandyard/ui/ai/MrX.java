@@ -3,8 +3,6 @@ package uk.ac.bris.cs.scotlandyard.ui.ai;
 import uk.ac.bris.cs.scotlandyard.model.Move;
 import uk.ac.bris.cs.scotlandyard.model.Player;
 import uk.ac.bris.cs.scotlandyard.model.ScotlandYardView;
-
-
 import java.util.Set;
 import java.util.function.Consumer;
 
