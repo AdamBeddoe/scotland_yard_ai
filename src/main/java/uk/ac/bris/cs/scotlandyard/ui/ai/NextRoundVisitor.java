@@ -36,10 +36,10 @@ public class NextRoundVisitor extends TreeVisitor {
 
         for (GameTree childTree : tree.getChildTrees()) {
             if (levels > 0 && !childTree.isDeadNode()) {
-                if (childTree.isMrXRound()) { // know for all
-                    NextRoundVisitor visitor = new NextRoundVisitor(childTree.getState().validMoves(Black), (levels - 1)); // valid moves only needed at the bottom
-                    childTree.accept(visitor); // also don't like making new visitor objects for each tree, seems wasteful
-                    // probably should be able to do it with visit() with some rejigging
+                if (childTree.isMrXRound()) {
+                    this.moves = childTree.getState().validMoves(Black);
+                    this.levels--;
+                    visit(childTree);
                 } else {
 
                     Set<Set<Move>> eachDetectiveMoves = new HashSet<>();
@@ -50,24 +50,21 @@ public class NextRoundVisitor extends TreeVisitor {
                     Set<Set<Move>> combinedDetectiveMoves = combinations(eachDetectiveMoves);
 
                     for (Set moveSet : combinedDetectiveMoves) {
-                        NextRoundVisitor detectivesMovesAdder = new NextRoundVisitor(moveSet, (levels - 1));
-                        childTree.accept(detectivesMovesAdder);
+                        this.moves = moveSet;
+                        this.levels--;
+                        visit(childTree);
                     }
                 }
             }
         }
+
+        this.levels++;
     }
 
     private Set<Set<Move>> combinations(Set<Set<Move>> original) {
         Set<Set<Move>> combined = new HashSet<>();
         for (Set<Move> set : original) {
-            System.out.println(set);
-            System.out.println("New Sprinkled: " + sprinkle(combined,set));
-            System.out.println();
             combined = sprinkle(combined,set);
-            for (Set print : combined) {
-                System.out.println("Set: " + print);
-            }
         }
         return combined;
     }

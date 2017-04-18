@@ -26,7 +26,7 @@ public class MrX implements Player {
 
         GameTree tree = new GameTree(new GameState(view, location),true);
 
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 1; i <= 10; i++) {
             NextRoundVisitor tilo = new NextRoundVisitor(moves, i);
             long startTime = System.nanoTime();
             tree.accept(tilo);
