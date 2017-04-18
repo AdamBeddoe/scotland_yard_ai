@@ -7,22 +7,28 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Consumer;
 
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import uk.ac.bris.cs.gamekit.graph.Edge;
 import uk.ac.bris.cs.gamekit.graph.Graph;
 import uk.ac.bris.cs.gamekit.graph.Node;
 import uk.ac.bris.cs.scotlandyard.ai.ManagedAI;
 import uk.ac.bris.cs.scotlandyard.ai.PlayerFactory;
+import uk.ac.bris.cs.scotlandyard.ai.ResourceProvider;
+import uk.ac.bris.cs.scotlandyard.ai.Visualiser;
 import uk.ac.bris.cs.scotlandyard.model.*;
 
 import static java.util.Arrays.fill;
 import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
 
 // TODO name the AI
-@ManagedAI("Name me!")
+@ManagedAI(value = "Name me!", visualiserType = ManagedAI.VisualiserType.WINDOWED)
 public class MyAI implements PlayerFactory {
 
 	private final int graphDistances[][] = new int[200][200];
-
+	Visualiser visualiser;
 
 	//TODO take out of constructor
 	public MyAI() {
@@ -43,6 +49,7 @@ public class MyAI implements PlayerFactory {
 
 	@Override
 	public Player createPlayer(Colour colour) {
+
 		if (colour.isMrX()) return new MrX(this);
 		else return new Detective();
 	}
@@ -106,6 +113,14 @@ public class MyAI implements PlayerFactory {
 			}
 		}
 		return node;
+	}
+
+	public void ready(Visualiser visualiser, ResourceProvider provider) {
+
+		this.visualiser = visualiser;
+
+		visualiser.surface().setStyle("-fx-background-color: black;");
+
 	}
 }
 

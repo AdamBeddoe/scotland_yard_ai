@@ -61,13 +61,13 @@ public class NextRoundVisitor extends TreeVisitor {
     private Set<Set<Move>> combinations(Set<Set<Move>> original) {
         Set<Set<Move>> combined = new HashSet<>();
         for (Set<Move> set : original) {
-            //System.out.println(set);
-            //System.out.println("New Sprinkled: " + newSprinkle(combined,set));
-            //System.out.println();
+            System.out.println(set);
+            System.out.println("New Sprinkled: " + sprinkle(combined,set));
+            System.out.println();
             combined = sprinkle(combined,set);
-            //for (Set print : combined) {
-            //    System.out.println("Set: " + print);
-            //}
+            for (Set print : combined) {
+                System.out.println("Set: " + print);
+            }
         }
         return combined;
     }

@@ -1,5 +1,8 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
+import javafx.scene.layout.Pane;
+import sun.java2d.Surface;
+import uk.ac.bris.cs.scotlandyard.ai.*;
 import uk.ac.bris.cs.scotlandyard.model.Move;
 import uk.ac.bris.cs.scotlandyard.model.Player;
 import uk.ac.bris.cs.scotlandyard.model.ScotlandYardView;
@@ -44,6 +47,9 @@ public class MrX implements Player {
 
 
         callback.accept(selectMove(tree));
+
+
+
     }
 
     private Move selectMove(GameTree tree) {
