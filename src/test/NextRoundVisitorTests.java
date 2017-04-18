@@ -15,9 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
-import static uk.ac.bris.cs.scotlandyard.model.Colour.Blue;
-import static uk.ac.bris.cs.scotlandyard.model.Colour.Green;
+import static uk.ac.bris.cs.scotlandyard.model.Colour.*;
 import static uk.ac.bris.cs.scotlandyard.model.Ticket.Taxi;
 
 /**
@@ -42,6 +40,25 @@ public class NextRoundVisitorTests extends AITestBase{
         Set<Move> moves = new HashSet<>();
         moves.add(new TicketMove(Black, Taxi , 20));
         NextRoundVisitor testRoundVisitor = new NextRoundVisitor(moves, 4);
-        //tree.accept(testRoundVisitor); also doesn't work for some reason
+        tree.accept(testRoundVisitor); //also doesn't work for some reason
+    }
+
+    @Test
+    public void justRun3() {
+        Graph graph = defaultGraph();
+
+        Map<Colour,Integer> detectives = new HashMap<>();
+        detectives.put(Blue, 4);
+        detectives.put(Green, 7);
+        detectives.put(Red, 9);
+
+        GameState testState1 = new GameState(graph, detectives, 3);
+
+        GameTree tree = new GameTree(testState1,true);
+
+        Set<Move> moves = new HashSet<>();
+        moves.add(new TicketMove(Black, Taxi , 20));
+        NextRoundVisitor testRoundVisitor = new NextRoundVisitor(moves, 4);
+        tree.accept(testRoundVisitor); //also doesn't work for some reason
     }
 }

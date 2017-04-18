@@ -8,7 +8,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         dijkstraTests.class,
-        scoreBoardTests.class
+        scoreBoardTests.class,
+        NextRoundVisitorTests.class
 })
 public class AITest {
 }
