@@ -51,7 +51,12 @@ public class MyAI implements PlayerFactory {
 	public Player createPlayer(Colour colour) {
 
 		if (colour.isMrX()) return new MrX(this);
-		else return new Detective();
+		else {
+
+			//hide detective visualiser window pls
+
+			return new Detective();
+		}
 	}
 
 	public int scoreBoard(GameState state) {
