@@ -1,5 +1,6 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -7,10 +8,18 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Consumer;
 
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
+import javafx.geometry.*;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.layout.*;
+import javafx.scene.paint.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import uk.ac.bris.cs.gamekit.graph.Edge;
 import uk.ac.bris.cs.gamekit.graph.Graph;
 import uk.ac.bris.cs.gamekit.graph.Node;
@@ -52,8 +61,8 @@ public class MyAI implements PlayerFactory {
 
 		if (colour.isMrX()) return new MrX(this);
 		else {
-
-			//hide detective visualiser window pls
+			Stage stage = (Stage) visualiser.surface().getScene().getWindow();
+			stage.close();
 
 			return new Detective();
 		}
@@ -123,9 +132,40 @@ public class MyAI implements PlayerFactory {
 	public void ready(Visualiser visualiser, ResourceProvider provider) {
 
 		this.visualiser = visualiser;
+		visualiserInitialiser();
+	}
 
-		visualiser.surface().setStyle("-fx-background-color: black;");
+	private void visualiserInitialiser() {
+		Group root = new Group();
+		Scene scene = new Scene(root, 600, 600);
+		TabPane tabPane = new TabPane();
+		tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+		tabPane.setBackground(new Background(new BackgroundFill(Color.web("#2a2a2a"), CornerRadii.EMPTY, Insets.EMPTY)));
+		BorderPane borderPane = new BorderPane();
 
+		String tabs[] = {"Tree", "Times", "Map", "Heatmap", "Route Tracer"};
+
+		for(int i = 0; i < 5; i++) {
+			Tab tab = new Tab();
+			tab.setText(tabs[i]);
+
+			HBox hbox = new HBox();
+			Label label = new Label("Tab" + i);
+			label.setTextFill(Color.WHITE);
+			hbox.getChildren().add(label);
+
+			hbox.setAlignment(Pos.CENTER);
+			tab.setContent(hbox);
+			tabPane.getTabs().add(tab);
+		}
+
+		borderPane.prefHeightProperty().bind(scene.heightProperty());
+		borderPane.prefWidthProperty().bind(scene.widthProperty());
+
+		borderPane.setCenter(tabPane);
+		root.getChildren().add(borderPane);
+
+		visualiser.surface().getChildren().add(root);
 	}
 }
 
