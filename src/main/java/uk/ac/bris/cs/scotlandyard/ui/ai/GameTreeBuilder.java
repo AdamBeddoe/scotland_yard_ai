@@ -1,5 +1,6 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
+import apple.laf.JRSUIUtils;
 import uk.ac.bris.cs.scotlandyard.model.Move;
 import uk.ac.bris.cs.scotlandyard.model.Spectator;
 
@@ -48,28 +49,35 @@ public class GameTreeBuilder {
     }
 
     public GameTree build() {
-        GameTree tree = new GameTree(this.startState,true);
+        notifyLoop(observer -> observer.onTreeBuildStart());
+        GameTree tree = new GameTree(this.startState, this.playerIsMrX);
 
         for (int i = 1; i <= this.levels; i++) {
 
             NextRoundVisitor tilo = new NextRoundVisitor(this.moves, i);
-
-            long startTime = System.nanoTime();
             tree.accept(tilo);
-            long endTime = System.nanoTime();
-            System.out.println("Tilo Time: "+(endTime-startTime)/1000000);
+            notifyLoop(observer -> observer.onNextRoundVisitorComplete());
 
             ScoreVisitor nick = new ScoreVisitor(this.AI);
-
-            long startTimeNick = System.nanoTime();
             tree.accept(nick);
-            long endTimeNick = System.nanoTime();
-            System.out.println("Nick nacs: "+(endTimeNick-startTimeNick)/1000000);
+            notifyLoop(observer -> observer.onScoreVisitorComplete());
 
             PruneVisitor bigPrune = new PruneVisitor(100);
-
             tree.accept(bigPrune);
+            notifyLoop(observer -> observer.onBigPruneComplete());
         }
+
+        notifyLoop(observer -> observer.onTreeBuildFinish(tree));
         return tree;
     }
+
+    private void notifyLoop(NotifyFunction function) {
+        for (TreeBuilderObserver observer : observers){
+            function.notifyFunc(observer);
+        }
+    }
+}
+
+interface NotifyFunction {
+    void notifyFunc(TreeBuilderObserver observer);
 }

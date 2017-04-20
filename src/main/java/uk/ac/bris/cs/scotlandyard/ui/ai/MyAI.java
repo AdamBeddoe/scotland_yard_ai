@@ -28,6 +28,7 @@ import uk.ac.bris.cs.scotlandyard.ai.PlayerFactory;
 import uk.ac.bris.cs.scotlandyard.ai.ResourceProvider;
 import uk.ac.bris.cs.scotlandyard.ai.Visualiser;
 import uk.ac.bris.cs.scotlandyard.model.*;
+import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorView;
 
 import static java.util.Arrays.fill;
 import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
@@ -132,40 +133,9 @@ public class MyAI implements PlayerFactory {
 	public void ready(Visualiser visualiser, ResourceProvider provider) {
 
 		this.visualiser = visualiser;
-		visualiserInitialiser();
+		GameMonitorView view = new GameMonitorView(visualiser);
 	}
 
-	private void visualiserInitialiser() {
-		Group root = new Group();
-		Scene scene = new Scene(root, 600, 600);
-		TabPane tabPane = new TabPane();
-		tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-		tabPane.setBackground(new Background(new BackgroundFill(Color.web("#2a2a2a"), CornerRadii.EMPTY, Insets.EMPTY)));
-		BorderPane borderPane = new BorderPane();
 
-		String tabs[] = {"Tree", "Times", "Map", "Heatmap", "Route Tracer"};
-
-		for(int i = 0; i < 5; i++) {
-			Tab tab = new Tab();
-			tab.setText(tabs[i]);
-
-			HBox hbox = new HBox();
-			Label label = new Label("Tab" + i);
-			label.setTextFill(Color.WHITE);
-			hbox.getChildren().add(label);
-
-			hbox.setAlignment(Pos.CENTER);
-			tab.setContent(hbox);
-			tabPane.getTabs().add(tab);
-		}
-
-		borderPane.prefHeightProperty().bind(scene.heightProperty());
-		borderPane.prefWidthProperty().bind(scene.widthProperty());
-
-		borderPane.setCenter(tabPane);
-		root.getChildren().add(borderPane);
-
-		visualiser.surface().getChildren().add(root);
-	}
 }
 
