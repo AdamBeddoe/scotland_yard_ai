@@ -1,7 +1,9 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
 import uk.ac.bris.cs.scotlandyard.model.Move;
+import uk.ac.bris.cs.scotlandyard.model.Spectator;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -13,10 +15,20 @@ public class GameTreeBuilder {
     private int levels;
     private Set<Move> moves;
     private MyAI AI;
+    List<TreeBuilderObserver> observers;
+
 
 
     public GameTreeBuilder(boolean playerIsMrX) {
         this.playerIsMrX = playerIsMrX;
+    }
+
+    public void registerObserver(TreeBuilderObserver observer) {
+        this.observers.add(observer);
+    }
+
+    public void deregisterObserver(TreeBuilderObserver observer) {
+        this.observers.remove(observer);
     }
 
     public void setStartState(GameState state) {
