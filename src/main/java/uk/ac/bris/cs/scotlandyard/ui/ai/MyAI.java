@@ -28,6 +28,7 @@ import uk.ac.bris.cs.scotlandyard.ai.PlayerFactory;
 import uk.ac.bris.cs.scotlandyard.ai.ResourceProvider;
 import uk.ac.bris.cs.scotlandyard.ai.Visualiser;
 import uk.ac.bris.cs.scotlandyard.model.*;
+import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorModel;
 import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorView;
 
 import static java.util.Arrays.fill;
@@ -39,6 +40,7 @@ public class MyAI implements PlayerFactory {
 
 	private final int graphDistances[][] = new int[200][200];
 	Visualiser visualiser;
+	MrX mrx;
 
 	//TODO take out of constructor
 	public MyAI() {
@@ -60,7 +62,9 @@ public class MyAI implements PlayerFactory {
 	@Override
 	public Player createPlayer(Colour colour) {
 
-		if (colour.isMrX()) return new MrX(this);
+		if (colour.isMrX()) {
+			return this.mrx;
+		}
 		else {
 			Stage stage = (Stage) visualiser.surface().getScene().getWindow();
 			stage.close();
@@ -131,9 +135,13 @@ public class MyAI implements PlayerFactory {
 	}
 
 	public void ready(Visualiser visualiser, ResourceProvider provider) {
+		this.mrx = new MrX(this);
+
 
 		this.visualiser = visualiser;
 		GameMonitorView view = new GameMonitorView(visualiser);
+		GameMonitorModel model = new GameMonitorModel(view);
+		this.mrx.builder.registerObserver(model);
 	}
 
 

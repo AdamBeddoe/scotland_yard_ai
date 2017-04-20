@@ -6,6 +6,8 @@ import uk.ac.bris.cs.scotlandyard.ai.*;
 import uk.ac.bris.cs.scotlandyard.model.Move;
 import uk.ac.bris.cs.scotlandyard.model.Player;
 import uk.ac.bris.cs.scotlandyard.model.ScotlandYardView;
+import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorModel;
+
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -15,6 +17,7 @@ import java.util.function.Consumer;
  */
 public class MrX implements Player {
     private MyAI ai;
+    public GameTreeBuilder builder = new GameTreeBuilder(true);
 
     public MrX(MyAI ai) {
         this.ai = ai;
@@ -24,13 +27,12 @@ public class MrX implements Player {
     public void makeMove(ScotlandYardView view, int location, Set<Move> moves,
                          Consumer<Move> callback) {
 
-        GameTreeBuilder builder = new GameTreeBuilder(true);
-        builder.setStartState(new GameState(view,location));
-        builder.setLookAheadLevels(2);
-        builder.setAI(this.ai);
-        builder.setMoves(moves);
+        this.builder.setStartState(new GameState(view,location));
+        this.builder.setLookAheadLevels(2);
+        this.builder.setAI(this.ai);
+        this.builder.setMoves(moves);
 
-        GameTree tree = builder.build();
+        GameTree tree = this.builder.build();
         Move bestMove = selectMove(tree);
 
         callback.accept(bestMove);

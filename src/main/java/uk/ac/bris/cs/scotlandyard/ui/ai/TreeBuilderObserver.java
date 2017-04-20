@@ -5,14 +5,14 @@ package uk.ac.bris.cs.scotlandyard.ui.ai;
  */
 public interface TreeBuilderObserver {
 
-    default void onTreeBuildStart() {}
+    void onTreeBuildStart();
 
-    default void onNextRoundVisitorComplete() {}
+    void onNextRoundVisitorComplete();
 
-    default void onScoreVisitorComplete() {}
+    void onScoreVisitorComplete();
 
-    default void onBigPruneComplete() {}
+    void onBigPruneComplete();
 
-    default void onTreeBuildFinish(GameTree tree) {}
+    void onTreeBuildFinish(GameTree tree);
 
 }

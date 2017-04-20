@@ -1,9 +1,9 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
-import apple.laf.JRSUIUtils;
 import uk.ac.bris.cs.scotlandyard.model.Move;
 import uk.ac.bris.cs.scotlandyard.model.Spectator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +16,7 @@ public class GameTreeBuilder {
     private int levels;
     private Set<Move> moves;
     private MyAI AI;
-    List<TreeBuilderObserver> observers;
+    private List<TreeBuilderObserver> observers = new ArrayList<>();
 
 
 
