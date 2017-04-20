@@ -24,32 +24,16 @@ public class MrX implements Player {
     public void makeMove(ScotlandYardView view, int location, Set<Move> moves,
                          Consumer<Move> callback) {
 
-        GameTree tree = new GameTree(new GameState(view, location),true);
+        GameTreeBuilder builder = new GameTreeBuilder(true);
+        builder.setStartState(new GameState(view,location));
+        builder.setLookAheadLevels(2);
+        builder.setAI(this.ai);
+        builder.setMoves(moves);
 
-        for (int i = 1; i <= 10; i++) {
-            NextRoundVisitor tilo = new NextRoundVisitor(moves, i);
-            long startTime = System.nanoTime();
-            tree.accept(tilo);
-            long endTime = System.nanoTime();
-            System.out.println("Tilo Time: "+(endTime-startTime)/1000000);
+        GameTree tree = builder.build();
+        Move bestMove = selectMove(tree);
 
-
-            ScoreVisitor nick = new ScoreVisitor(this.ai);
-
-            long startTimeNick = System.nanoTime();
-            tree.accept(nick);
-            long endTimeNick = System.nanoTime();
-            System.out.println("Nick nacs: "+(endTimeNick-startTimeNick)/1000000);
-
-            PruneVisitor bigPrune = new PruneVisitor(100);
-            tree.accept(bigPrune);
-        }
-
-
-        callback.accept(selectMove(tree));
-
-
-
+        callback.accept(bestMove);
     }
 
     private Move selectMove(GameTree tree) {
