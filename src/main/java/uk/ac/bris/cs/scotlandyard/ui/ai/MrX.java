@@ -35,7 +35,7 @@ public class MrX implements Player {
         }
 
         this.builder.setStartState(new GameState(view,location));
-        this.builder.setLookAheadLevels(2);
+        this.builder.setLookAheadLevels(4);
         this.builder.setThreshold(100);
         this.builder.setAI(this.ai);
         this.builder.setMoves(moves);

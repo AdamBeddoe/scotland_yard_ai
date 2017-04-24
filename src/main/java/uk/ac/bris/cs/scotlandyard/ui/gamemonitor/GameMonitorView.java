@@ -154,8 +154,12 @@ public class GameMonitorView {
         sp.setHvalue(0.5);
 
         Button leftB = new Button();
+        leftB.setMinWidth(100);
+        leftB.setText("Left");
         Button rightB = new Button();
+        rightB.setMinWidth(100);
         rightB.setLayoutX(100);
+        rightB.setText("Right");
 
         Pane pane = new Pane();
         pane.getChildren().addAll(leftB, rightB);
@@ -206,13 +210,13 @@ public class GameMonitorView {
     private void drawTreeFromGraph(DrawTree tree, GraphicsContext gc, Canvas canvas) {
         for (DrawTree child : tree.getChildDrawTrees()) {
 
+            gc.setFill(Color.WHITE);
+            gc.setLineWidth(1);
+            gc.strokeLine(tree.getX()+3, tree.getY()+3, child.getX()+3, child.getY()+3);
+
             gc.setLineWidth(2);
             if(child.isDeadNode()) {gc.setFill(Color.RED);}
             gc.fillOval(child.getX(), child.getY(), 6, 6);
-
-            gc.setFill(Color.WHITE);
-            gc.setLineWidth(1);
-            gc.strokeLine(tree.getX(), tree.getY(), child.getX(), child.getY());
 
             drawTreeFromGraph(child, gc, canvas);
         }
