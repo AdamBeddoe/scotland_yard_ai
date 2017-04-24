@@ -48,11 +48,11 @@ public class NextRoundVisitor extends TreeVisitor {
                     }
 
                     Set<Set<Move>> combinedDetectiveMoves = combinations(eachDetectiveMoves);
-
                     for (Set moveSet : combinedDetectiveMoves) {
                         this.moves = moveSet;
                         this.levels--;
-                        visit(childTree);
+                        visit(childTree); // what is child tree?
+
                     }
                 }
             }
@@ -78,14 +78,17 @@ public class NextRoundVisitor extends TreeVisitor {
                 sprinkledMoves.add(newSet);
             }
         }
-        for (Set<Move> set : sprinkled) {
-            for (Move move : moves) {
-                Set<Move> newSet = new HashSet<>();
-                newSet.addAll(set);
-                newSet.add(move);
-                sprinkledMoves.add(newSet);
+        else {
+            for (Set<Move> set : sprinkled) {
+                for (Move move : moves) {
+                    Set<Move> newSet = new HashSet<>();
+                    newSet.addAll(set);
+                    newSet.add(move);
+                    sprinkledMoves.add(newSet);
+                }
             }
         }
+
         return sprinkledMoves;
     }
 }
