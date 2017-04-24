@@ -3,6 +3,7 @@ package uk.ac.bris.cs.scotlandyard.ui.ai;
 import javafx.scene.layout.Pane;
 import sun.java2d.Surface;
 import uk.ac.bris.cs.scotlandyard.ai.*;
+import uk.ac.bris.cs.scotlandyard.model.Colour;
 import uk.ac.bris.cs.scotlandyard.model.Move;
 import uk.ac.bris.cs.scotlandyard.model.Player;
 import uk.ac.bris.cs.scotlandyard.model.ScotlandYardView;
@@ -17,6 +18,7 @@ import java.util.function.Consumer;
  */
 public class MrX implements Player {
     private MyAI ai;
+    private int nodeHistory[] = new int[200];
     public GameTreeBuilder builder = new GameTreeBuilder(true);
 
     public MrX(MyAI ai) {
@@ -26,6 +28,11 @@ public class MrX implements Player {
     @Override
     public void makeMove(ScotlandYardView view, int location, Set<Move> moves,
                          Consumer<Move> callback) {
+
+        for (Colour player : view.getPlayers()) {
+            nodeHistory[view.getPlayerLocation(player)]++;
+            System.out.println(nodeHistory[view.getPlayerLocation(player)]);
+        }
 
         this.builder.setStartState(new GameState(view,location));
         this.builder.setLookAheadLevels(2);
@@ -39,13 +46,12 @@ public class MrX implements Player {
         callback.accept(bestMove);
     }
 
+
+
     private Move selectMove(GameTree tree) {
-        System.out.println("Starting Selection: ");
         int highestScore = 0;
         GameTree bestTree = tree.getChildTrees().get(0);
         for (GameTree currentTree : tree.getChildTrees()) {
-            System.out.print("t: ");
-            System.out.print(" " + currentTree.getScore() + " ");
             if (currentTree.getScore() > highestScore) {
                 bestTree = currentTree;
                 highestScore = bestTree.getScore();
