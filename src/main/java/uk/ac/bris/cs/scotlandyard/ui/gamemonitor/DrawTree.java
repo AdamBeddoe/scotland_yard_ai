@@ -19,6 +19,7 @@ public class DrawTree {
     public DrawTree(GameTree tree) {
         this.deadNode = tree.isDeadNode();
         this.score = tree.getScore();
+        this.spaceNeeded = tree.getChildTrees().size();
 
         for(GameTree child : tree.getChildTrees()) {
             this.childTrees.add(new DrawTree(child));
@@ -45,4 +46,35 @@ public class DrawTree {
         return this.deadNode;
     }
 
+    public List<DrawTree> getChildDrawTrees() {
+        return this.childTrees;
+    }
+
+    public int getSpaceNeeded() {
+        return this.spaceNeeded;
+    }
+
+    public void setSpaceNeeded(int space) {
+        this.spaceNeeded = space;
+    }
+
+    public void accept(DrawTreeVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
+    }
 }

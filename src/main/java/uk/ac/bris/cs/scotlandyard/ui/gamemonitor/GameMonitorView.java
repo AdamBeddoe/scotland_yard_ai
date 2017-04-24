@@ -19,6 +19,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import uk.ac.bris.cs.scotlandyard.ai.Visualiser;
 import uk.ac.bris.cs.scotlandyard.ui.ai.GameTree;
 
@@ -40,6 +41,7 @@ public class GameMonitorView {
     private XYChart.Series score = new XYChart.Series();
     private XYChart.Series prune = new XYChart.Series();
     private XYChart.Series treeFinish = new XYChart.Series();
+    private DrawTree dt;
 
     public GameMonitorView(Visualiser visualiser) {
         this.visualiser = visualiser;
@@ -50,7 +52,7 @@ public class GameMonitorView {
 
     private void visualiserInit() {
         Group root = new Group();
-        Scene scene = new Scene(root, 800, 800);
+        Scene scene = new Scene(root, 1400, 850);
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         tabPane.setBackground(new Background(new BackgroundFill(Color.web("#2a2a2a"), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -167,37 +169,44 @@ public class GameMonitorView {
     public void drawTree(GameTree tree) {
         Tab tab = returnTab(0);
         ScrollPane sp = new ScrollPane();
-        Canvas canvas = new Canvas(4000, 4000);
-
-        //sp.setBackground(new Background(new BackgroundFill(Color.web("#2a2a2a"), CornerRadii.EMPTY, Insets.EMPTY)));
+        Canvas canvas = new Canvas(10000, 10000);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.web("#2a2a2a"));
         gc.fillRect( 0, 0, canvas.getWidth(), canvas.getHeight());
+        sp.setHvalue(0.5);
+
+        this.dt = new DrawTree(tree, (int) canvas.getWidth()/2, 100);
+        System.out.println("First board score: " + dt.getScore());
+        System.out.println("spaceNeeded: " + dt.getSpaceNeeded());
+
+        SpaceNeededVisitor Ian = new SpaceNeededVisitor();
+        XYVisitor Andrew = new XYVisitor();
+
+        dt.accept(Ian);     //space needed
+        dt.accept(Andrew);  //coordinates calculated
 
         gc.setStroke(Color.WHITE);
         gc.setLineWidth(2);
-        gc.strokeOval(canvas.getWidth()/2, 20, 30 , 30);
+        gc.strokeOval(dt.getX(), dt.getY(), 8 , 8);
 
-        //int spacing = 800/(tree.getChildTrees().size());
-        int x = (int) (canvas.getWidth()/2)-((tree.getChildTrees().size()/2)*(35));
+        drawTreeFromGraph(dt, gc, canvas);
 
-        for(GameTree child : tree.getChildTrees()) {
-            gc.strokeOval(x, 100, 30, 30);
-            x = x + 35;
-            System.out.println("Child: " + child.getChildTrees().size());
-            System.out.println("First child is dead no: " + child.getChildTrees().get(0).isDeadNode());
-            System.out.println("First child child size: " + child.getChildTrees().get(0).getChildTrees().size());
-        }
-
-        System.out.println("First Tree: " + tree.getChildTrees().size());
-
-
-        //tree.getScore()
         Platform.runLater(() -> tab.setContent(sp));
         Platform.runLater(() -> sp.setContent(canvas));
     }
 
-    private void drawImmediateChildren(GameTree tree) {
+    private void drawTreeFromGraph(DrawTree tree, GraphicsContext gc, Canvas canvas) {
+        for (DrawTree child : tree.getChildDrawTrees()) {
 
+            gc.setLineWidth(2);
+            if(child.isDeadNode()) {gc.setStroke(Color.RED);}
+            gc.strokeOval(child.getX(), child.getY(), 8, 8);
+
+            gc.setStroke(Color.WHITE);
+            gc.setLineWidth(1);
+            gc.strokeLine(tree.getX(), tree.getY(), child.getX(), child.getY());
+
+            drawTreeFromGraph(child, gc, canvas);
+        }
     }
 }
