@@ -31,7 +31,6 @@ import uk.ac.bris.cs.scotlandyard.model.*;
 import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorModel;
 import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorView;
 
-import static java.util.Arrays.fill;
 import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
 
 // TODO name the AI
