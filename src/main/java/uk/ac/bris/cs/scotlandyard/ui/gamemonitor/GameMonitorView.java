@@ -22,6 +22,7 @@ import javafx.scene.paint.Color;
 import uk.ac.bris.cs.scotlandyard.ai.Visualiser;
 import uk.ac.bris.cs.scotlandyard.ui.ai.GameTree;
 
+import javax.swing.*;
 import javax.swing.text.Element;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -165,26 +166,38 @@ public class GameMonitorView {
 
     public void drawTree(GameTree tree) {
         Tab tab = returnTab(0);
-        Canvas canvas = new Canvas(800, 800);
+        ScrollPane sp = new ScrollPane();
+        Canvas canvas = new Canvas(4000, 4000);
 
+        //sp.setBackground(new Background(new BackgroundFill(Color.web("#2a2a2a"), CornerRadii.EMPTY, Insets.EMPTY)));
         GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(Color.web("#2a2a2a"));
+        gc.fillRect( 0, 0, canvas.getWidth(), canvas.getHeight());
 
         gc.setStroke(Color.WHITE);
         gc.setLineWidth(2);
-        gc.strokeOval(400, 20, 30 , 30);
+        gc.strokeOval(canvas.getWidth()/2, 20, 30 , 30);
 
-        int spacing = 800/(tree.getChildTrees().size());
-        int x = 0;
+        //int spacing = 800/(tree.getChildTrees().size());
+        int x = (int) (canvas.getWidth()/2)-((tree.getChildTrees().size()/2)*(35));
 
         for(GameTree child : tree.getChildTrees()) {
-            gc.strokeOval(x, 100, spacing, spacing);
-            x = x + spacing;
+            gc.strokeOval(x, 100, 30, 30);
+            x = x + 35;
+            System.out.println("Child: " + child.getChildTrees().size());
+            System.out.println("First child is dead no: " + child.getChildTrees().get(0).isDeadNode());
+            System.out.println("First child child size: " + child.getChildTrees().get(0).getChildTrees().size());
         }
 
-        System.out.println(tree.getChildTrees().size());
+        System.out.println("First Tree: " + tree.getChildTrees().size());
 
 
         //tree.getScore()
-        Platform.runLater(() -> tab.setContent(canvas));
+        Platform.runLater(() -> tab.setContent(sp));
+        Platform.runLater(() -> sp.setContent(canvas));
+    }
+
+    private void drawImmediateChildren(GameTree tree) {
+
     }
 }
