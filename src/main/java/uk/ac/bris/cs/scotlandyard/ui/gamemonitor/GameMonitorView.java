@@ -168,10 +168,10 @@ public class GameMonitorView {
         this.dt = new DrawTree(tree, (int) canvas.getWidth()/2, 100);
 
         SpaceNeededVisitor Ian = new SpaceNeededVisitor();
-        XYVisitor Andrew = new XYVisitor();
+        XYVisitor Dave = new XYVisitor();
 
         dt.accept(Ian);     //space needed
-        dt.accept(Andrew);  //coordinates calculated
+        dt.accept(Dave);  //coordinates calculated
 
         gc.setStroke(Color.WHITE);
         gc.setLineWidth(2);
