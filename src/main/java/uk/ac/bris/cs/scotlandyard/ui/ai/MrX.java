@@ -28,12 +28,7 @@ public class MrX implements Player {
     @Override
     public void makeMove(ScotlandYardView view, int location, Set<Move> moves,
                          Consumer<Move> callback) {
-
-        for (Colour player : view.getPlayers()) {
-            nodeHistory[view.getPlayerLocation(player)]++;
-            System.out.println(nodeHistory[view.getPlayerLocation(player)]);
-        }
-
+        updateNodeHistory(view);
         this.builder.setStartState(new GameState(view,location));
         this.builder.setLookAheadLevels(4);
         this.builder.setThreshold(100);
@@ -46,7 +41,11 @@ public class MrX implements Player {
         callback.accept(bestMove);
     }
 
-
+    private void updateNodeHistory(ScotlandYardView view) {
+        for (Colour player : view.getPlayers()) {
+            this.nodeHistory[view.getPlayerLocation(player)]++;
+        }
+    }
 
     private Move selectMove(GameTree tree) {
         int highestScore = 0;
