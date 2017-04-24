@@ -17,6 +17,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -25,6 +26,8 @@ import uk.ac.bris.cs.scotlandyard.ui.ai.GameTree;
 
 import javax.swing.*;
 import javax.swing.text.Element;
+import java.awt.event.ActionEvent;
+import java.beans.EventHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,6 +45,7 @@ public class GameMonitorView {
     private XYChart.Series prune = new XYChart.Series();
     private XYChart.Series treeFinish = new XYChart.Series();
     private DrawTree dt;
+    private int originX;
 
     public GameMonitorView(Visualiser visualiser) {
         this.visualiser = visualiser;
@@ -81,34 +85,6 @@ public class GameMonitorView {
         root.getChildren().add(borderPane);
 
         visualiser.surface().getChildren().add(root);
-    }
-
-    //Tried to use a table to display, cannot do individual cells :/
-    private void timeInit() {
-        Group root = (Group) visualiser.surface().getChildren().get(0);
-        BorderPane borderPane = (BorderPane) root.getChildren().get(0);
-        TabPane tabPane = (TabPane) borderPane.getChildren().get(0);
-        Tab timesTab = tabPane.getTabs().get(1);
-
-        TableView table = new TableView();
-
-        TableColumn moveNumber = new TableColumn("Move #");
-        TableColumn nextRound = new TableColumn("Next Round");
-        TableColumn score = new TableColumn("Score");
-        TableColumn prune = new TableColumn("Prune");
-        TableColumn treeFinish = new TableColumn("Tree finish");
-
-        table.getColumns().addAll(moveNumber, nextRound, score, prune, treeFinish);
-
-        ObservableList data =
-                FXCollections.observableArrayList("hello");
-
-
-        table.setItems(data);
-        timesTab.setContent(table);
-
-
-        //System.out.println(table.);
     }
 
     private void timeInitGraph() {
@@ -168,16 +144,24 @@ public class GameMonitorView {
 
     public void drawTree(GameTree tree) {
         Tab tab = returnTab(0);
+        BorderPane bp = new BorderPane();
         ScrollPane sp = new ScrollPane();
         Canvas canvas = new Canvas(10000, 10000);
+        bp.setCenter(sp);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.web("#2a2a2a"));
         gc.fillRect( 0, 0, canvas.getWidth(), canvas.getHeight());
         sp.setHvalue(0.5);
 
+        Button leftB = new Button();
+        Button rightB = new Button();
+        rightB.setLayoutX(100);
+
+        Pane pane = new Pane();
+        pane.getChildren().addAll(leftB, rightB);
+        bp.setTop(pane);
+
         this.dt = new DrawTree(tree, (int) canvas.getWidth()/2, 100);
-        System.out.println("First board score: " + dt.getScore());
-        System.out.println("spaceNeeded: " + dt.getSpaceNeeded());
 
         SpaceNeededVisitor Ian = new SpaceNeededVisitor();
         XYVisitor Andrew = new XYVisitor();
@@ -189,20 +173,44 @@ public class GameMonitorView {
         gc.setLineWidth(2);
         gc.strokeOval(dt.getX(), dt.getY(), 8 , 8);
 
+        gc.setFill(Color.WHITE);
         drawTreeFromGraph(dt, gc, canvas);
 
-        Platform.runLater(() -> tab.setContent(sp));
+        Platform.runLater(() -> tab.setContent(bp));
         Platform.runLater(() -> sp.setContent(canvas));
+
+        TransformVisitor leftV = new TransformVisitor(200);
+        TransformVisitor rightV = new TransformVisitor(-200);
+
+        leftB.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
+            @Override
+            public void handle(javafx.event.ActionEvent event) {
+                dt.accept(leftV);
+                gc.setFill(Color.web("#2a2a2a"));
+                gc.fillRect( 0, 0, canvas.getWidth(), canvas.getHeight());
+                drawTreeFromGraph(dt, gc, canvas);
+            }
+        });
+
+        rightB.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
+            @Override
+            public void handle(javafx.event.ActionEvent event) {
+                dt.accept(rightV);
+                gc.setFill(Color.web("#2a2a2a"));
+                gc.fillRect( 0, 0, canvas.getWidth(), canvas.getHeight());
+                drawTreeFromGraph(dt, gc, canvas);
+            }
+        });
     }
 
     private void drawTreeFromGraph(DrawTree tree, GraphicsContext gc, Canvas canvas) {
         for (DrawTree child : tree.getChildDrawTrees()) {
 
             gc.setLineWidth(2);
-            if(child.isDeadNode()) {gc.setStroke(Color.RED);}
-            gc.strokeOval(child.getX(), child.getY(), 8, 8);
+            if(child.isDeadNode()) {gc.setFill(Color.RED);}
+            gc.fillOval(child.getX(), child.getY(), 6, 6);
 
-            gc.setStroke(Color.WHITE);
+            gc.setFill(Color.WHITE);
             gc.setLineWidth(1);
             gc.strokeLine(tree.getX(), tree.getY(), child.getX(), child.getY());
 

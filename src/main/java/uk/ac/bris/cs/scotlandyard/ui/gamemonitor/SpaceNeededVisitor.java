@@ -12,7 +12,7 @@ public class SpaceNeededVisitor extends DrawTreeVisitor {
     public void visit(DrawTree tree) {
         int calc = 0;
 
-        if(!tree.isDeadNode()) {
+        if(!tree.getChildDrawTrees().isEmpty()) {
             for(DrawTree child : tree.getChildDrawTrees()) {
                 visit(child);
             }
@@ -25,9 +25,8 @@ public class SpaceNeededVisitor extends DrawTreeVisitor {
 
         }
         else {
-            tree.setSpaceNeeded(8); //px
+            tree.setSpaceNeeded(6); //px
         }
 
-        //if(calc != 0) System.out.println("setSpaceNeeded: " + calc);
     }
 }
