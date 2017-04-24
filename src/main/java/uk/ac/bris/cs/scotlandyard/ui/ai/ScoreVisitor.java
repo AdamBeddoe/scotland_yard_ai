@@ -16,13 +16,12 @@ public class ScoreVisitor extends TreeVisitor {
         if (tree.isMrXRound()) {
             int bestScore = Integer.MIN_VALUE;
             for (GameTree childTree : tree.getChildTrees()) {
-                if (!childTree.isDeadNode()) visit(childTree); // vs childTree.accept(this) should be consistent with other visitors
+                if (!childTree.isDeadNode()) visit(childTree);
                 if (childTree.getScore() > bestScore) {
                     tree.setScore(childTree.getScore());
                     bestScore = childTree.getScore();
                 }
             }
-            //if (tree.getChildTrees().isEmpty()) System.out.println("Assigning score " + this.ai.scoreBoard(tree.getState()));
             if (tree.getChildTrees().isEmpty()) tree.setScore(this.ai.scoreBoard(tree.getState()));
         }
 
@@ -35,9 +34,7 @@ public class ScoreVisitor extends TreeVisitor {
                     worstScore = childTree.getScore();
                 }
             }
-            //if (tree.getChildTrees().isEmpty()) System.out.println("Assigning score (detective) " + this.ai.scoreBoard(tree.getState()));
             if (tree.getChildTrees().isEmpty()) tree.setScore(this.ai.scoreBoard(tree.getState()));
         }
-        //System.out.println("                      Visiting");
     }
 }

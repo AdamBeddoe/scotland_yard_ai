@@ -1,6 +1,5 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
-import org.apache.commons.lang3.ObjectUtils;
 import uk.ac.bris.cs.scotlandyard.model.Move;
 
 import java.util.ArrayList;

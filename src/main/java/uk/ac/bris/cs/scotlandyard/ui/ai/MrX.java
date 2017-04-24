@@ -1,13 +1,10 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
-import javafx.scene.layout.Pane;
-import sun.java2d.Surface;
-import uk.ac.bris.cs.scotlandyard.ai.*;
+
 import uk.ac.bris.cs.scotlandyard.model.Colour;
 import uk.ac.bris.cs.scotlandyard.model.Move;
 import uk.ac.bris.cs.scotlandyard.model.Player;
 import uk.ac.bris.cs.scotlandyard.model.ScotlandYardView;
-import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorModel;
 
 import java.util.Set;
 import java.util.function.Consumer;
@@ -30,7 +27,7 @@ public class MrX implements Player {
                          Consumer<Move> callback) {
         updateNodeHistory(view);
         this.builder.setStartState(new GameState(view,location));
-        this.builder.setLookAheadLevels(4);
+        this.builder.setLookAheadLevels(2);
         this.builder.setThreshold(100);
         this.builder.setAI(this.ai);
         this.builder.setMoves(moves);
@@ -54,10 +51,8 @@ public class MrX implements Player {
             if (currentTree.getScore() > highestScore) {
                 bestTree = currentTree;
                 highestScore = bestTree.getScore();
-                System.out.print("!! ");
             }
         }
-        System.out.println("\nBest score is " + highestScore);
         return tree.getMove(bestTree);
     }
 }

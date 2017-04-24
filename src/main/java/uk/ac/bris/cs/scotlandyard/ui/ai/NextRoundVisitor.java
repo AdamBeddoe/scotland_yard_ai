@@ -51,7 +51,7 @@ public class NextRoundVisitor extends TreeVisitor {
                     for (Set moveSet : combinedDetectiveMoves) {
                         this.moves = moveSet;
                         this.levels--;
-                        visit(childTree); // what is child tree?
+                        visit(childTree);
 
                     }
                 }

@@ -1,24 +1,11 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.function.Consumer;
 
-import javafx.geometry.*;
-import javafx.geometry.Insets;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.Label;
-import javafx.scene.layout.*;
-import javafx.scene.paint.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import uk.ac.bris.cs.gamekit.graph.Edge;
 import uk.ac.bris.cs.gamekit.graph.Graph;
@@ -38,31 +25,14 @@ import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
 public class MyAI implements PlayerFactory {
 
 	private final int graphDistances[][] = new int[200][200];
-	Visualiser visualiser;
-	MrX mrx;
-
-	//TODO take out of constructor
-	public MyAI() {
-		try {
-			Graph defaultGraph = ScotlandYardGraphReader.fromLines(Files.readAllLines(
-					Paths.get(MyAI.class.getResource("/game_graph.txt").toURI())));
-			for (int i = 1; i < 200; i++) {
-				for (int j = 1; j < 200; j++) {
-					this.graphDistances[i][j] = dijkstra(defaultGraph,i,j);
-				}
-			}
-		} catch (IOException | URISyntaxException e) {
-			throw new RuntimeException(e);
-		}
-
-
-	}
+	private Visualiser visualiser;
+	private MrX mrX;
 
 	@Override
 	public Player createPlayer(Colour colour) {
 
 		if (colour.isMrX()) {
-			return this.mrx;
+			return this.mrX;
 		}
 		else {
 			Stage stage = (Stage) visualiser.surface().getScene().getWindow();
@@ -104,7 +74,6 @@ public class MyAI implements PlayerFactory {
 		distances[src] = 0;
 		int current = src;
 
-
 		while (current != dest) {
 			checked[current] = true;
 			Collection<Edge> edgesOut = graph.getEdgesFrom(new Node(current));
@@ -134,15 +103,28 @@ public class MyAI implements PlayerFactory {
 	}
 
 	public void ready(Visualiser visualiser, ResourceProvider provider) {
-		this.mrx = new MrX(this);
+		preCalculateDistances();
 
-
+		this.mrX = new MrX(this);
 		this.visualiser = visualiser;
 		GameMonitorView view = new GameMonitorView(visualiser);
 		GameMonitorModel model = new GameMonitorModel(view);
-		this.mrx.builder.registerObserver(model);
+		this.mrX.builder.registerObserver(model);
 	}
 
 
+	private void preCalculateDistances() {
+		try {
+			Graph defaultGraph = ScotlandYardGraphReader.fromLines(Files.readAllLines(
+					Paths.get(MyAI.class.getResource("/game_graph.txt").toURI())));
+			for (int i = 1; i < 200; i++) {
+				for (int j = 1; j < 200; j++) {
+					this.graphDistances[i][j] = dijkstra(defaultGraph,i,j);
+				}
+			}
+		} catch (IOException | URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
 
