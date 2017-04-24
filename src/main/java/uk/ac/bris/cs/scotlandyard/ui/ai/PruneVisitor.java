@@ -15,7 +15,10 @@ public class PruneVisitor extends TreeVisitor {
     public void visit(GameTree tree) {
         for (GameTree childTree : tree.getChildTrees()) {
             if (!childTree.isDeadNode()) visit(childTree);
-            if (childTree.getScore() < threshold) childTree.isDeadNode(true);
+            if (childTree.getScore() < threshold) {
+                childTree.isDeadNode(true);
+                childTree.removeChildren();
+            }
         }
     }
 }
