@@ -1,7 +1,7 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
+import org.apache.commons.lang3.ObjectUtils;
 import uk.ac.bris.cs.scotlandyard.model.Move;
-import uk.ac.bris.cs.scotlandyard.model.Spectator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +17,7 @@ public class GameTreeBuilder {
     private Set<Move> moves;
     private MyAI AI;
     private List<TreeBuilderObserver> observers = new ArrayList<>();
-
-
+    private int threshold;
 
     public GameTreeBuilder(boolean playerIsMrX) {
         this.playerIsMrX = playerIsMrX;
@@ -44,6 +43,10 @@ public class GameTreeBuilder {
         this.moves = moves;
     }
 
+    public void setThreshold(int threshold) {
+        this.threshold = threshold;
+    }
+
     public void setAI(MyAI myAI) {
         this.AI = myAI;
     }
@@ -62,7 +65,7 @@ public class GameTreeBuilder {
             tree.accept(nick);
             notifyLoop(observer -> observer.onScoreVisitorComplete());
 
-            PruneVisitor bigPrune = new PruneVisitor(100);
+            PruneVisitor bigPrune = new PruneVisitor(this.threshold);
             tree.accept(bigPrune);
             notifyLoop(observer -> observer.onBigPruneComplete());
         }

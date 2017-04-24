@@ -29,6 +29,10 @@ public class GameTree {
         this.childMoves.add(move);
     }
 
+    public void removeChildren() {
+        this.childTrees.clear();
+    }
+
     public boolean isMrXRound() {
         return this.isMrXRound;
     }
@@ -37,8 +41,16 @@ public class GameTree {
         return this.childTrees;
     }
 
+    public List<Move> getMoves() {
+        return childMoves;
+    }
+
     public Move getMove(GameTree tree) {
         return childMoves.get(childTrees.indexOf(tree));
+    }
+
+    public GameTree getTree(Move move) {
+        return childTrees.get(childMoves.indexOf(move));
     }
 
     public void setScore(int score) {
