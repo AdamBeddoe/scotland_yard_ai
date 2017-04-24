@@ -160,9 +160,17 @@ public class GameMonitorView {
         rightB.setMinWidth(100);
         rightB.setLayoutX(100);
         rightB.setText("Right");
+        Button zoomOut = new Button();
+        zoomOut.setLayoutX(200);
+        zoomOut.setMinWidth(20);
+        zoomOut.setText("-");
+        Button zoomIn = new Button();
+        zoomIn.setLayoutX(220);
+        zoomIn.setMinWidth(20);
+        zoomIn.setText("+");
 
         Pane pane = new Pane();
-        pane.getChildren().addAll(leftB, rightB);
+        pane.getChildren().addAll(leftB, rightB, zoomOut, zoomIn);
         bp.setTop(pane);
 
         this.dt = new DrawTree(tree, (int) canvas.getWidth()/2, 100);
@@ -203,6 +211,20 @@ public class GameMonitorView {
                 gc.setFill(Color.web("#2a2a2a"));
                 gc.fillRect( 0, 0, canvas.getWidth(), canvas.getHeight());
                 drawTreeFromGraph(dt, gc, canvas);
+            }
+        });
+
+        zoomOut.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
+            @Override
+            public void handle(javafx.event.ActionEvent event) {
+                gc.scale(0.5, 0.5);
+            }
+        });
+
+        zoomIn.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
+            @Override
+            public void handle(javafx.event.ActionEvent event) {
+                gc.scale(2, 2);
             }
         });
     }
