@@ -62,7 +62,7 @@ public class GameTreeBuilder {
             notifyLoop(observer -> observer.onScoreVisitorComplete());
 
             PruneVisitor bigPrune = new PruneVisitor();
-            bigPrune.setThreshold(100);
+            bigPrune.setThreshold(this.threshold);
             tree.accept(bigPrune);
             notifyLoop(observer -> observer.onBigPruneComplete());
         }

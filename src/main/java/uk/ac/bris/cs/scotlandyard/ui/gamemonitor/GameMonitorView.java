@@ -53,6 +53,7 @@ public class GameMonitorView {
     private int originX;
     private int windowX = 1400;
     private int windowY = 850;
+    private int tabNumber = 0;
 
     public GameMonitorView(Visualiser visualiser) {
         this.visualiser = visualiser;
@@ -84,6 +85,9 @@ public class GameMonitorView {
             tab.setContent(hbox);
             tabPane.getTabs().add(tab);
         }
+
+        TabPane treeTabs = new TabPane();
+        tabPane.getTabs().get(0).setContent(treeTabs);
 
         borderPane.prefHeightProperty().bind(scene.heightProperty());
         borderPane.prefWidthProperty().bind(scene.widthProperty());
@@ -156,7 +160,13 @@ public class GameMonitorView {
     }
 
     public void drawTree(GameTree tree) {
-        Tab tab = returnTab(0);
+        Tab mainTab = returnTab(0);
+        TabPane tabs = (TabPane) mainTab.getContent();
+        Tab tab = new Tab();
+        tabNumber++;
+        tab.setText(Integer.toString(tabNumber));
+        Platform.runLater(() -> tabs.getTabs().add(tab));
+
         BorderPane bp = new BorderPane();
         ScrollPane sp = new ScrollPane();
         Canvas canvas = new Canvas(5000, 5000);
@@ -314,7 +324,6 @@ public class GameMonitorView {
     }
 
     private void highlightChosenMoves(DrawTree tree, GraphicsContext gc) {
-        //DrawTree highest = new DrawTree(new GameTree());
         int highestScore = 0;
         DrawTree highestNode = null;
 
@@ -331,7 +340,6 @@ public class GameMonitorView {
 
             gc.setFill(Color.GREEN);
             gc.fillOval(highestNode.getX(), highestNode.getY(), 6, 6);
-            System.out.println("green");
 
             highlightChosenMoves(highestNode, gc);
         }

@@ -1,6 +1,7 @@
 package uk.ac.bris.cs.scotlandyard.ui.gamemonitor;
 
 
+import javafx.application.Platform;
 import uk.ac.bris.cs.scotlandyard.ui.ai.GameTree;
 import uk.ac.bris.cs.scotlandyard.ui.ai.TreeBuilderObserver;
 
@@ -47,6 +48,6 @@ public class GameMonitorModel implements TreeBuilderObserver {
         long treeFinishTime = (this.treeBuildFinishTime - this.pruneTime)/1000000;
 
         view.treeFinishTime(treeFinishTime);
-        view.drawTree(tree);
+        Platform.runLater(() -> view.drawTree(tree));
     }
 }

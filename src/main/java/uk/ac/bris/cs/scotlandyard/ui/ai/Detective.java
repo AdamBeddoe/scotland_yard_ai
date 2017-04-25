@@ -35,7 +35,7 @@ public class Detective implements Player {
         else {
             this.builder.setStartState(new GameState(view,location));
             this.builder.setLookAheadLevels(2);
-            this.builder.setThreshold(100);
+            //this.builder.setThreshold(100);
             this.builder.setMoves(moves);
 
             GameTree tree = this.builder.build();
