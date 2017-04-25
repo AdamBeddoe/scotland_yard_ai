@@ -14,12 +14,13 @@ public class GameTreeBuilder {
     private boolean playerIsMrX;
     private int levels;
     private Set<Move> moves;
-    private MyAI AI;
+    private Calculator calculator;
     private List<TreeBuilderObserver> observers = new ArrayList<>();
     private int threshold;
 
-    public GameTreeBuilder(boolean playerIsMrX) {
+    public GameTreeBuilder(boolean playerIsMrX, Calculator calculator) {
         this.playerIsMrX = playerIsMrX;
+        this.calculator = calculator;
     }
 
     public void registerObserver(TreeBuilderObserver observer) {
@@ -46,10 +47,6 @@ public class GameTreeBuilder {
         this.threshold = threshold;
     }
 
-    public void setAI(MyAI myAI) {
-        this.AI = myAI;
-    }
-
     public GameTree build() {
         notifyLoop(observer -> observer.onTreeBuildStart());
         GameTree tree = new GameTree(this.startState, this.playerIsMrX);
@@ -60,7 +57,7 @@ public class GameTreeBuilder {
             tree.accept(tilo);
             notifyLoop(observer -> observer.onNextRoundVisitorComplete());
 
-            ScoreVisitor nick = new ScoreVisitor(this.AI);
+            ScoreVisitor nick = new ScoreVisitor(this.calculator);
             tree.accept(nick);
             notifyLoop(observer -> observer.onScoreVisitorComplete());
 

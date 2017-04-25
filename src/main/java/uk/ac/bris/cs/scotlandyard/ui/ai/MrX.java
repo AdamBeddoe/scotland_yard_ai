@@ -14,22 +14,22 @@ import java.util.function.Consumer;
  * Created by Adam on 30/03/2017.
  */
 public class MrX implements Player {
-    private MyAI ai;
-    private int nodeHistory[] = new int[200];
-    public GameTreeBuilder builder = new GameTreeBuilder(true);
 
-    public MrX(MyAI ai) {
-        this.ai = ai;
+    public GameTreeBuilder builder;
+    public Calculator calculator;
+
+    public MrX(Calculator calculator) {
+        this.calculator = calculator;
+        this.builder = new GameTreeBuilder(true, this.calculator);
     }
 
     @Override
     public void makeMove(ScotlandYardView view, int location, Set<Move> moves,
                          Consumer<Move> callback) {
-        updateNodeHistory(view);
+        this.calculator.updateNodeHistory(view);
         this.builder.setStartState(new GameState(view,location));
         this.builder.setLookAheadLevels(2);
         this.builder.setThreshold(100);
-        this.builder.setAI(this.ai);
         this.builder.setMoves(moves);
 
         GameTree tree = this.builder.build();
@@ -38,14 +38,8 @@ public class MrX implements Player {
         callback.accept(bestMove);
     }
 
-    private void updateNodeHistory(ScotlandYardView view) {
-        for (Colour player : view.getPlayers()) {
-            this.nodeHistory[view.getPlayerLocation(player)]++;
-        }
-    }
-
     private Move selectMove(GameTree tree) {
-        int highestScore = 0;
+        int highestScore = Integer.MIN_VALUE;
         GameTree bestTree = tree.getChildTrees().get(0);
         for (GameTree currentTree : tree.getChildTrees()) {
             if (currentTree.getScore() > highestScore) {

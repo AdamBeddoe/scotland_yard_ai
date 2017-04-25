@@ -37,7 +37,10 @@ public class GameState implements MoveVisitor {
         }
 
         else {
-
+            for (Colour colour : view.getPlayers()) {
+                if (colour != Black) detectives.put(colour,view.getPlayerLocation(colour));
+            }
+            this.mrXLocation = view.getPlayerLocation(Black);
         }
     }
 
