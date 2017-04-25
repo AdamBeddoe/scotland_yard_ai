@@ -4,6 +4,7 @@ import uk.ac.bris.cs.gamekit.graph.Graph;
 import uk.ac.bris.cs.gamekit.graph.Node;
 import uk.ac.bris.cs.gamekit.graph.UndirectedGraph;
 import uk.ac.bris.cs.scotlandyard.model.*;
+import uk.ac.bris.cs.scotlandyard.ui.ai.Calculator;
 import uk.ac.bris.cs.scotlandyard.ui.ai.GameState;
 import uk.ac.bris.cs.scotlandyard.ui.ai.MyAI;
 
@@ -26,8 +27,8 @@ import static uk.ac.bris.cs.scotlandyard.model.Transport.Taxi;
  * Created by Adam on 30/03/2017.
  */
 public class scoreBoardTests extends AITestBase{
-    MyAI testAI = new MyAI();
-    MyAI flatAI = new FlatAI();
+    Calculator calculator = new Calculator();
+    Calculator flatCalculator = new FlatCalculator();
 
     @Test
     public void scoreValidReturnType() {
@@ -37,7 +38,7 @@ public class scoreBoardTests extends AITestBase{
         detectives.put(Blue, 20);
 
         GameState testState = new GameState(graph, detectives, 10);
-        assertThat(testAI.scoreBoard(testState), instanceOf (Integer.class));
+        assertThat(calculator.scoreBoard(testState), instanceOf (Integer.class));
     }
 
     @Test
@@ -48,7 +49,7 @@ public class scoreBoardTests extends AITestBase{
         detectives.put(Blue, 20);
 
         GameState testState = new GameState(graph, detectives, 20);
-        assertEquals(-1000, testAI.scoreBoard(testState));
+        assertEquals(-1000, calculator.scoreBoard(testState));
     }
 
     @Test
@@ -60,7 +61,7 @@ public class scoreBoardTests extends AITestBase{
         detectives.put(Red, 30);
 
         GameState testState = new GameState(graph, detectives, 20);
-        assertEquals(-1000, testAI.scoreBoard(testState));
+        assertEquals(-1000, calculator.scoreBoard(testState));
     }
 
     @Test
@@ -71,9 +72,9 @@ public class scoreBoardTests extends AITestBase{
 
         // Score should be 6 for each valid move
         GameState testState1 = new GameState(graph, detectives, 3);
-        assertEquals(6, testAI.scoreBoard(testState1));
+        assertEquals(6, calculator.scoreBoard(testState1));
         GameState testState2 = new GameState(graph, detectives, 4);
-        assertEquals(6, testAI.scoreBoard(testState2));
+        assertEquals(6, calculator.scoreBoard(testState2));
     }
 
     @Test
@@ -85,20 +86,20 @@ public class scoreBoardTests extends AITestBase{
 
         // Score should be 3 for valid moves + (1^2) away = 4
         GameState testState1 = new GameState(graph, detectives, 3);
-        assertEquals(4, flatAI.scoreBoard(testState1));
+        assertEquals(4, flatCalculator.scoreBoard(testState1));
         // Score should be -1000 as MrX is captured
         GameState testState2 = new GameState(graph, detectives, 4);
-        assertEquals(-1000, flatAI.scoreBoard(testState2));
+        assertEquals(-1000, flatCalculator.scoreBoard(testState2));
         // Score should be 4 for valid moves + (2^2) away = 8
         GameState testState3 = new GameState(graph, detectives, 2);
-        assertEquals(8, flatAI.scoreBoard(testState3));
+        assertEquals(8, flatCalculator.scoreBoard(testState3));
     }
 }
 
-class FlatAI extends MyAI {
+class FlatCalculator extends Calculator {
     int graphDistances[][] = new int[8][8];
 
-    public FlatAI() {
+    public FlatCalculator() {
         Graph<Integer,Transport> flatTaxiGraph = new UndirectedGraph();
         //TODO sort thing out
         flatTaxiGraph.addNode(new Node<>(1));
@@ -116,7 +117,7 @@ class FlatAI extends MyAI {
         flatTaxiGraph.addEdge(new Edge<Integer,Transport>(new Node(6), new Node<>(7),Taxi));
         for (int i = 1; i < 8; i++) {
             for (int j = 1; j < 8; j++) {
-                this.graphDistances[i][j] = dijkstra(flatTaxiGraph, i, j);
+                this.graphDistances[i][j] = Calculator.dijkstra(flatTaxiGraph, i, j);
             }
         }
     }

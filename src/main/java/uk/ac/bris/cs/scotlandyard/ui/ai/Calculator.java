@@ -23,9 +23,14 @@ public class Calculator {
 
     private final int graphDistances[][] = new int[200][200];
     private int nodeHistory[] = new int[200];
+    private boolean sneakyMode;
 
     public Calculator() {
         preCalculateDistances();
+    }
+
+    public void enableSneakyMode() {
+        this.sneakyMode = true;
     }
 
     public int scoreBoard(GameState state) {
@@ -39,7 +44,7 @@ public class Calculator {
             total = total + (Math.pow(distance, 2));
             if (distance == 0) captured = true;
         }
-
+        if (sneakyMode) total = total + (nodeHistory[state.getMrXLocation()]*10);
         if (captured) return -1000;
         else return (int) total;
     }
