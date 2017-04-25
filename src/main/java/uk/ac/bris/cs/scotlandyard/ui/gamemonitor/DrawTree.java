@@ -15,11 +15,13 @@ public class DrawTree {
     private int x;
     private int y;
     private int spaceNeeded;
+    private boolean isMrXRound;
 
     public DrawTree(GameTree tree) {
         this.deadNode = tree.isDeadNode();
         this.score = tree.getScore();
         this.spaceNeeded = tree.getChildTrees().size();
+        this.isMrXRound = tree.isMrXRound();
 
         for(GameTree child : tree.getChildTrees()) {
             this.childTrees.add(new DrawTree(child));
@@ -76,5 +78,9 @@ public class DrawTree {
 
     public int getY() {
         return this.y;
+    }
+
+    public boolean getIsMrXRound() {
+        return this.isMrXRound;
     }
 }
