@@ -1,6 +1,7 @@
 import org.junit.Test;
 import uk.ac.bris.cs.gamekit.graph.Graph;
 import uk.ac.bris.cs.scotlandyard.model.Player;
+import uk.ac.bris.cs.scotlandyard.ui.ai.Calculator;
 import uk.ac.bris.cs.scotlandyard.ui.ai.MyAI;
 
 import static org.junit.Assert.assertEquals;
@@ -15,11 +16,11 @@ public class dijkstraTests extends AITestBase{
     public void testStandardCaseDijkstra() {
         Graph graph = defaultGraph();
 
-        assertEquals(1, MyAI.dijkstra(graph, 69, 86));
-        assertEquals(4, MyAI.dijkstra(graph, 69, 129));
-        assertEquals(4, MyAI.dijkstra(graph, 1, 99));
-        assertEquals(8, MyAI.dijkstra(graph, 20, 30));
-        assertEquals(5, MyAI.dijkstra(graph, 1, 199));
+        assertEquals(1, Calculator.dijkstra(graph, 69, 86));
+        assertEquals(4, Calculator.dijkstra(graph, 69, 129));
+        assertEquals(4, Calculator.dijkstra(graph, 1, 99));
+        assertEquals(8, Calculator.dijkstra(graph, 20, 30));
+        assertEquals(5, Calculator.dijkstra(graph, 1, 199));
     }
 
     @Test
@@ -27,12 +28,12 @@ public class dijkstraTests extends AITestBase{
         Graph graph = defaultGraph();
 
         // First node
-        assertEquals(0, MyAI.dijkstra(graph, 1, 1));
+        assertEquals(0, Calculator.dijkstra(graph, 1, 1));
         // Random nodes
-        assertEquals(0, MyAI.dijkstra(graph, 3, 3));
-        assertEquals(0, MyAI.dijkstra(graph, 69, 69));
+        assertEquals(0, Calculator.dijkstra(graph, 3, 3));
+        assertEquals(0, Calculator.dijkstra(graph, 69, 69));
         // Last node
-        assertEquals(0, MyAI.dijkstra(graph, 199, 199));
+        assertEquals(0, Calculator.dijkstra(graph, 199, 199));
     }
 
 
@@ -40,11 +41,11 @@ public class dijkstraTests extends AITestBase{
     public void invalidNodeShouldThrow() {
         Graph graph = defaultGraph();
 
-        MyAI.dijkstra(graph, 199, 200);
-        MyAI.dijkstra(graph, 200, 199);
-        MyAI.dijkstra(graph, 0, 1);
-        MyAI.dijkstra(graph, 1, 0);
-        MyAI.dijkstra(graph, 1, -1);
-        MyAI.dijkstra(graph, -1, 1);
+        Calculator.dijkstra(graph, 199, 200);
+        Calculator.dijkstra(graph, 200, 199);
+        Calculator.dijkstra(graph, 0, 1);
+        Calculator.dijkstra(graph, 1, 0);
+        Calculator.dijkstra(graph, 1, -1);
+        Calculator.dijkstra(graph, -1, 1);
     }
 }

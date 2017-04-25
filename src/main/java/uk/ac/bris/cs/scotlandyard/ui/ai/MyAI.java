@@ -20,7 +20,6 @@ public class MyAI implements PlayerFactory {
 
 	@Override
 	public Player createPlayer(Colour colour) {
-
 		if (colour.isMrX()) {
 			return this.mrX;
 		}

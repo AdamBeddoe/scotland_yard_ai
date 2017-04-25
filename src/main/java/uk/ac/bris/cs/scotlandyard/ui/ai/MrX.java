@@ -1,7 +1,6 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
 
-import uk.ac.bris.cs.scotlandyard.model.Colour;
 import uk.ac.bris.cs.scotlandyard.model.Move;
 import uk.ac.bris.cs.scotlandyard.model.Player;
 import uk.ac.bris.cs.scotlandyard.model.ScotlandYardView;
@@ -20,6 +19,7 @@ public class MrX implements Player {
 
     public MrX(Calculator calculator) {
         this.calculator = calculator;
+        this.calculator.enableSneakyMode();
         this.builder = new GameTreeBuilder(true, this.calculator);
     }
 
