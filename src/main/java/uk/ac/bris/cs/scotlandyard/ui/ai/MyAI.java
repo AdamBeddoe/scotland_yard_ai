@@ -6,6 +6,7 @@ import uk.ac.bris.cs.scotlandyard.ai.PlayerFactory;
 import uk.ac.bris.cs.scotlandyard.ai.ResourceProvider;
 import uk.ac.bris.cs.scotlandyard.ai.Visualiser;
 import uk.ac.bris.cs.scotlandyard.model.*;
+import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorController;
 import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorModel;
 import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorView;
 
@@ -37,7 +38,8 @@ public class MyAI implements PlayerFactory {
 		this.mrX = new MrX(this.calculator);
 
 		this.visualiser = visualiser;
-		GameMonitorView view = new GameMonitorView(visualiser);
+		GameMonitorController controller = new GameMonitorController();
+		GameMonitorView view = new GameMonitorView(visualiser, controller);
 		GameMonitorModel model = new GameMonitorModel(view);
 		this.mrX.builder.registerObserver(model);
 	}

@@ -45,6 +45,7 @@ import java.util.*;
 public class GameMonitorView {
 
     private Visualiser visualiser;
+    private GameMonitorController controller;
     private Integer moveNum = 0;
     private XYChart.Series nextRoundSeries = new XYChart.Series();
     private XYChart.Series score = new XYChart.Series();
@@ -55,8 +56,9 @@ public class GameMonitorView {
     private int windowY = 850;
     private int tabNumber = 0;
 
-    public GameMonitorView(Visualiser visualiser) {
+    public GameMonitorView(Visualiser visualiser, GameMonitorController controller) {
         this.visualiser = visualiser;
+        this.controller = controller;
         Stage stage = (Stage) this.visualiser.surface().getScene().getWindow();
         stage.setResizable(false);
 
@@ -162,12 +164,7 @@ public class GameMonitorView {
     }
 
     public void drawTree(GameTree tree) {
-        Tab mainTab = returnTab(0);
-        TabPane tabs = (TabPane) mainTab.getContent();
-        Tab tab = new Tab();
-        tabNumber++;
-        tab.setText(Integer.toString(tabNumber));
-        Platform.runLater(() -> tabs.getTabs().add(tab));
+        Tab tab = drawTreeTab();
 
         BorderPane bp = new BorderPane();
         Canvas canvas = new Canvas(windowX, windowY);
@@ -176,24 +173,10 @@ public class GameMonitorView {
         gc.setFill(Color.web("#2a2a2a"));
         gc.fillRect( 0, 0, canvas.getWidth(), canvas.getHeight());
 
-        Button leftB = new Button();
-        leftB.setMinWidth(100);
-        leftB.setText("Left");
-
-        Button rightB = new Button();
-        rightB.setMinWidth(100);
-        rightB.setLayoutX(100);
-        rightB.setText("Right");
-
-        Button zoomOut = new Button();
-        zoomOut.setLayoutX(200);
-        zoomOut.setMinWidth(20);
-        zoomOut.setText("-");
-
-        Button zoomIn = new Button();
-        zoomIn.setLayoutX(220);
-        zoomIn.setMinWidth(20);
-        zoomIn.setText("+");
+        Button leftB = leftBSetup();
+        Button rightB = rightBSetup();
+        Button zoomOut = zoomOutSetup();
+        Button zoomIn = zoomInSetup();
 
         Label clickedNode = new Label("Clicked Node Score: ");
         clickedNode.setFont(new Font("Arial", 18));
@@ -205,13 +188,7 @@ public class GameMonitorView {
         pane.getChildren().addAll(leftB, rightB, zoomOut, zoomIn, clickedNode);
         bp.setTop(pane);
 
-        this.dt = new DrawTree(tree, (int) canvas.getWidth()/2, 100);
-
-        SpaceNeededVisitor Ian = new SpaceNeededVisitor();
-        XYVisitor Dave = new XYVisitor();
-
-        dt.accept(Ian);     //space needed
-        dt.accept(Dave);  //coordinates calculated
+        this.dt = initialiseDrawTree(tree, (int) canvas.getWidth()/2);
 
         gc.setStroke(Color.WHITE);
         gc.setLineWidth(2);
@@ -222,54 +199,78 @@ public class GameMonitorView {
 
         Platform.runLater(() -> tab.setContent(bp));
 
-        TransformVisitor leftV = new TransformVisitor(200);
-        TransformVisitor rightV = new TransformVisitor(-200);
-
-        leftB.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
-            @Override
-            public void handle(javafx.event.ActionEvent event) {
-                clearCanvas(canvas, gc);
-                dt.accept(leftV);
-                drawTreeFromGraph(dt, gc);
-            }
-        });
-
-        rightB.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
-            @Override
-            public void handle(javafx.event.ActionEvent event) {
-                clearCanvas(canvas, gc);
-                dt.accept(rightV);
-                drawTreeFromGraph(dt, gc);
-            }
-        });
-
-        zoomOut.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
-            @Override
-            public void handle(javafx.event.ActionEvent event) {
-                clearCanvas(canvas, gc);
-                gc.scale(0.5, 0.5);
-                drawTreeFromGraph(dt, gc);
-            }
-        });
-
-        zoomIn.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
-            @Override
-            public void handle(javafx.event.ActionEvent event) {
-                clearCanvas(canvas, gc);
-                gc.scale(2, 2);
-                drawTreeFromGraph(dt, gc);
-            }
-        });
-
-        canvas.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                findNodeOnClick(dt, (int) event.getX(), (int) event.getY(), clickedNode);
-            }
-        });
+        controller.viewAttributes(canvas, gc, dt, this);
+        controller.leftBHandlerInit(leftB);
+        controller.rightBHandlerInit(rightB);
+        controller.zoomInHandlerInit(zoomIn);
+        controller.zoomOutHandlerInit(zoomOut);
+        controller.mouseClickHandlerInit(clickedNode);
     }
 
-    private void findNodeOnClick(DrawTree tree, int x, int y, Label clickedNode) {
+    private Button leftBSetup() {
+        Button leftB = new Button();
+        leftB.setMinWidth(100);
+        leftB.setText("Left");
+
+        return leftB;
+    }
+
+    private Button rightBSetup() {
+        Button rightB = new Button();
+        rightB.setMinWidth(100);
+        rightB.setLayoutX(100);
+        rightB.setText("Right");
+
+        return rightB;
+    }
+
+    private Button zoomOutSetup() {
+        Button zoomOut = new Button();
+        zoomOut.setLayoutX(200);
+        zoomOut.setMinWidth(20);
+        zoomOut.setText("-");
+
+        return zoomOut;
+    }
+
+    private Button zoomInSetup() {
+        Button zoomIn = new Button();
+        zoomIn.setLayoutX(220);
+        zoomIn.setMinWidth(20);
+        zoomIn.setText("+");
+
+        return zoomIn;
+    }
+
+    public void clearCanvas(javafx.scene.canvas.Canvas canvas, GraphicsContext gc) {
+        gc.setFill(javafx.scene.paint.Color.web("#2a2a2a"));
+        gc.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
+    }
+
+    private Tab drawTreeTab() {
+        Tab mainTab = returnTab(0);
+        TabPane tabs = (TabPane) mainTab.getContent();
+        Tab tab = new Tab();
+        tabNumber++;
+        tab.setText(Integer.toString(tabNumber));
+        Platform.runLater(() -> tabs.getTabs().add(tab));
+
+        return tab;
+    }
+
+    private DrawTree initialiseDrawTree(GameTree tree, int x) {
+        DrawTree dt = new DrawTree(tree, x, 100);
+
+        SpaceNeededVisitor Ian = new SpaceNeededVisitor();
+        XYVisitor Dave = new XYVisitor();
+
+        dt.accept(Ian);     //space needed
+        dt.accept(Dave);  //coordinates calculated
+
+        return dt;
+    }
+
+    public void findNodeOnClick(DrawTree tree, int x, int y, Label clickedNode) {
         boolean located = false;
         int threshold = 5;
 
@@ -288,12 +289,7 @@ public class GameMonitorView {
         }
     }
 
-    private void clearCanvas(Canvas canvas, GraphicsContext gc) {
-        gc.setFill(Color.web("#2a2a2a"));
-        gc.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
-    }
-
-    private void drawTreeFromGraph(DrawTree tree, GraphicsContext gc) {
+    public void drawTreeFromGraph(DrawTree tree, GraphicsContext gc) {
         drawLines(tree, gc);
         drawCircles(tree, gc);
         highlightChosenMoves(tree, gc);
