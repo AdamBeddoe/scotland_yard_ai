@@ -18,15 +18,22 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
 import uk.ac.bris.cs.scotlandyard.ai.Visualiser;
 import uk.ac.bris.cs.scotlandyard.ui.ai.GameTree;
 
 import javax.swing.*;
 import javax.swing.text.Element;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.EventHandler;
 import java.util.*;
@@ -162,21 +169,30 @@ public class GameMonitorView {
         Button leftB = new Button();
         leftB.setMinWidth(100);
         leftB.setText("Left");
+
         Button rightB = new Button();
         rightB.setMinWidth(100);
         rightB.setLayoutX(100);
         rightB.setText("Right");
+
         Button zoomOut = new Button();
         zoomOut.setLayoutX(200);
         zoomOut.setMinWidth(20);
         zoomOut.setText("-");
+
         Button zoomIn = new Button();
         zoomIn.setLayoutX(220);
         zoomIn.setMinWidth(20);
         zoomIn.setText("+");
 
+        Label clickedNode = new Label("Clicked Node Score: ");
+        clickedNode.setFont(new Font("Arial", 18));
+        clickedNode.setLayoutX(250);
+        clickedNode.setLayoutY(4);
+        clickedNode.setTextFill(Color.WHITE);
+
         Pane pane = new Pane();
-        pane.getChildren().addAll(leftB, rightB, zoomOut, zoomIn);
+        pane.getChildren().addAll(leftB, rightB, zoomOut, zoomIn, clickedNode);
         bp.setTop(pane);
 
         this.dt = new DrawTree(tree, (int) canvas.getWidth()/2, 100);
@@ -192,7 +208,7 @@ public class GameMonitorView {
         gc.strokeOval(dt.getX(), dt.getY(), 8 , 8);
 
         gc.setFill(Color.WHITE);
-        drawTreeFromGraph(dt, gc, canvas);
+        drawTreeFromGraph(dt, gc, canvas, bp);
 
         Platform.runLater(() -> tab.setContent(bp));
         Platform.runLater(() -> sp.setContent(canvas));
@@ -205,7 +221,7 @@ public class GameMonitorView {
             public void handle(javafx.event.ActionEvent event) {
                 clearCanvas(canvas, gc);
                 dt.accept(leftV);
-                drawTreeFromGraph(dt, gc, canvas);
+                drawTreeFromGraph(dt, gc, canvas, bp);
             }
         });
 
@@ -214,7 +230,7 @@ public class GameMonitorView {
             public void handle(javafx.event.ActionEvent event) {
                 clearCanvas(canvas, gc);
                 dt.accept(rightV);
-                drawTreeFromGraph(dt, gc, canvas);
+                drawTreeFromGraph(dt, gc, canvas, bp);
             }
         });
 
@@ -223,7 +239,7 @@ public class GameMonitorView {
             public void handle(javafx.event.ActionEvent event) {
                 clearCanvas(canvas, gc);
                 gc.scale(0.5, 0.5);
-                drawTreeFromGraph(dt, gc, canvas);
+                drawTreeFromGraph(dt, gc, canvas, bp);
             }
         });
 
@@ -232,9 +248,35 @@ public class GameMonitorView {
             public void handle(javafx.event.ActionEvent event) {
                 clearCanvas(canvas, gc);
                 gc.scale(2, 2);
-                drawTreeFromGraph(dt, gc, canvas);
+                drawTreeFromGraph(dt, gc, canvas, bp);
             }
         });
+
+        canvas.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                findNodeOnClick(dt, (int) event.getX(), (int) event.getY(), clickedNode);
+            }
+        });
+    }
+
+    private void findNodeOnClick(DrawTree tree, int x, int y, Label clickedNode) {
+        boolean located = false;
+        int threshold = 5;
+
+        for (DrawTree child : tree.getChildDrawTrees()) {
+            if (x > child.getX()-threshold && x < child.getX()+threshold) {
+                if (y < child.getY()+threshold && y > child.getY()-threshold) {
+                    located = true;
+                }
+            }
+
+            if(located) {
+                located = false;
+                clickedNode.setText("Clicked Node Score: " + child.getScore());
+            }
+            else findNodeOnClick(child, x, y, clickedNode);
+        }
     }
 
     private void clearCanvas(Canvas canvas, GraphicsContext gc) {
@@ -242,7 +284,7 @@ public class GameMonitorView {
         gc.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
     }
 
-    private void drawTreeFromGraph(DrawTree tree, GraphicsContext gc, Canvas canvas) {
+    private void drawTreeFromGraph(DrawTree tree, GraphicsContext gc, Canvas canvas, BorderPane bp) {
         for (DrawTree child : tree.getChildDrawTrees()) {
 
             gc.setFill(Color.WHITE);
@@ -253,7 +295,7 @@ public class GameMonitorView {
             if(child.isDeadNode()) {gc.setFill(Color.RED);}
             gc.fillOval(child.getX(), child.getY(), 6, 6);
 
-            drawTreeFromGraph(child, gc, canvas);
+            drawTreeFromGraph(child, gc, canvas, bp);
         }
     }
 }
