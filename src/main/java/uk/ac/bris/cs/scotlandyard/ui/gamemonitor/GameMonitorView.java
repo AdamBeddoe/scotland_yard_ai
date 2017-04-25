@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -28,10 +29,7 @@ import javax.swing.*;
 import javax.swing.text.Element;
 import java.awt.event.ActionEvent;
 import java.beans.EventHandler;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Adam on 18/04/2017.
@@ -98,7 +96,14 @@ public class GameMonitorView {
         yAxis.setLabel("Time (ms)");
 
         ScatterChart<Number, Number> chart = new ScatterChart<Number, Number>(xAxis, yAxis);
-        chart.setTitle("Calculation Time Again...");
+        chart.setTitle("Graph Visitor Timing");
+
+        Set<Node> axisNode = chart.lookupAll(".axis-label");
+        for(final Node axis : axisNode) {
+            axis.setStyle("-fx-text-fill: white;");
+        }
+        Node title = chart.lookup(".chart-title");
+        title.setStyle("-fx-text-fill: white;");
 
         nextRoundSeries.setName("nextRound");
         score.setName("score");
@@ -106,7 +111,6 @@ public class GameMonitorView {
         treeFinish.setName("treeFinish");
 
         chart.getData().addAll(nextRoundSeries, score, prune, treeFinish);
-        //chart.setStyle("-fx-font-color: white;");         TODO Graph text colour :/
         tab.setContent(chart);
     }
 
