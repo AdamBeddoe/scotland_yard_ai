@@ -208,7 +208,7 @@ public class GameMonitorView {
         gc.strokeOval(dt.getX(), dt.getY(), 8 , 8);
 
         gc.setFill(Color.WHITE);
-        drawTreeFromGraph(dt, gc, canvas, bp);
+        drawTreeFromGraph(dt, gc);
 
         Platform.runLater(() -> tab.setContent(bp));
         Platform.runLater(() -> sp.setContent(canvas));
@@ -221,7 +221,7 @@ public class GameMonitorView {
             public void handle(javafx.event.ActionEvent event) {
                 clearCanvas(canvas, gc);
                 dt.accept(leftV);
-                drawTreeFromGraph(dt, gc, canvas, bp);
+                drawTreeFromGraph(dt, gc);
             }
         });
 
@@ -230,7 +230,7 @@ public class GameMonitorView {
             public void handle(javafx.event.ActionEvent event) {
                 clearCanvas(canvas, gc);
                 dt.accept(rightV);
-                drawTreeFromGraph(dt, gc, canvas, bp);
+                drawTreeFromGraph(dt, gc);
             }
         });
 
@@ -239,7 +239,7 @@ public class GameMonitorView {
             public void handle(javafx.event.ActionEvent event) {
                 clearCanvas(canvas, gc);
                 gc.scale(0.5, 0.5);
-                drawTreeFromGraph(dt, gc, canvas, bp);
+                drawTreeFromGraph(dt, gc);
             }
         });
 
@@ -248,7 +248,7 @@ public class GameMonitorView {
             public void handle(javafx.event.ActionEvent event) {
                 clearCanvas(canvas, gc);
                 gc.scale(2, 2);
-                drawTreeFromGraph(dt, gc, canvas, bp);
+                drawTreeFromGraph(dt, gc);
             }
         });
 
@@ -284,23 +284,24 @@ public class GameMonitorView {
         gc.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
     }
 
-    private void drawTreeFromGraph(DrawTree tree, GraphicsContext gc, Canvas canvas, BorderPane bp) {
-        drawLines(tree, gc, canvas, bp);
-        drawCircles(tree, gc, canvas, bp);
+    private void drawTreeFromGraph(DrawTree tree, GraphicsContext gc) {
+        drawLines(tree, gc);
+        drawCircles(tree, gc);
+        highlightChosenMoves(tree, gc);
     }
 
-    private void drawCircles(DrawTree tree, GraphicsContext gc, Canvas canvas, BorderPane bp) {
+    private void drawCircles(DrawTree tree, GraphicsContext gc) {
         for (DrawTree child : tree.getChildDrawTrees()) {
             gc.setLineWidth(2);
             if(child.isDeadNode()) {gc.setFill(Color.RED);}
             else {gc.setFill(Color.WHITE);}
             gc.fillOval(child.getX(), child.getY(), 6, 6);
 
-            drawCircles(child, gc, canvas, bp);
+            drawCircles(child, gc);
         }
     }
 
-    private void drawLines(DrawTree tree, GraphicsContext gc, Canvas canvas, BorderPane bp) {
+    private void drawLines(DrawTree tree, GraphicsContext gc) {
         for (DrawTree child : tree.getChildDrawTrees()) {
 
             if(!child.getIsMrXRound()) {gc.setStroke(Color.BLUE);}
@@ -308,7 +309,31 @@ public class GameMonitorView {
             gc.setLineWidth(1);
             gc.strokeLine(tree.getX()+3, tree.getY()+3, child.getX()+3, child.getY()+3);
 
-            drawLines(child, gc, canvas, bp);
+            drawLines(child, gc);
+        }
+    }
+
+    private void highlightChosenMoves(DrawTree tree, GraphicsContext gc) {
+        //DrawTree highest = new DrawTree(new GameTree());
+        int highestScore = 0;
+        DrawTree highestNode = null;
+
+        for (DrawTree child : tree.getChildDrawTrees()) {
+            if(child.getScore() > highestScore) {
+                highestScore = child.getScore();
+                highestNode = child;
+            }
+        }
+
+        if(highestNode != null) {
+            gc.setStroke(Color.GREEN);
+            gc.strokeLine(tree.getX()+3, tree.getY()+3, highestNode.getX()+3, highestNode.getY()+3);
+
+            gc.setFill(Color.GREEN);
+            gc.fillOval(highestNode.getX(), highestNode.getY(), 6, 6);
+            System.out.println("green");
+
+            highlightChosenMoves(highestNode, gc);
         }
     }
 }
