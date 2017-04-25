@@ -169,7 +169,7 @@ public class GameMonitorView {
 
         BorderPane bp = new BorderPane();
         ScrollPane sp = new ScrollPane();
-        Canvas canvas = new Canvas(5000, 5000);
+        Canvas canvas = new Canvas(2000, 2000);
         bp.setCenter(sp);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.web("#2a2a2a"));
