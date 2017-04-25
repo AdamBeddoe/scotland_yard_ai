@@ -18,10 +18,11 @@ public class Detective implements Player {
 
     private Calculator calculator;
     private final Random random = new Random();
-    public GameTreeBuilder builder = new GameTreeBuilder(false, calculator);
+    public GameTreeBuilder builder;
 
     public Detective(Calculator calculator) {
         this.calculator = calculator;
+        this.builder = new GameTreeBuilder(true, this.calculator);
     }
 
     @Override
