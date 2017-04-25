@@ -16,12 +16,12 @@ import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
  */
 public class Detective implements Player {
 
-    private MyAI ai;
+    private Calculator calculator;
     private final Random random = new Random();
-    public GameTreeBuilder builder = new GameTreeBuilder(false);
+    public GameTreeBuilder builder = new GameTreeBuilder(false, calculator);
 
-    public Detective(MyAI ai) {
-        this.ai = ai;
+    public Detective(Calculator calculator) {
+        this.calculator = calculator;
     }
 
     @Override
@@ -35,7 +35,6 @@ public class Detective implements Player {
             this.builder.setStartState(new GameState(view,location));
             this.builder.setLookAheadLevels(2);
             this.builder.setThreshold(100);
-            this.builder.setAI(this.ai);
             this.builder.setMoves(moves);
 
             GameTree tree = this.builder.build();

@@ -6,10 +6,10 @@ package uk.ac.bris.cs.scotlandyard.ui.ai;
  */
 public class ScoreVisitor extends TreeVisitor {
 
-    private MyAI ai;
+    private Calculator calculator;
 
-    public ScoreVisitor(MyAI ai) {
-        this.ai = ai;
+    public ScoreVisitor(Calculator calculator) {
+        this.calculator = calculator;
     }
 
     public void visit(GameTree tree) {
@@ -22,7 +22,7 @@ public class ScoreVisitor extends TreeVisitor {
                     bestScore = childTree.getScore();
                 }
             }
-            if (tree.getChildTrees().isEmpty()) tree.setScore(this.ai.scoreBoard(tree.getState()));
+            if (tree.getChildTrees().isEmpty()) tree.setScore(this.calculator.scoreBoard(tree.getState()));
         }
 
         else {
@@ -34,7 +34,7 @@ public class ScoreVisitor extends TreeVisitor {
                     worstScore = childTree.getScore();
                 }
             }
-            if (tree.getChildTrees().isEmpty()) tree.setScore(this.ai.scoreBoard(tree.getState()));
+            if (tree.getChildTrees().isEmpty()) tree.setScore(this.calculator.scoreBoard(tree.getState()));
         }
     }
 }

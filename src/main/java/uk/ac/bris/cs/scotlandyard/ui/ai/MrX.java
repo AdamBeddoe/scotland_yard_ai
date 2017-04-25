@@ -15,34 +15,27 @@ import java.util.function.Consumer;
  */
 public class MrX implements Player {
 
-    private MyAI ai;
-    private int nodeHistory[] = new int[200];
-    public GameTreeBuilder builder = new GameTreeBuilder(true);
+    public GameTreeBuilder builder;
+    public Calculator calculator;
 
-    public MrX(MyAI ai) {
-        this.ai = ai;
+    public MrX(Calculator calculator) {
+        this.calculator = calculator;
+        this.builder = new GameTreeBuilder(true, this.calculator);
     }
 
     @Override
     public void makeMove(ScotlandYardView view, int location, Set<Move> moves,
                          Consumer<Move> callback) {
-        updateNodeHistory(view);
+        this.calculator.updateNodeHistory(view);
         this.builder.setStartState(new GameState(view,location));
         this.builder.setLookAheadLevels(2);
         this.builder.setThreshold(100);
-        this.builder.setAI(this.ai);
         this.builder.setMoves(moves);
 
         GameTree tree = this.builder.build();
         Move bestMove = selectMove(tree);
 
         callback.accept(bestMove);
-    }
-
-    private void updateNodeHistory(ScotlandYardView view) {
-        for (Colour player : view.getPlayers()) {
-            this.nodeHistory[view.getPlayerLocation(player)]++;
-        }
     }
 
     private Move selectMove(GameTree tree) {
