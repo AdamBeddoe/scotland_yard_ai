@@ -14,6 +14,7 @@ import java.util.function.Consumer;
  * Created by Adam on 30/03/2017.
  */
 public class MrX implements Player {
+
     private MyAI ai;
     private int nodeHistory[] = new int[200];
     public GameTreeBuilder builder = new GameTreeBuilder(true);
@@ -45,7 +46,7 @@ public class MrX implements Player {
     }
 
     private Move selectMove(GameTree tree) {
-        int highestScore = 0;
+        int highestScore = Integer.MIN_VALUE;
         GameTree bestTree = tree.getChildTrees().get(0);
         for (GameTree currentTree : tree.getChildTrees()) {
             if (currentTree.getScore() > highestScore) {

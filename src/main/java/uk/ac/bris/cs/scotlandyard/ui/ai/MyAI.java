@@ -38,7 +38,7 @@ public class MyAI implements PlayerFactory {
 			Stage stage = (Stage) visualiser.surface().getScene().getWindow();
 			stage.close();
 
-			return new Detective();
+			return new Detective(this);
 		}
 	}
 

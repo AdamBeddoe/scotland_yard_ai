@@ -37,7 +37,10 @@ public class GameState implements MoveVisitor {
         }
 
         else {
-
+            for (Colour colour : view.getPlayers()) {
+                if (colour != Black) detectives.put(colour,view.getPlayerLocation(colour));
+            }
+            this.mrXLocation = view.getPlayerLocation(Black);
         }
     }
 
@@ -73,6 +76,10 @@ public class GameState implements MoveVisitor {
         Collection<Edge<Integer,Transport>> edgesFrom;
         Set<Move> validMoves = new HashSet<>();
 
+        System.out.println();
+        System.out.println(mrXLocation);
+        System.out.println(graph.getNode(mrXLocation));
+        System.out.println(this.graph.getEdgesFrom(graph.getNode(mrXLocation)));
         if (colour.isMrX()) edgesFrom = this.graph.getEdgesFrom(graph.getNode(mrXLocation));
         else edgesFrom = this.graph.getEdgesFrom(graph.getNode(detectives.get(colour)));
 
