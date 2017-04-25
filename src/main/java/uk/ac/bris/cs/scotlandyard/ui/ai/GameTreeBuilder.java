@@ -17,6 +17,11 @@ public class GameTreeBuilder {
     private Calculator calculator;
     private List<TreeBuilderObserver> observers = new ArrayList<>();
     private int threshold;
+    private boolean isUsingThreshold;
+    private int maxMrXMoves;
+    private boolean isUsingMaxMrXMoves;
+    private int maxDetectiveMoves;
+    private boolean isUsingMaxDetectiveMoves;
 
     public GameTreeBuilder(boolean playerIsMrX, Calculator calculator) {
         this.playerIsMrX = playerIsMrX;
@@ -44,7 +49,18 @@ public class GameTreeBuilder {
     }
 
     public void setThreshold(int threshold) {
+        this.isUsingThreshold = true;
         this.threshold = threshold;
+    }
+
+    public void setMaxMrXMoves(int max) {
+        this.isUsingMaxMrXMoves = true;
+        this.maxMrXMoves = max;
+    }
+
+    public void setMaxDetectiveMoves(int max) {
+        this.isUsingMaxDetectiveMoves = true;
+        this.maxDetectiveMoves = max;
     }
 
     public GameTree build() {
@@ -62,7 +78,9 @@ public class GameTreeBuilder {
             notifyLoop(observer -> observer.onScoreVisitorComplete());
 
             PruneVisitor bigPrune = new PruneVisitor();
-            bigPrune.setThreshold(this.threshold);
+            if (this.isUsingMaxDetectiveMoves) bigPrune.setMaxDetectiveMoves(this.maxDetectiveMoves);
+            if (this.isUsingMaxMrXMoves) bigPrune.setMaxDetectiveMoves(this.maxMrXMoves);
+            if (this.isUsingThreshold) bigPrune.setMaxDetectiveMoves(this.threshold);
             tree.accept(bigPrune);
             notifyLoop(observer -> observer.onBigPruneComplete());
         }

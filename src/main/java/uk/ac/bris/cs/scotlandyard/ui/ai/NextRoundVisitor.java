@@ -57,7 +57,6 @@ public class NextRoundVisitor extends TreeVisitor {
                 }
             }
         }
-
         this.levels++;
     }
 

@@ -1,6 +1,7 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -9,14 +10,14 @@ import java.util.List;
 public class PruneVisitor extends TreeVisitor {
 
     private int threshold = -1;
-    private boolean isUsingThreashold;
+    private boolean isUsingThreshold;
     private int maxMrXMoves = -1;
     private boolean isUsingMaxMrXMoves;
     private int maxDetectiveMoves = -1;
     private boolean isUsingMaxDetectiveMoves;
 
     public void setThreshold(int threshold) {
-        this.isUsingThreashold = true;
+        this.isUsingThreshold = true;
         this.threshold = threshold;
     }
 
@@ -33,8 +34,8 @@ public class PruneVisitor extends TreeVisitor {
     @Override
     public void visit(GameTree tree) {
         if (this.isUsingMaxDetectiveMoves && !tree.isMrXRound()) maxDetectiveMovePrune(tree);
-        if (this.isUsingMaxMrXMoves) maxMrXMovePrune(tree);
-        if (this.isUsingThreashold) thresholdPrune(tree);
+        if (this.isUsingMaxMrXMoves && tree.isMrXRound()) maxMrXMovePrune(tree);
+        if (this.isUsingThreshold) thresholdPrune(tree);
 
         for (GameTree childTree : tree.getChildTrees()) {
             if (!childTree.isDeadNode()) visit(childTree);
@@ -49,18 +50,27 @@ public class PruneVisitor extends TreeVisitor {
     }
 
     private void maxDetectiveMovePrune(GameTree tree) {
-        int lowestInList = Integer.MAX_VALUE;
-        List<GameTree> bestTrees = new ArrayList<>();
-        if (tree.getScore() < lowestInList && bestTrees.size() < this.maxDetectiveMoves) {
-            bestTrees.add(tree);
-            lowestInList = tree.getScore();
-        }
-        else if (tree.getScore() < lowestInList && bestTrees.size() < this.maxDetectiveMoves) {
-
+        List<GameTree> allTrees = tree.getChildTrees();
+        allTrees.sort(Comparator.comparing(GameTree::getScore));
+        List<GameTree> worstTrees;
+        System.out.println("all " + allTrees.size());
+        if (this.maxDetectiveMoves > allTrees.size()) worstTrees = allTrees;
+        else worstTrees = allTrees.subList(0, this.maxDetectiveMoves);
+        System.out.println("worst" + worstTrees.size());
+        for (GameTree childTree : tree.getChildTrees()) {
+            if (!worstTrees.contains(childTree)) childTree.isDeadNode(true);
         }
     }
 
     private void maxMrXMovePrune(GameTree tree) {
+        List<GameTree> allTrees = tree.getChildTrees();
+        allTrees.sort(Comparator.comparing(GameTree::getScore));
+        List<GameTree> bestTrees;
+        if (this.maxMrXMoves > allTrees.size()) bestTrees = allTrees;
+        else bestTrees = allTrees.subList(allTrees.size()-this.maxMrXMoves, allTrees.size());
 
+        for (GameTree childTree : tree.getChildTrees()) {
+            if (!bestTrees.contains(childTree)) childTree.isDeadNode(true);
+        }
     }
 }
