@@ -159,7 +159,7 @@ public class GameMonitorView {
         Tab tab = returnTab(0);
         BorderPane bp = new BorderPane();
         ScrollPane sp = new ScrollPane();
-        Canvas canvas = new Canvas(5000, 1000);
+        Canvas canvas = new Canvas(5000, 5000);
         bp.setCenter(sp);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.web("#2a2a2a"));
@@ -285,17 +285,30 @@ public class GameMonitorView {
     }
 
     private void drawTreeFromGraph(DrawTree tree, GraphicsContext gc, Canvas canvas, BorderPane bp) {
+        drawLines(tree, gc, canvas, bp);
+        drawCircles(tree, gc, canvas, bp);
+    }
+
+    private void drawCircles(DrawTree tree, GraphicsContext gc, Canvas canvas, BorderPane bp) {
+        for (DrawTree child : tree.getChildDrawTrees()) {
+            gc.setLineWidth(2);
+            if(child.isDeadNode()) {gc.setFill(Color.RED);}
+            else {gc.setFill(Color.WHITE);}
+            gc.fillOval(child.getX(), child.getY(), 6, 6);
+
+            drawCircles(child, gc, canvas, bp);
+        }
+    }
+
+    private void drawLines(DrawTree tree, GraphicsContext gc, Canvas canvas, BorderPane bp) {
         for (DrawTree child : tree.getChildDrawTrees()) {
 
-            gc.setFill(Color.WHITE);
+            if(!child.getIsMrXRound()) {gc.setStroke(Color.BLUE);}
+            else {gc.setStroke(Color.WHITE);}
             gc.setLineWidth(1);
             gc.strokeLine(tree.getX()+3, tree.getY()+3, child.getX()+3, child.getY()+3);
 
-            gc.setLineWidth(2);
-            if(child.isDeadNode()) {gc.setFill(Color.RED);}
-            gc.fillOval(child.getX(), child.getY(), 6, 6);
-
-            drawTreeFromGraph(child, gc, canvas, bp);
+            drawLines(child, gc, canvas, bp);
         }
     }
 }
