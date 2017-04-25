@@ -28,6 +28,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import uk.ac.bris.cs.scotlandyard.ai.Visualiser;
 import uk.ac.bris.cs.scotlandyard.ui.ai.GameTree;
 
@@ -50,13 +51,14 @@ public class GameMonitorView {
     private XYChart.Series prune = new XYChart.Series();
     private XYChart.Series treeFinish = new XYChart.Series();
     private DrawTree dt;
-    private int originX;
     private int windowX = 1400;
     private int windowY = 850;
     private int tabNumber = 0;
 
     public GameMonitorView(Visualiser visualiser) {
         this.visualiser = visualiser;
+        Stage stage = (Stage) this.visualiser.surface().getScene().getWindow();
+        stage.setResizable(false);
 
         visualiserInit();
         timeInitGraph();
@@ -168,13 +170,11 @@ public class GameMonitorView {
         Platform.runLater(() -> tabs.getTabs().add(tab));
 
         BorderPane bp = new BorderPane();
-        ScrollPane sp = new ScrollPane();
-        Canvas canvas = new Canvas(2000, 2000);
-        bp.setCenter(sp);
+        Canvas canvas = new Canvas(windowX, windowY);
+        bp.setCenter(canvas);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.web("#2a2a2a"));
         gc.fillRect( 0, 0, canvas.getWidth(), canvas.getHeight());
-        sp.setHvalue(0.5);
 
         Button leftB = new Button();
         leftB.setMinWidth(100);
@@ -221,7 +221,6 @@ public class GameMonitorView {
         drawTreeFromGraph(dt, gc);
 
         Platform.runLater(() -> tab.setContent(bp));
-        Platform.runLater(() -> sp.setContent(canvas));
 
         TransformVisitor leftV = new TransformVisitor(200);
         TransformVisitor rightV = new TransformVisitor(-200);
