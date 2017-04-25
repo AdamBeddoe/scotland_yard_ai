@@ -46,6 +46,8 @@ public class GameMonitorView {
     private XYChart.Series treeFinish = new XYChart.Series();
     private DrawTree dt;
     private int originX;
+    private int windowX = 1400;
+    private int windowY = 850;
 
     public GameMonitorView(Visualiser visualiser) {
         this.visualiser = visualiser;
@@ -56,7 +58,7 @@ public class GameMonitorView {
 
     private void visualiserInit() {
         Group root = new Group();
-        Scene scene = new Scene(root, 1400, 850);
+        Scene scene = new Scene(root, windowX, windowY);
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         tabPane.setBackground(new Background(new BackgroundFill(Color.web("#2a2a2a"), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -197,9 +199,8 @@ public class GameMonitorView {
         leftB.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
             @Override
             public void handle(javafx.event.ActionEvent event) {
+                clearCanvas(canvas, gc);
                 dt.accept(leftV);
-                gc.setFill(Color.web("#2a2a2a"));
-                gc.fillRect( 0, 0, canvas.getWidth(), canvas.getHeight());
                 drawTreeFromGraph(dt, gc, canvas);
             }
         });
@@ -207,9 +208,8 @@ public class GameMonitorView {
         rightB.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
             @Override
             public void handle(javafx.event.ActionEvent event) {
+                clearCanvas(canvas, gc);
                 dt.accept(rightV);
-                gc.setFill(Color.web("#2a2a2a"));
-                gc.fillRect( 0, 0, canvas.getWidth(), canvas.getHeight());
                 drawTreeFromGraph(dt, gc, canvas);
             }
         });
@@ -217,16 +217,25 @@ public class GameMonitorView {
         zoomOut.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
             @Override
             public void handle(javafx.event.ActionEvent event) {
+                clearCanvas(canvas, gc);
                 gc.scale(0.5, 0.5);
+                drawTreeFromGraph(dt, gc, canvas);
             }
         });
 
         zoomIn.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
             @Override
             public void handle(javafx.event.ActionEvent event) {
+                clearCanvas(canvas, gc);
                 gc.scale(2, 2);
+                drawTreeFromGraph(dt, gc, canvas);
             }
         });
+    }
+
+    private void clearCanvas(Canvas canvas, GraphicsContext gc) {
+        gc.setFill(Color.web("#2a2a2a"));
+        gc.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
     }
 
     private void drawTreeFromGraph(DrawTree tree, GraphicsContext gc, Canvas canvas) {
