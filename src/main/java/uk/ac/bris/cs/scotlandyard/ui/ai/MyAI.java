@@ -10,9 +10,7 @@ import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorController;
 import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorModel;
 import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorView;
 
-
-// TODO name the AI
-@ManagedAI(value = "Name me!", visualiserType = ManagedAI.VisualiserType.WINDOWED)
+@ManagedAI(value = "The Tree Surgeon (World)", visualiserType = ManagedAI.VisualiserType.WINDOWED)
 public class MyAI implements PlayerFactory {
 
 	private Calculator calculator;
