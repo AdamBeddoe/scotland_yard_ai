@@ -1,8 +1,15 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
 /**
- * Created by Adam on 26/04/2017.
+ * Interface required for AI players to use GameTreeBuilder.
  */
 public interface AIPlayer {
-    public void updateTree(GameTree tree);
+
+    /**
+     *  Called by the builder when the next iteration of the tree has been generated.
+     *
+     * @param tree The tree passed by the builder.
+     */
+    void updateTree(GameTree tree);
+
 }

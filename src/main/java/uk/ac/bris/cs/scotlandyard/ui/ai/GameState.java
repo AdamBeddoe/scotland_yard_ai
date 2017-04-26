@@ -13,7 +13,7 @@ import static uk.ac.bris.cs.scotlandyard.model.Ticket.Secret;
 import static uk.ac.bris.cs.scotlandyard.model.Ticket.Taxi;
 
 /**
- * Created by Adam on 30/03/2017.
+ * Stores information about a state of the game at any point.
  */
 
 public class GameState implements MoveVisitor {
@@ -21,12 +21,23 @@ public class GameState implements MoveVisitor {
     private Map<Colour,Integer> detectives = new HashMap<>();
     private int mrXLocation;
 
+    /**
+     * Create a new GameState.
+     * @param graph A graph of the board.
+     * @param detectives A map of detectives and their locations.
+     * @param mrXLocation The location of MrX.
+     */
     public GameState(Graph graph, Map<Colour,Integer> detectives, int mrXLocation) {
         this.graph = graph;
         this.mrXLocation = mrXLocation;
         this.detectives = detectives;
     }
 
+    /**
+     * Create a new GameState.
+     * @param view The current ScotlandYardView.
+     * @param location The location of MrX or current detective.
+     */
     public GameState(ScotlandYardView view, int location) {
         this.graph = view.getGraph();
         if (view.getCurrentPlayer().isMrX()) {
@@ -44,6 +55,11 @@ public class GameState implements MoveVisitor {
         }
     }
 
+    /**
+     * Create a new GameState based on a previous GameState and a move.
+     * @param state Previous GameState.
+     * @param move Move made.
+     */
     public GameState(GameState state, Move move) {
         this.graph = state.getGraph();
         for (Colour colour : state.getDetectives()) {
@@ -54,6 +70,11 @@ public class GameState implements MoveVisitor {
         move.visit(this);
     }
 
+    /**
+     * Create a new GameState based on a previous GameState and set of moves.
+     * @param state Previous GameState.
+     * @param moves Set of moves made.
+     */
     public GameState(GameState state, Set<Move> moves) {
         this.graph = state.getGraph();
         for (Colour colour : state.getDetectives()) {
@@ -66,25 +87,47 @@ public class GameState implements MoveVisitor {
         }
     }
 
-
-
+    /**
+     * Get the location of a detective.
+     * @param colour The colour of the detective.
+     * @return The location of the detective.
+     */
     public int getDetectiveLocation(Colour colour) {
         return this.detectives.get(colour);
     }
 
+
+    /**
+     * Returns a set of detectives.
+     * @return The set of detective colours in the state.
+     */
     public Set<Colour> getDetectives() {
         return this.detectives.keySet();
     }
 
+
+    /**
+     * Returns MrX's location.
+     * @return MrX's location.
+     */
     public int getMrXLocation() {
         return this.mrXLocation;
     }
 
+
+    /**
+     * Returns the graph used in the state.
+     * @return The graph used in the state.
+     */
     public Graph getGraph() {
         return this.graph;
     }
 
-    // Creates a set of valid moves for a detective.
+    /**
+     * Returns a set of valid moves for any player. Ignores tickets.
+     * @param colour The colour of the player.
+     * @return A set of available moves.
+     */
     public Set<Move> validMoves(Colour colour) {
 
         Collection<Edge<Integer,Transport>> edgesFrom;
@@ -140,8 +183,6 @@ public class GameState implements MoveVisitor {
         this.mrXLocation = move.finalDestination();
     }
 
-    public void visit(PassMove move) {
-
-    }
+    public void visit(PassMove move) {}
 
 }

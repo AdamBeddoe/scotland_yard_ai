@@ -17,22 +17,36 @@ import java.util.Collection;
 import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
 
 /**
- * Created by Adam on 25/04/2017.
+ * Responsible for generic board calculations and scoring used by multiple parts of AI.
+ * Pre-calculates all possible distances on initialisation.
+ * Stores information on how often nodes have been visited by detectives, must be updated by a player.
  */
+
 public class Calculator {
 
     private final int graphDistances[][] = new int[200][200];
     private int nodeHistory[] = new int[200];
     private boolean sneakyMode;
 
+    /**
+     * Make a new Calculator, pre-calculates distances.
+     */
     public Calculator() {
         preCalculateDistances();
     }
 
+    /**
+     * Enables the use of how often nodes have been visited by detectives in scoring function.
+     */
     public void enableSneakyMode() {
         this.sneakyMode = true;
     }
 
+    /**
+     * Scores the board.
+     * @param state A GameState to be scored.
+     * @return The score.
+     */
     public int scoreBoard(GameState state) {
         double total = 0;
         int mrXLocation = state.getMrXLocation();
@@ -49,10 +63,23 @@ public class Calculator {
         else return (int) total;
     }
 
+    /**
+     * Gets the distance from one node to another, already pre-calculated. Ignores tickets.
+     * @param x First location.
+     * @param y Second location.
+     * @return The maximum distance in between the two locations.
+     */
     public int getGraphDistances(int x, int y) {
         return this.graphDistances[x][y];
     }
 
+    /**
+     * Calculates the distance between two nodes on a given graph.
+     * @param graph The graph to calculate the distance over.
+     * @param src First location.
+     * @param dest Second location.
+     * @return The maximum distance in between the two locations on the given graph.
+     */
     public static int dijkstra(Graph graph, int src, int dest) {
         if(src>199 || src<1) throw new IllegalArgumentException("Source node not in graph");
         if(dest>199 || src<1) throw new IllegalArgumentException("Destination node not in graph");
@@ -80,9 +107,11 @@ public class Calculator {
         return distances[current];
     }
 
+    // Finds the smallest distance in the path.
     private static int findSmallest(int[] distances, boolean[] inPath) {
         int current = Integer.MAX_VALUE;
         int node = -1;
+
         for (int n = 1; n<distances.length; n++) {
 
             if ((distances[n] < current) && !inPath[n]) {
@@ -93,6 +122,8 @@ public class Calculator {
         return node;
     }
 
+
+    // Pre-calculates the distances, uses the resource containing standard game graph.
     private void preCalculateDistances() {
         try {
             Graph defaultGraph = ScotlandYardGraphReader.fromLines(Files.readAllLines(
@@ -107,6 +138,11 @@ public class Calculator {
         }
     }
 
+    /**
+     * Updates the history of the nodes of the board.
+     * Should only be called once per round.
+     * @param view The ScotlandYardView of the round.
+     */
     public void updateNodeHistory(ScotlandYardView view) {
         for (Colour player : view.getPlayers()) {
             this.nodeHistory[view.getPlayerLocation(player)]++;
