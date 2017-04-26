@@ -42,8 +42,6 @@ public class PruneVisitor extends TreeVisitor {
         }
 
         for (GameTree childTree : tree.getChildTrees()) {
-
-
             if (!childTree.isDeadNode()) visit(childTree);
             else if (childTree.isDeadNode() && !childTree.getChildTrees().isEmpty()) childTree.removeChildren();
         }
@@ -60,18 +58,19 @@ public class PruneVisitor extends TreeVisitor {
         List<GameTree> sortedTrees = new ArrayList<>();
         sortedTrees.addAll(rawTrees);
         sortedTrees.sort(Comparator.comparing(GameTree::getScore));
-        System.out.print("[");
+        //System.out.print("[");
 
-        System.out.println("hi " + (sortedTrees.size()));
+        //System.out.println("hi " + (sortedTrees.size()));
         for (int i = (sortedTrees.size()-1); i>=this.maxDetectiveMoves; i--) {
             sortedTrees.get(i).isDeadNode(true);
-            System.out.println(i);
+        //    System.out.println(i);
             //System.out.println(sortedTrees.get(i).isDeadNode());
         }
         for (GameTree treeee : sortedTrees) {
-            System.out.print(treeee.isDeadNode() +"-" + treeee.getScore() + ",");
+        //    System.out.print(treeee.isDeadNode() +"-" + treeee.getScore() + ",");
         }
-        System.out.print("]\n");
+        //System.out.print("]\n");
+        //printTree(tree);
     }
 
     private void maxMrXMovePrune(GameTree tree) {
@@ -91,5 +90,18 @@ public class PruneVisitor extends TreeVisitor {
             if (child.isDeadNode()) return true;
         }
         return false;
+    }
+
+    public void printTree(GameTree tree) {
+        if (!tree.getChildTrees().isEmpty()) {
+            System.out.print("[");
+            for (GameTree treeee : tree.getChildTrees()) {
+                System.out.print(treeee.isDeadNode() +"-" + treeee.getScore() + ",");
+            }
+            System.out.print("]\n");
+            for (GameTree child: tree.getChildTrees()) {
+                printTree(child);
+            }
+        }
     }
 }

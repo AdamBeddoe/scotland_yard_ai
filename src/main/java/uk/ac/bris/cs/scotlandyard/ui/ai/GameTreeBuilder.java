@@ -83,6 +83,8 @@ public class GameTreeBuilder {
             if (this.isUsingThreshold) bigPrune.setThreshold(this.threshold);
             tree.accept(bigPrune);
             notifyLoop(observer -> observer.onBigPruneComplete());
+
+            this.observers.forEach(TreeBuilderObserver::onBigPruneComplete);
         }
 
         notifyLoop(observer -> observer.onTreeBuildFinish(tree));
