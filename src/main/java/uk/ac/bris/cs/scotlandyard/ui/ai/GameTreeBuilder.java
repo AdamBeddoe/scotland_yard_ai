@@ -16,6 +16,7 @@ public class GameTreeBuilder {
     private Set<Move> moves;
     private Calculator calculator;
     private List<TreeBuilderObserver> observers = new ArrayList<>();
+
     private int threshold;
     private boolean isUsingThreshold;
     private int maxMrXMoves;
@@ -64,40 +65,29 @@ public class GameTreeBuilder {
     }
 
     public GameTree build() {
-        notifyLoop(observer -> observer.onTreeBuildStart());
+        this.observers.forEach(TreeBuilderObserver::onTreeBuildStart);
         GameTree tree = new GameTree(this.startState, this.playerIsMrX);
 
         for (int i = 1; i <= this.levels; i++) {
 
-            NextRoundVisitor tilo = new NextRoundVisitor(this.moves, i);
-            tree.accept(tilo);
-            notifyLoop(observer -> observer.onNextRoundVisitorComplete());
+            NextRoundVisitor nextRoundVisitorTilo = new NextRoundVisitor(this.moves, i);
+            tree.accept(nextRoundVisitorTilo);
+            this.observers.forEach(TreeBuilderObserver::onNextRoundVisitorComplete);
 
-            ScoreVisitor nick = new ScoreVisitor(this.calculator);
-            tree.accept(nick);
-            notifyLoop(observer -> observer.onScoreVisitorComplete());
+            ScoreVisitor scoreVisitorNick = new ScoreVisitor(this.calculator);
+            tree.accept(scoreVisitorNick);
+            this.observers.forEach(TreeBuilderObserver::onScoreVisitorComplete);
 
-            PruneVisitor bigPrune = new PruneVisitor();
-            if (this.isUsingMaxDetectiveMoves) bigPrune.setMaxDetectiveMoves(this.maxDetectiveMoves);
-            if (this.isUsingMaxMrXMoves) bigPrune.setMaxMrXMoves(this.maxMrXMoves);
-            if (this.isUsingThreshold) bigPrune.setThreshold(this.threshold);
-            tree.accept(bigPrune);
-            notifyLoop(observer -> observer.onBigPruneComplete());
+            PruneVisitor pruneVisitorDave = new PruneVisitor();
+            if (this.isUsingMaxDetectiveMoves) pruneVisitorDave.setMaxDetectiveMoves(this.maxDetectiveMoves);
+            if (this.isUsingMaxMrXMoves) pruneVisitorDave.setMaxMrXMoves(this.maxMrXMoves);
+            if (this.isUsingThreshold) pruneVisitorDave.setThreshold(this.threshold);
+            tree.accept(pruneVisitorDave);
 
             this.observers.forEach(TreeBuilderObserver::onBigPruneComplete);
         }
 
-        notifyLoop(observer -> observer.onTreeBuildFinish(tree));
+        this.observers.forEach(observer -> observer.onTreeBuildFinish(tree));
         return tree;
     }
-
-    private void notifyLoop(NotifyFunction function) {
-        for (TreeBuilderObserver observer : observers){
-            function.notifyFunc(observer);
-        }
-    }
-}
-
-interface NotifyFunction {
-    void notifyFunc(TreeBuilderObserver observer);
 }

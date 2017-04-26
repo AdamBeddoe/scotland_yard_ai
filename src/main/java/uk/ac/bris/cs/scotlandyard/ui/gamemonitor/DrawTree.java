@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Adam on 24/04/2017.
  */
 public class DrawTree {
-    private List<DrawTree> childTrees = new ArrayList();
+    private List<DrawTree> childTrees = new ArrayList<>();
     private boolean deadNode;
     private int score;
     private int x;

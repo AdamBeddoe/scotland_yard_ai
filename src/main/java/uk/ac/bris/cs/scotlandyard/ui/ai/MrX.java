@@ -14,8 +14,8 @@ import java.util.function.Consumer;
  */
 public class MrX implements Player {
 
-    public GameTreeBuilder builder;
-    public Calculator calculator;
+    private GameTreeBuilder builder;
+    private Calculator calculator;
 
     public MrX(Calculator calculator) {
         this.calculator = calculator;
@@ -31,13 +31,17 @@ public class MrX implements Player {
         this.builder.setLookAheadLevels(2);
         //this.builder.setThreshold(500);
         this.builder.setMaxDetectiveMoves(3);
-//        this.builder.setMaxMrXMoves(3);
+       //this.builder.setMaxMrXMoves(3);
         this.builder.setMoves(moves);
 
         GameTree tree = this.builder.build();
         Move bestMove = selectMove(tree);
 
         callback.accept(bestMove);
+    }
+
+    public GameTreeBuilder getBuilder() {
+        return this.builder;
     }
 
     private Move selectMove(GameTree tree) {
