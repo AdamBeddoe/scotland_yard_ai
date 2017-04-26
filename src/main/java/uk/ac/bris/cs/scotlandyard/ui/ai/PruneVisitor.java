@@ -1,6 +1,7 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -33,13 +34,18 @@ public class PruneVisitor extends TreeVisitor {
 
     @Override
     public void visit(GameTree tree) {
-        if (this.isUsingMaxDetectiveMoves && !tree.isMrXRound()) maxDetectiveMovePrune(tree);
-        if (this.isUsingMaxMrXMoves && tree.isMrXRound()) maxMrXMovePrune(tree);
+
         if (this.isUsingThreshold) thresholdPrune(tree);
+        if (!tree.getChildTrees().isEmpty() && !hasBeenVisited(tree)) {
+            if (this.isUsingMaxDetectiveMoves && !tree.isMrXRound()) maxDetectiveMovePrune(tree);
+            if (this.isUsingMaxMrXMoves && tree.isMrXRound()) maxMrXMovePrune(tree);
+        }
 
         for (GameTree childTree : tree.getChildTrees()) {
+
+
             if (!childTree.isDeadNode()) visit(childTree);
-            else if (childTree.isDeadNode() && !childTree.getChildTrees().isEmpty()) childTree.removeChildren();
+            //else if (childTree.isDeadNode() && !childTree.getChildTrees().isEmpty()) childTree.removeChildren();
         }
     }
 
@@ -50,16 +56,22 @@ public class PruneVisitor extends TreeVisitor {
     }
 
     private void maxDetectiveMovePrune(GameTree tree) {
-        List<GameTree> allTrees = tree.getChildTrees();
-        allTrees.sort(Comparator.comparing(GameTree::getScore));
-        List<GameTree> worstTrees;
-        System.out.println("all " + allTrees.size());
-        if (this.maxDetectiveMoves > allTrees.size()) worstTrees = allTrees;
-        else worstTrees = allTrees.subList(0, this.maxDetectiveMoves);
-        System.out.println("worst" + worstTrees.size());
-        for (GameTree childTree : tree.getChildTrees()) {
-            if (!worstTrees.contains(childTree)) childTree.isDeadNode(true);
+        List<GameTree> rawTrees = tree.getChildTrees();
+        List<GameTree> sortedTrees = new ArrayList<>();
+        sortedTrees.addAll(rawTrees);
+        sortedTrees.sort(Comparator.comparing(GameTree::getScore));
+        System.out.print("[");
+
+        System.out.println("hi " + (sortedTrees.size()));
+        for (int i = (sortedTrees.size()-1); i>=this.maxDetectiveMoves; i--) {
+            sortedTrees.get(i).isDeadNode(true);
+            System.out.println(i);
+            //System.out.println(sortedTrees.get(i).isDeadNode());
         }
+        for (GameTree treeee : sortedTrees) {
+            System.out.print(treeee.isDeadNode() +"-" + treeee.getScore() + ",");
+        }
+        System.out.print("]\n");
     }
 
     private void maxMrXMovePrune(GameTree tree) {
@@ -72,5 +84,12 @@ public class PruneVisitor extends TreeVisitor {
         for (GameTree childTree : tree.getChildTrees()) {
             if (!bestTrees.contains(childTree)) childTree.isDeadNode(true);
         }
+    }
+
+    private boolean hasBeenVisited(GameTree tree) {
+        for (GameTree child : tree.getChildTrees()) {
+            if (child.isDeadNode()) return true;
+        }
+        return false;
     }
 }

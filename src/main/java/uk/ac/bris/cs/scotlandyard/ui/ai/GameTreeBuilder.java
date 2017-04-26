@@ -79,8 +79,8 @@ public class GameTreeBuilder {
 
             PruneVisitor bigPrune = new PruneVisitor();
             if (this.isUsingMaxDetectiveMoves) bigPrune.setMaxDetectiveMoves(this.maxDetectiveMoves);
-            if (this.isUsingMaxMrXMoves) bigPrune.setMaxDetectiveMoves(this.maxMrXMoves);
-            if (this.isUsingThreshold) bigPrune.setMaxDetectiveMoves(this.threshold);
+            if (this.isUsingMaxMrXMoves) bigPrune.setMaxMrXMoves(this.maxMrXMoves);
+            if (this.isUsingThreshold) bigPrune.setThreshold(this.threshold);
             tree.accept(bigPrune);
             notifyLoop(observer -> observer.onBigPruneComplete());
         }

@@ -28,10 +28,15 @@ public class NextRoundVisitor extends TreeVisitor {
     }
 
     public void visit(GameTree tree) {
-        if (tree.getChildTrees().isEmpty()) {
+        if (tree.getChildTrees().isEmpty() && tree.isMrXRound()) {
             for (Move move : this.moves) {
                 tree.addChild(new GameState(tree.getState(), move), move);
             }
+        }
+
+        if (/*tree.getChildTrees().isEmpty() &&*/ !tree.isMrXRound()) {
+            tree.addChild(new GameState(tree.getState(), this.moves), this.moves);
+            //System.out.println("3");
         }
 
         for (GameTree childTree : tree.getChildTrees()) {
@@ -48,11 +53,16 @@ public class NextRoundVisitor extends TreeVisitor {
                     }
 
                     Set<Set<Move>> combinedDetectiveMoves = combinations(eachDetectiveMoves);
+//                    System.out.println("each: " + eachDetectiveMoves.size());
+//                    System.out.println("comb: " + combinedDetectiveMoves.size());
+                    //System.out.println("1");
+
                     for (Set moveSet : combinedDetectiveMoves) {
                         this.moves = moveSet;
+                        //System.out.println("moveset size: " + moveSet.size());
                         this.levels--;
+                        //System.out.println("2");
                         visit(childTree);
-
                     }
                 }
             }
@@ -77,7 +87,7 @@ public class NextRoundVisitor extends TreeVisitor {
                 sprinkledMoves.add(newSet);
             }
         }
-        else {
+        //else {
             for (Set<Move> set : sprinkled) {
                 for (Move move : moves) {
                     Set<Move> newSet = new HashSet<>();
@@ -86,7 +96,7 @@ public class NextRoundVisitor extends TreeVisitor {
                     sprinkledMoves.add(newSet);
                 }
             }
-        }
+        //}
 
         return sprinkledMoves;
     }

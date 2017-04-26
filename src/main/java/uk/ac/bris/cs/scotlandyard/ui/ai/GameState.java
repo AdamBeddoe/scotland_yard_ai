@@ -54,6 +54,20 @@ public class GameState implements MoveVisitor {
         move.visit(this);
     }
 
+    public GameState(GameState state, Set<Move> moves) {
+        this.graph = state.getGraph();
+        for (Colour colour : state.getDetectives()) {
+            if (colour != Black) detectives.put(colour,state.getDetectiveLocation(colour));
+        }
+        this.mrXLocation = state.getMrXLocation();
+
+        for(Move move : moves) {
+            move.visit(this);
+        }
+    }
+
+
+
     public int getDetectiveLocation(Colour colour) {
         return this.detectives.get(colour);
     }

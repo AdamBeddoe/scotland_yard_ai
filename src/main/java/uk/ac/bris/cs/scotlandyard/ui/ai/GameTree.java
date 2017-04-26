@@ -1,6 +1,7 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
 import uk.ac.bris.cs.scotlandyard.model.Move;
+import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,6 +28,11 @@ public class GameTree {
     public void addChild(GameState state, Move move) {
         this.childTrees.add(new GameTree(state,!this.isMrXRound));
         this.childMoves.add(move);
+    }
+
+    public void addChild(GameState state, Set<Move> moves) {
+        this.childTrees.add(new GameTree(state,!this.isMrXRound));
+        this.childMoves.addAll(moves);
     }
 
     public void removeChildren() {

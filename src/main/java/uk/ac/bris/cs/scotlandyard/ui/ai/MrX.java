@@ -28,10 +28,10 @@ public class MrX implements Player {
                          Consumer<Move> callback) {
         this.calculator.updateNodeHistory(view);
         this.builder.setStartState(new GameState(view,location));
-        this.builder.setLookAheadLevels(3);
-        //this.builder.setThreshold(100);
-        //this.builder.setMaxDetectiveMoves(3);
-        //this.builder.setMaxMrXMoves(3);
+        this.builder.setLookAheadLevels(2);
+        //this.builder.setThreshold(500);
+        this.builder.setMaxDetectiveMoves(3);
+//        this.builder.setMaxMrXMoves(3);
         this.builder.setMoves(moves);
 
         GameTree tree = this.builder.build();

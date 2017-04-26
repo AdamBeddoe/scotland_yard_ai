@@ -1,42 +1,25 @@
 package uk.ac.bris.cs.scotlandyard.ui.gamemonitor;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import uk.ac.bris.cs.scotlandyard.ai.Visualiser;
 import uk.ac.bris.cs.scotlandyard.ui.ai.GameTree;
-
-import javax.swing.*;
-import javax.swing.text.Element;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.beans.EventHandler;
 import java.util.*;
 
 /**
@@ -165,7 +148,6 @@ public class GameMonitorView {
 
     public void drawTree(GameTree tree) {
         Tab tab = drawTreeTab();
-
         BorderPane bp = new BorderPane();
         Canvas canvas = new Canvas(windowX, windowY);
         bp.setCenter(canvas);
@@ -177,24 +159,13 @@ public class GameMonitorView {
         Button rightB = rightBSetup();
         Button zoomOut = zoomOutSetup();
         Button zoomIn = zoomInSetup();
-
-        Label clickedNode = new Label("Clicked Node Score: ");
-        clickedNode.setFont(new Font("Arial", 18));
-        clickedNode.setLayoutX(250);
-        clickedNode.setLayoutY(4);
-        clickedNode.setTextFill(Color.WHITE);
+        Label clickedNode = clickedNodeLabelSetup();
 
         Pane pane = new Pane();
         pane.getChildren().addAll(leftB, rightB, zoomOut, zoomIn, clickedNode);
         bp.setTop(pane);
 
         this.dt = initialiseDrawTree(tree, (int) canvas.getWidth()/2);
-
-        gc.setStroke(Color.WHITE);
-        gc.setLineWidth(2);
-        gc.strokeOval(dt.getX(), dt.getY(), 8 , 8);
-
-        gc.setFill(Color.WHITE);
         drawTreeFromGraph(dt, gc);
 
         Platform.runLater(() -> tab.setContent(bp));
@@ -205,6 +176,16 @@ public class GameMonitorView {
         controller.zoomInHandlerInit(zoomIn);
         controller.zoomOutHandlerInit(zoomOut);
         controller.mouseClickHandlerInit(clickedNode);
+    }
+
+    private Label clickedNodeLabelSetup() {
+        Label clickedNode = new Label("Clicked Node Score: ");
+        clickedNode.setFont(new Font("Arial", 18));
+        clickedNode.setLayoutX(250);
+        clickedNode.setLayoutY(4);
+        clickedNode.setTextFill(Color.WHITE);
+
+        return clickedNode;
     }
 
     private Button leftBSetup() {
@@ -293,6 +274,11 @@ public class GameMonitorView {
         drawLines(tree, gc);
         drawCircles(tree, gc);
         highlightChosenMoves(tree, gc);
+
+        //Draw first circle
+        gc.setStroke(Color.WHITE);
+        gc.setLineWidth(2);
+        gc.strokeOval(dt.getX(), dt.getY(), 8 , 8);
     }
 
     private void drawCircles(DrawTree tree, GraphicsContext gc) {
