@@ -14,11 +14,12 @@ import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
 /**
  * Created by Adam on 01/04/2017.
  */
-public class Detective implements Player {
+public class Detective implements Player,AIPlayer {
 
     private Calculator calculator;
     private final Random random = new Random();
-    public GameTreeBuilder builder;
+    private GameTreeBuilder builder;
+    private Move bestMove;
 
     public Detective(Calculator calculator) {
         this.calculator = calculator;
@@ -28,19 +29,48 @@ public class Detective implements Player {
     @Override
     public void makeMove(ScotlandYardView view, int location, Set<Move> moves,
                          Consumer<Move> callback) {
-        Move bestMove;
+
         if (view.getPlayerLocation(Black) == 0) {
-            bestMove = new ArrayList<>(moves).get(random.nextInt(moves.size()));
+            this.bestMove = new ArrayList<>(moves).get(random.nextInt(moves.size()));
         }
         else {
+            this.calculator.updateNodeHistory(view);
+
             this.builder.setStartState(new GameState(view,location));
             this.builder.setLookAheadLevels(2);
+            //this.builder.setThreshold(100);
+            //this.builder.setMaxDetectiveMoves(3);
+            //this.builder.setMaxMrXMoves(3);
+            this.builder.setNotifyPlayer(this);
             this.builder.setMoves(moves);
 
-            GameTree tree = this.builder.build();
-            bestMove = selectMove(tree);
+            Thread t = new Thread(this.builder);
+            t.start();
+
+            long timeAvailable = 14000;
+            long start = System.currentTimeMillis();
+
+            try {
+                t.join(14000);
+                if (((System.currentTimeMillis() - start) > timeAvailable) && t.isAlive()) {
+                    builder.stop();
+
+                }
+            } catch (InterruptedException e) {
+                // do something here
+            }
         }
-        callback.accept(bestMove);
+
+        if (this.bestMove == null) this.bestMove = new ArrayList<>(moves).get(random.nextInt(moves.size()));
+        callback.accept(this.bestMove);
+    }
+
+    public GameTreeBuilder getBuilder() {
+        return this.builder;
+    }
+
+    public void updateTree(GameTree tree) {
+        this.bestMove = selectMove(tree);
     }
 
     private Move selectMove(GameTree tree) {

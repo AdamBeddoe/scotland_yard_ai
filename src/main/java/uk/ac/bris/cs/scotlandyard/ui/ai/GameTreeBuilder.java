@@ -1,6 +1,7 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
 import uk.ac.bris.cs.scotlandyard.model.Move;
+import uk.ac.bris.cs.scotlandyard.model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,13 +10,15 @@ import java.util.Set;
 /**
  * Created by Adam on 20/04/2017.
  */
-public class GameTreeBuilder {
+public class GameTreeBuilder implements Runnable {
     private GameState startState;
     private boolean playerIsMrX;
     private int levels;
     private Set<Move> moves;
     private Calculator calculator;
     private List<TreeBuilderObserver> observers = new ArrayList<>();
+    private AIPlayer player;
+    private boolean stopped;
 
     private int threshold;
     private boolean isUsingThreshold;
@@ -23,6 +26,10 @@ public class GameTreeBuilder {
     private boolean isUsingMaxMrXMoves;
     private int maxDetectiveMoves;
     private boolean isUsingMaxDetectiveMoves;
+
+    public void run() {
+        build();
+    }
 
     public GameTreeBuilder(boolean playerIsMrX, Calculator calculator) {
         this.playerIsMrX = playerIsMrX;
@@ -49,6 +56,10 @@ public class GameTreeBuilder {
         this.moves = moves;
     }
 
+    public void setNotifyPlayer(AIPlayer player) {
+     this.player = player;
+    }
+
     public void setThreshold(int threshold) {
         this.isUsingThreshold = true;
         this.threshold = threshold;
@@ -64,11 +75,11 @@ public class GameTreeBuilder {
         this.maxDetectiveMoves = max;
     }
 
-    public GameTree build() {
+    public void build() {
         this.observers.forEach(TreeBuilderObserver::onTreeBuildStart);
         GameTree tree = new GameTree(this.startState, this.playerIsMrX);
 
-        for (int i = 1; i <= this.levels; i++) {
+        for (int i = 1; i <= this.levels && !this.stopped; i++) {
 
             NextRoundVisitor nextRoundVisitorTilo = new NextRoundVisitor(this.moves, i);
             tree.accept(nextRoundVisitorTilo);
@@ -78,16 +89,20 @@ public class GameTreeBuilder {
             tree.accept(scoreVisitorNick);
             this.observers.forEach(TreeBuilderObserver::onScoreVisitorComplete);
 
+            player.updateTree(tree);
+
             PruneVisitor pruneVisitorDave = new PruneVisitor();
             if (this.isUsingMaxDetectiveMoves) pruneVisitorDave.setMaxDetectiveMoves(this.maxDetectiveMoves);
             if (this.isUsingMaxMrXMoves) pruneVisitorDave.setMaxMrXMoves(this.maxMrXMoves);
             if (this.isUsingThreshold) pruneVisitorDave.setThreshold(this.threshold);
             tree.accept(pruneVisitorDave);
-
             this.observers.forEach(TreeBuilderObserver::onBigPruneComplete);
         }
 
         this.observers.forEach(observer -> observer.onTreeBuildFinish(tree));
-        return tree;
+    }
+
+    public void stop() {
+        this.stopped = true;
     }
 }
