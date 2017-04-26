@@ -45,7 +45,7 @@ public class PruneVisitor extends TreeVisitor {
 
 
             if (!childTree.isDeadNode()) visit(childTree);
-            //else if (childTree.isDeadNode() && !childTree.getChildTrees().isEmpty()) childTree.removeChildren();
+            else if (childTree.isDeadNode() && !childTree.getChildTrees().isEmpty()) childTree.removeChildren();
         }
     }
 
