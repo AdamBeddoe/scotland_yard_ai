@@ -74,6 +74,7 @@ public class GameMonitorView {
         }
 
         TabPane treeTabs = new TabPane();
+        treeTabs.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         tabPane.getTabs().get(0).setContent(treeTabs);
 
         borderPane.prefHeightProperty().bind(scene.heightProperty());
@@ -305,24 +306,37 @@ public class GameMonitorView {
     }
 
     private void highlightChosenMoves(DrawTree tree, GraphicsContext gc) {
-        int highestScore = 0;
-        DrawTree highestNode = null;
+        int chosenScore = 0;
+        DrawTree chosenNode = null;
 
-        for (DrawTree child : tree.getChildDrawTrees()) {
-            if(child.getScore() > highestScore) {
-                highestScore = child.getScore();
-                highestNode = child;
+        if(!tree.getIsMrXRound()) {
+            for (DrawTree child : tree.getChildDrawTrees()) {
+                if (child.getScore() > chosenScore) {
+                    chosenScore = child.getScore();
+                    chosenNode = child;
+                }
+            }
+        }
+        else {
+            for (DrawTree child : tree.getChildDrawTrees()) {
+                if (child.getScore() < chosenScore) {
+                    chosenScore = child.getScore();
+                    chosenNode = child;
+                }
             }
         }
 
-        if(highestNode != null) {
+
+
+        if(chosenNode != null) {
+            highlightChosenMoves(chosenNode, gc);
+
             gc.setStroke(Color.GREEN);
-            gc.strokeLine(tree.getX()+3, tree.getY()+3, highestNode.getX()+3, highestNode.getY()+3);
+            gc.strokeLine(tree.getX()+3, tree.getY()+3, chosenNode.getX()+3, chosenNode.getY()+3);
 
             gc.setFill(Color.GREEN);
-            gc.fillOval(highestNode.getX(), highestNode.getY(), 6, 6);
+            gc.fillOval(chosenNode.getX(), chosenNode.getY(), 6, 6);
 
-            highlightChosenMoves(highestNode, gc);
         }
     }
 }

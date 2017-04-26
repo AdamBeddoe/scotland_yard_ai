@@ -18,6 +18,7 @@ public class DrawTree {
     private boolean isMrXRound;
 
     public DrawTree(GameTree tree) {
+
         this.deadNode = tree.isDeadNode();
         this.score = tree.getScore();
         this.spaceNeeded = tree.getChildTrees().size();

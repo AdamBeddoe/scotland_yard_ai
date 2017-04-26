@@ -2,6 +2,10 @@ package uk.ac.bris.cs.scotlandyard.ui.gamemonitor;
 
 
 import javafx.application.Platform;
+import uk.ac.bris.cs.scotlandyard.model.DoubleMove;
+import uk.ac.bris.cs.scotlandyard.model.Move;
+import uk.ac.bris.cs.scotlandyard.model.MoveVisitor;
+import uk.ac.bris.cs.scotlandyard.model.TicketMove;
 import uk.ac.bris.cs.scotlandyard.ui.ai.GameTree;
 import uk.ac.bris.cs.scotlandyard.ui.ai.TreeBuilderObserver;
 
