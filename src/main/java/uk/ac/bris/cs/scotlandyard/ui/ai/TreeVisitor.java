@@ -1,9 +1,9 @@
 package uk.ac.bris.cs.scotlandyard.ui.ai;
 
 /**
- * Created by Adam on 31/03/2017.
+ * An abstract visitor for classes that need to visit a GameTree.
  */
-public abstract class TreeVisitor {
+abstract class TreeVisitor {
 
-    public abstract void visit (GameTree tree);
+    abstract void visit (GameTree tree);
 }

@@ -1,24 +1,18 @@
+package uk.ac.bris.cs.scotlandyard.ui.ai;
+
 import org.junit.Test;
 import uk.ac.bris.cs.gamekit.graph.Edge;
 import uk.ac.bris.cs.gamekit.graph.Graph;
 import uk.ac.bris.cs.gamekit.graph.Node;
 import uk.ac.bris.cs.gamekit.graph.UndirectedGraph;
 import uk.ac.bris.cs.scotlandyard.model.*;
-import uk.ac.bris.cs.scotlandyard.ui.ai.Calculator;
-import uk.ac.bris.cs.scotlandyard.ui.ai.GameState;
-import uk.ac.bris.cs.scotlandyard.ui.ai.MyAI;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
 import static uk.ac.bris.cs.scotlandyard.model.Colour.Blue;
 import static uk.ac.bris.cs.scotlandyard.model.Colour.Red;
 import static uk.ac.bris.cs.scotlandyard.model.Transport.Taxi;

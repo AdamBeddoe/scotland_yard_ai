@@ -22,7 +22,7 @@ import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
  * Stores information on how often nodes have been visited by detectives, must be updated by a player.
  */
 
-public class Calculator {
+class Calculator {
 
     private final int graphDistances[][] = new int[200][200];
     private int nodeHistory[] = new int[200];
@@ -31,14 +31,14 @@ public class Calculator {
     /**
      * Make a new Calculator, pre-calculates distances.
      */
-    public Calculator() {
+    Calculator() {
         preCalculateDistances();
     }
 
     /**
      * Enables the use of how often nodes have been visited by detectives in scoring function.
      */
-    public void enableSneakyMode() {
+    void enableSneakyMode() {
         this.sneakyMode = true;
     }
 
@@ -47,7 +47,7 @@ public class Calculator {
      * @param state A GameState to be scored.
      * @return The score.
      */
-    public int scoreBoard(GameState state) {
+    int scoreBoard(GameState state) {
         double total = 0;
         int mrXLocation = state.getMrXLocation();
         total = total + state.validMoves(Black).size();
@@ -80,7 +80,7 @@ public class Calculator {
      * @param dest Second location.
      * @return The maximum distance in between the two locations on the given graph.
      */
-    public static int dijkstra(Graph graph, int src, int dest) {
+    static int dijkstra(Graph graph, int src, int dest) {
         if(src>199 || src<1) throw new IllegalArgumentException("Source node not in graph");
         if(dest>199 || src<1) throw new IllegalArgumentException("Destination node not in graph");
 
@@ -143,7 +143,7 @@ public class Calculator {
      * Should only be called once per round.
      * @param view The ScotlandYardView of the round.
      */
-    public void updateNodeHistory(ScotlandYardView view) {
+    void updateNodeHistory(ScotlandYardView view) {
         for (Colour player : view.getPlayers()) {
             this.nodeHistory[view.getPlayerLocation(player)]++;
         }

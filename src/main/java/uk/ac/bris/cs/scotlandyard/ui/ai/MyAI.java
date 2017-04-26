@@ -10,6 +10,9 @@ import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorController;
 import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorModel;
 import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorView;
 
+/**
+ * The main AI class, responsible for initialising the AIPlayer and starting the visualiser.
+ */
 @ManagedAI(value = "The Tree Surgeon (World)", visualiserType = ManagedAI.VisualiserType.WINDOWED)
 public class MyAI implements PlayerFactory {
 
@@ -17,6 +20,12 @@ public class MyAI implements PlayerFactory {
 	private Visualiser visualiser;
 	private MrX mrX;
 
+	/**
+	 * Makes a new AIPlayer based on the type of the player.
+	 * If Detective, close the visualiser window.
+	 * @param colour The colour of the player.
+	 * @return A Player object.
+	 */
 	@Override
 	public Player createPlayer(Colour colour) {
 		if (colour.isMrX()) {
@@ -30,6 +39,13 @@ public class MyAI implements PlayerFactory {
 		}
 	}
 
+	/**
+	 * Makes a new Calculator object.
+	 * Sets up Model-View-Controller objects for visualiser.
+	 * Registers builderObserver for MrX for the GameMonitor model.
+	 * @param visualiser The visualiser.
+	 * @param provider The resource provider.
+	 */
 	public void ready(Visualiser visualiser, ResourceProvider provider) {
 		this.calculator = new Calculator();
 

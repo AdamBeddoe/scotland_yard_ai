@@ -15,7 +15,7 @@ import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
  * Minimax AI for a detective player, no tree pruning possible.
  * Uses GameTreeBuilder.
  */
-public class Detective implements Player, AIPlayer {
+class Detective implements Player, AIPlayer {
 
     private Calculator calculator;
     private final Random random = new Random();
@@ -26,7 +26,7 @@ public class Detective implements Player, AIPlayer {
      * Make new Detective AI.
      * @param calculator Calculator for detective to use.
      */
-    public Detective(Calculator calculator) {
+    Detective(Calculator calculator) {
         this.calculator = calculator;
         this.builder = new GameTreeBuilder(true, this.calculator);
     }
@@ -35,10 +35,6 @@ public class Detective implements Player, AIPlayer {
      * Makes move for detective.
      * Starts new thread for builder and waits for 14s.
      * Returns via callback the best move from the most detailed provided so far.
-     * @param view
-     * @param location
-     * @param moves
-     * @param callback
      */
     @Override
     public void makeMove(ScotlandYardView view, int location, Set<Move> moves,
@@ -92,7 +88,7 @@ public class Detective implements Player, AIPlayer {
         this.bestMove = selectMove(tree);
     }
 
-    // Selects the move with the highest score based on the GameTree
+    // Selects the best move (with the lowest score) from the GameTree.
     private Move selectMove(GameTree tree) {
         int lowestScore = Integer.MAX_VALUE;
         GameTree bestTree = tree.getChildTrees().get(0);

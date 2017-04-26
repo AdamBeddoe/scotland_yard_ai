@@ -16,7 +16,7 @@ import static uk.ac.bris.cs.scotlandyard.model.Ticket.Taxi;
  * Stores information about a state of the game at any point.
  */
 
-public class GameState implements MoveVisitor {
+class GameState implements MoveVisitor {
     private Graph graph;
     private Map<Colour,Integer> detectives = new HashMap<>();
     private int mrXLocation;
@@ -27,7 +27,7 @@ public class GameState implements MoveVisitor {
      * @param detectives A map of detectives and their locations.
      * @param mrXLocation The location of MrX.
      */
-    public GameState(Graph graph, Map<Colour,Integer> detectives, int mrXLocation) {
+    GameState(Graph graph, Map<Colour,Integer> detectives, int mrXLocation) {
         this.graph = graph;
         this.mrXLocation = mrXLocation;
         this.detectives = detectives;
@@ -38,7 +38,7 @@ public class GameState implements MoveVisitor {
      * @param view The current ScotlandYardView.
      * @param location The location of MrX or current detective.
      */
-    public GameState(ScotlandYardView view, int location) {
+    GameState(ScotlandYardView view, int location) {
         this.graph = view.getGraph();
         if (view.getCurrentPlayer().isMrX()) {
             this.mrXLocation = location;
@@ -60,7 +60,7 @@ public class GameState implements MoveVisitor {
      * @param state Previous GameState.
      * @param move Move made.
      */
-    public GameState(GameState state, Move move) {
+    GameState(GameState state, Move move) {
         this.graph = state.getGraph();
         for (Colour colour : state.getDetectives()) {
             if (colour != Black) detectives.put(colour,state.getDetectiveLocation(colour));
@@ -75,7 +75,7 @@ public class GameState implements MoveVisitor {
      * @param state Previous GameState.
      * @param moves Set of moves made.
      */
-    public GameState(GameState state, Set<Move> moves) {
+    GameState(GameState state, Set<Move> moves) {
         this.graph = state.getGraph();
         for (Colour colour : state.getDetectives()) {
             if (colour != Black) detectives.put(colour,state.getDetectiveLocation(colour));
@@ -92,7 +92,7 @@ public class GameState implements MoveVisitor {
      * @param colour The colour of the detective.
      * @return The location of the detective.
      */
-    public int getDetectiveLocation(Colour colour) {
+    int getDetectiveLocation(Colour colour) {
         return this.detectives.get(colour);
     }
 
@@ -101,7 +101,7 @@ public class GameState implements MoveVisitor {
      * Returns a set of detectives.
      * @return The set of detective colours in the state.
      */
-    public Set<Colour> getDetectives() {
+    Set<Colour> getDetectives() {
         return this.detectives.keySet();
     }
 
@@ -110,7 +110,7 @@ public class GameState implements MoveVisitor {
      * Returns MrX's location.
      * @return MrX's location.
      */
-    public int getMrXLocation() {
+    int getMrXLocation() {
         return this.mrXLocation;
     }
 
@@ -119,7 +119,7 @@ public class GameState implements MoveVisitor {
      * Returns the graph used in the state.
      * @return The graph used in the state.
      */
-    public Graph getGraph() {
+    Graph getGraph() {
         return this.graph;
     }
 
@@ -128,7 +128,7 @@ public class GameState implements MoveVisitor {
      * @param colour The colour of the player.
      * @return A set of available moves.
      */
-    public Set<Move> validMoves(Colour colour) {
+    Set<Move> validMoves(Colour colour) {
 
         Collection<Edge<Integer,Transport>> edgesFrom;
         Set<Move> validMoves = new HashSet<>();
@@ -172,6 +172,7 @@ public class GameState implements MoveVisitor {
         return (detectives.containsValue(edge.destination().value()));
     }
 
+    // Updates the location of the detective/MrX moved.
     public void visit(TicketMove move) {
         if (move.colour().isMrX()) this.mrXLocation = move.destination();
         else {
@@ -179,10 +180,12 @@ public class GameState implements MoveVisitor {
         }
     }
 
+    // Updates the location of MrX.
     public void visit(DoubleMove move) {
         this.mrXLocation = move.finalDestination();
     }
 
+    // Required as part of move visitor.
     public void visit(PassMove move) {}
 
 }

@@ -3,7 +3,7 @@ package uk.ac.bris.cs.scotlandyard.ui.ai;
 /**
  * Interface required for AI players to use GameTreeBuilder.
  */
-public interface AIPlayer {
+interface AIPlayer {
 
     /**
      *  Called by the builder when the next iteration of the tree has been generated.

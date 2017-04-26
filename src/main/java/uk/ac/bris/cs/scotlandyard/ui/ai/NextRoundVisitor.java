@@ -15,28 +15,37 @@ import java.util.stream.Stream;
 import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
 
 /**
- * Created by Adam on 31/03/2017.
+ * Visits a GameTree and generate the child trees for all nodes that are not marked as dead.
  */
-public class NextRoundVisitor extends TreeVisitor {
+class NextRoundVisitor extends TreeVisitor {
 
     private Set<Move> moves;
     private int levels;
 
-    public NextRoundVisitor(Set<Move> moves, int levels) {
+    /**
+     * Makes a new visitor
+     * @param moves The initial set of moves for the tree.
+     * @param levels The depth of the tree required.
+     */
+    NextRoundVisitor(Set<Move> moves, int levels) {
         this.levels = levels;
         this.moves = moves;
     }
 
-    public void visit(GameTree tree) {
+    /**
+     * Adds child for each node with one move for MrX round.
+     * Adds one child for each possible combination of detective moves for detective round.
+     * @param tree The GameTree to visit.
+     */
+    void visit(GameTree tree) {
         if (tree.getChildTrees().isEmpty() && tree.isMrXRound()) {
             for (Move move : this.moves) {
                 tree.addChild(new GameState(tree.getState(), move), move);
             }
         }
 
-        if (/*tree.getChildTrees().isEmpty() &&*/ !tree.isMrXRound()) {
+        if (!tree.isMrXRound()) {
             tree.addChild(new GameState(tree.getState(), this.moves), this.moves);
-            //System.out.println("3");
         }
 
         for (GameTree childTree : tree.getChildTrees()) {
@@ -53,15 +62,9 @@ public class NextRoundVisitor extends TreeVisitor {
                     }
 
                     Set<Set<Move>> combinedDetectiveMoves = combinations(eachDetectiveMoves);
-//                    System.out.println("each: " + eachDetectiveMoves.size());
-//                    System.out.println("comb: " + combinedDetectiveMoves.size());
-                    //System.out.println("1");
-
                     for (Set moveSet : combinedDetectiveMoves) {
                         this.moves = moveSet;
-                        //System.out.println("moveset size: " + moveSet.size());
                         this.levels--;
-                        //System.out.println("2");
                         visit(childTree);
                     }
                 }
@@ -70,6 +73,7 @@ public class NextRoundVisitor extends TreeVisitor {
         this.levels++;
     }
 
+    // Generates a set of all possible combinations of each set in original.
     private Set<Set<Move>> combinations(Set<Set<Move>> original) {
         Set<Set<Move>> combined = new HashSet<>();
         for (Set<Move> set : original) {
@@ -78,6 +82,7 @@ public class NextRoundVisitor extends TreeVisitor {
         return combined;
     }
 
+    // Takes a set and makes all the combinations of the sprinkled and that set
     private Set<Set<Move>> sprinkle(Set<Set<Move>> sprinkled, Set<Move> moves) {
         Set<Set<Move>> sprinkledMoves = new HashSet<>();
         if (sprinkled.isEmpty()) {
@@ -87,16 +92,14 @@ public class NextRoundVisitor extends TreeVisitor {
                 sprinkledMoves.add(newSet);
             }
         }
-        //else {
-            for (Set<Move> set : sprinkled) {
-                for (Move move : moves) {
-                    Set<Move> newSet = new HashSet<>();
-                    newSet.addAll(set);
-                    newSet.add(move);
-                    sprinkledMoves.add(newSet);
-                }
+        for (Set<Move> set : sprinkled) {
+            for (Move move : moves) {
+                Set<Move> newSet = new HashSet<>();
+                newSet.addAll(set);
+                newSet.add(move);
+                sprinkledMoves.add(newSet);
             }
-        //}
+        }
 
         return sprinkledMoves;
     }

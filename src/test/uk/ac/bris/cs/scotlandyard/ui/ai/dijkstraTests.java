@@ -1,11 +1,9 @@
+package uk.ac.bris.cs.scotlandyard.ui.ai;
+
 import org.junit.Test;
 import uk.ac.bris.cs.gamekit.graph.Graph;
-import uk.ac.bris.cs.scotlandyard.model.Player;
-import uk.ac.bris.cs.scotlandyard.ui.ai.Calculator;
-import uk.ac.bris.cs.scotlandyard.ui.ai.MyAI;
 
 import static org.junit.Assert.assertEquals;
-import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
 
 /**
  * Created by adam on 28/03/2017.

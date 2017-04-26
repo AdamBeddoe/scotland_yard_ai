@@ -11,16 +11,21 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 /**
- * Created by Adam on 30/03/2017.
+ * Controls move selection for a MrX AI.
+ * Creates and calls builder.
  */
-public class MrX implements Player,AIPlayer {
+class MrX implements Player,AIPlayer {
 
     private GameTreeBuilder builder;
     private Calculator calculator;
     private Move bestMove;
     private Random random = new Random();;
 
-    public MrX(Calculator calculator) {
+    /**
+     * Makes a new MrX player.
+     * @param calculator A calculator to use to score the board.
+     */
+    MrX(Calculator calculator) {
         this.calculator = calculator;
         this.calculator.enableSneakyMode();
         this.builder = new GameTreeBuilder(true, this.calculator);
@@ -47,26 +52,34 @@ public class MrX implements Player,AIPlayer {
 
         try {
             t.join(14000);
-                if (((System.currentTimeMillis() - start) > timeAvailable) && t.isAlive()) {
-                    builder.stop();
-
-                }
+            if (((System.currentTimeMillis() - start) > timeAvailable) && t.isAlive()) {
+                builder.stop();
+            }
         } catch (InterruptedException e) {
-                // do something here
+            System.out.println("Unknown Error");
         }
 
         if (this.bestMove == null) this.bestMove = new ArrayList<>(moves).get(random.nextInt(moves.size()));
         callback.accept(bestMove);
     }
 
-    public GameTreeBuilder getBuilder() {
+    /**
+     * Returns a reference to the builder used.
+     * @return reference to the builder used in tree generation.
+     */
+    GameTreeBuilder getBuilder() {
         return this.builder;
     }
 
+    /**
+     * Called by the builder to update the current tree.
+     * @param tree The tree passed by the builder.
+     */
     public void updateTree(GameTree tree) {
         this.bestMove = selectMove(tree);
     }
 
+    // Selects the best move from the current tree.
     private Move selectMove(GameTree tree) {
         int highestScore = Integer.MIN_VALUE;
         GameTree bestTree = tree.getChildTrees().get(0);

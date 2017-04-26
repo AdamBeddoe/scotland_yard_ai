@@ -23,9 +23,9 @@ public class GameTree {
     /**
      * Make a new GameTree.
      * @param state The current GameState.
-     * @param isMrXRound
+     * @param isMrXRound Whether the current player is MrX.
      */
-    public GameTree(GameState state, boolean isMrXRound) {
+    GameTree(GameState state, boolean isMrXRound) {
         this.state = state;
         this.isMrXRound = isMrXRound;
         this.isDeadNode = false;
@@ -36,7 +36,7 @@ public class GameTree {
      * @param state The state of the child.
      * @param move The move used to create that state.
      */
-    public void addChild(GameState state, Move move) {
+    void addChild(GameState state, Move move) {
         this.childTrees.add(new GameTree(state,!this.isMrXRound));
         this.childMoves.add(move);
     }
@@ -46,7 +46,7 @@ public class GameTree {
      * @param state The state of the child.
      * @param moves The set of moves used to create the state.
      */
-    public void addChild(GameState state, Set<Move> moves) {
+    void addChild(GameState state, Set<Move> moves) {
         this.childTrees.add(new GameTree(state,!this.isMrXRound));
         this.childMoves.addAll(moves);
     }
@@ -54,7 +54,7 @@ public class GameTree {
     /**
      * Removes all child trees from a GameTree.
      */
-    public void removeChildren() {
+    void removeChildren() {
         this.childTrees.clear();
     }
 
@@ -79,7 +79,7 @@ public class GameTree {
      * @param tree The child tree.
      * @return The move that created tree.
      */
-    public Move getMove(GameTree tree) {
+    Move getMove(GameTree tree) {
         return childMoves.get(childTrees.indexOf(tree));
     }
 
@@ -87,7 +87,7 @@ public class GameTree {
      * Sets the score of a this game tree.
      * @param score The score of this game tree.
      */
-    public void setScore(int score) {
+    void setScore(int score) {
         this.score = score;
     }
 
@@ -104,7 +104,7 @@ public class GameTree {
      * Returns the GameState of this tree.
      * @return The GameState of this tree.
      */
-    public GameState getState() {
+    GameState getState() {
         return this.state;
     }
 
@@ -120,7 +120,7 @@ public class GameTree {
      * Sets whether the tree is a dead node.
      * @param isDeadNode Whether the node is dead.
      */
-    public void isDeadNode(boolean isDeadNode) {
+    void isDeadNode(boolean isDeadNode) {
         this.isDeadNode = isDeadNode;
     }
 
@@ -128,7 +128,7 @@ public class GameTree {
      * Accepts a tree visitor on the node.
      * @param visitor A tree visitor.
      */
-    public void accept(TreeVisitor visitor) {
+     void accept(TreeVisitor visitor) {
         visitor.visit(this);
     }
 }

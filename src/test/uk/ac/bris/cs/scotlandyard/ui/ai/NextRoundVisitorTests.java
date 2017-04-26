@@ -1,13 +1,10 @@
+package uk.ac.bris.cs.scotlandyard.ui.ai;
+
 import org.junit.Test;
 import uk.ac.bris.cs.gamekit.graph.Graph;
-import uk.ac.bris.cs.gamekit.graph.Node;
 import uk.ac.bris.cs.scotlandyard.model.Colour;
 import uk.ac.bris.cs.scotlandyard.model.Move;
-import uk.ac.bris.cs.scotlandyard.model.Ticket;
 import uk.ac.bris.cs.scotlandyard.model.TicketMove;
-import uk.ac.bris.cs.scotlandyard.ui.ai.GameState;
-import uk.ac.bris.cs.scotlandyard.ui.ai.GameTree;
-import uk.ac.bris.cs.scotlandyard.ui.ai.NextRoundVisitor;
 
 import java.util.HashMap;
 import java.util.HashSet;

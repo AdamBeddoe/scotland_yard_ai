@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by Adam on 20/04/2017.
+ * Iteratively generates a GameTree.
  */
-public class GameTreeBuilder implements Runnable {
+class GameTreeBuilder implements Runnable {
     private GameState startState;
     private boolean playerIsMrX;
     private int levels;
@@ -26,55 +26,107 @@ public class GameTreeBuilder implements Runnable {
     private int maxDetectiveMoves;
     private boolean isUsingMaxDetectiveMoves;
 
+    /**
+     * Starts building the tree.
+     */
     public void run() {
         build();
     }
 
-    public GameTreeBuilder(boolean playerIsMrX, Calculator calculator) {
+    /**
+     * Makes a new GameTreeBuilder.
+     * @param playerIsMrX Whether MrX is is the current player at point of generation.
+     * @param calculator A calculator for scoring the board.
+     */
+    GameTreeBuilder(boolean playerIsMrX, Calculator calculator) {
         this.playerIsMrX = playerIsMrX;
         this.calculator = calculator;
     }
 
-    public void registerObserver(TreeBuilderObserver observer) {
+    /**
+     * Adds a TreeBuilderObserver to be notified.
+     * @param observer The observer to be added.
+     */
+    void registerObserver(TreeBuilderObserver observer) {
         this.observers.add(observer);
     }
 
-    public void deregisterObserver(TreeBuilderObserver observer) {
+    /**
+     * Removes a TreeBuilderObserver to be notified.
+     * @param observer The observer to be removed.
+     */
+    void deregisterObserver(TreeBuilderObserver observer) {
         this.observers.remove(observer);
     }
 
-    public void setStartState(GameState state) {
+    /**
+     * Sets the initial state for the GameTree.
+     * @param state The initial state of the GameTree.
+     */
+    void setStartState(GameState state) {
         this.startState = state;
     }
 
-    public void setLookAheadLevels(int levels) {
+    /**
+     * Sets the number of levels in the tree to be generated.
+     * @param levels The number of levels in the tree to be generated.
+     */
+    void setLookAheadLevels(int levels) {
         this.levels = levels;
     }
 
-    public void setMoves(Set<Move> moves) {
+    /**
+     * Set the initial set of moves for the current player.
+     * @param moves Initial set of moves for the current player.
+     */
+    void setMoves(Set<Move> moves) {
         this.moves = moves;
     }
 
-    public void setNotifyPlayer(AIPlayer player) {
+    /**
+     * Set the player to notify with each iteration of the tree.
+     * @param player A class implementing AIPlayer, receives updated tree iterations.
+     */
+    void setNotifyPlayer(AIPlayer player) {
      this.player = player;
     }
 
-    public void setThreshold(int threshold) {
+    /**
+     *  Sets the threshold to use for the pruning, if done via score.
+     * @param threshold Minimum score for a tree before it is marked as dead.
+     */
+    void setThreshold(int threshold) {
         this.isUsingThreshold = true;
         this.threshold = threshold;
     }
 
-    public void setMaxMrXMoves(int max) {
+    /**
+     * Sets the maximum number of moves in any tree branch for MrX.
+     * @param max The maximum number of moves.
+     */
+    void setMaxMrXMoves(int max) {
         this.isUsingMaxMrXMoves = true;
         this.maxMrXMoves = max;
     }
 
-    public void setMaxDetectiveMoves(int max) {
+    /**
+     * Sets the maximum number of moves in any tree branch for Detectives.
+     * @param max The maximum number of moves.
+     */
+    void setMaxDetectiveMoves(int max) {
         this.isUsingMaxDetectiveMoves = true;
         this.maxDetectiveMoves = max;
     }
 
-    public void build() {
+    /**
+     * Builds the game tree.
+     * Calls the NextRoundVisitor, ScoreVisitor and PruneVisitor respectively on the GameTree repeatedly.
+     * Stops when reaches required level or when stop has been called.
+     * After the ScoreVisitor calls updateTree on the player.
+     * Notifies observers about each stage.
+     *
+     */
+    private void build() {
         this.observers.forEach(TreeBuilderObserver::onTreeBuildStart);
         GameTree tree = new GameTree(this.startState, this.playerIsMrX);
 
@@ -101,7 +153,10 @@ public class GameTreeBuilder implements Runnable {
         this.observers.forEach(observer -> observer.onTreeBuildFinish(tree));
     }
 
-    public void stop() {
+    /**
+     * Sets the builder to stopped state, will finish tree generation when current build iteration is complete.
+     */
+    void stop() {
         this.stopped = true;
     }
 }
