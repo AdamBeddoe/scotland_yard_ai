@@ -16,10 +16,13 @@ import static uk.ac.bris.cs.scotlandyard.model.Colour.*;
 import static uk.ac.bris.cs.scotlandyard.model.Ticket.Taxi;
 
 /**
- * Created by Adam on 14/04/2017.
+ * Tests the NextRoundVisitor functionality.
  */
 public class NextRoundVisitorTests extends AITestBase{
 
+    /**
+     * Runs the visitor to make sure nothing crashes.
+     */
     @Test
     public void justRun() {
         Graph graph = defaultGraph();

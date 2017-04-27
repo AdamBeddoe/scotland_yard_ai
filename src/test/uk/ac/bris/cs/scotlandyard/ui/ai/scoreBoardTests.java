@@ -18,12 +18,15 @@ import static uk.ac.bris.cs.scotlandyard.model.Colour.Red;
 import static uk.ac.bris.cs.scotlandyard.model.Transport.Taxi;
 
 /**
- * Created by Adam on 30/03/2017.
+ * Tests the scoring function.
  */
 public class scoreBoardTests extends AITestBase{
-    Calculator calculator = new Calculator();
-    Calculator flatCalculator = new FlatCalculator();
+    private Calculator calculator = new Calculator();
+    private Calculator flatCalculator = new FlatCalculator();
 
+    /**
+     * Tests that the score returns an integer.
+     */
     @Test
     public void scoreValidReturnType() {
         Graph graph = defaultGraph();
@@ -35,6 +38,9 @@ public class scoreBoardTests extends AITestBase{
         assertThat(calculator.scoreBoard(testState), instanceOf (Integer.class));
     }
 
+    /**
+     * Tests that the captured score is -1000.
+     */
     @Test
     public void testCapturedScore() {
         Graph graph = defaultGraph();
@@ -46,6 +52,9 @@ public class scoreBoardTests extends AITestBase{
         assertEquals(-1000, calculator.scoreBoard(testState));
     }
 
+    /**
+     * Tests that the captured score is -1000 with multiple detectives.
+     */
     @Test
     public void testCapturedScoreWithMultipleDetectives() {
         Graph graph = defaultGraph();
@@ -58,6 +67,9 @@ public class scoreBoardTests extends AITestBase{
         assertEquals(-1000, calculator.scoreBoard(testState));
     }
 
+    /**
+     * Test that a game with just MrX scores correct.
+     */
     @Test
     public void justMrXScoresCorrect() {
         Graph graph = flatTaxiGraph();
@@ -71,6 +83,9 @@ public class scoreBoardTests extends AITestBase{
         assertEquals(6, calculator.scoreBoard(testState2));
     }
 
+    /**
+     * Tests some simple flat cases of the scoring with multiple detectives.
+     */
     @Test
     public void flatMrXAndDetectiveScoresCorrect() {
         Graph graph = flatTaxiGraph();
@@ -90,12 +105,18 @@ public class scoreBoardTests extends AITestBase{
     }
 }
 
+/**
+ * A version of the calculator which can calculate on a FlatGraph.
+ */
 class FlatCalculator extends Calculator {
-    int graphDistances[][] = new int[8][8];
+    private int graphDistances[][] = new int[8][8];
 
-    public FlatCalculator() {
-        Graph<Integer,Transport> flatTaxiGraph = new UndirectedGraph();
-        //TODO sort thing out
+
+    /**
+     * Makes a new calculator.
+     */
+    FlatCalculator() {
+        Graph<Integer,Transport> flatTaxiGraph = new UndirectedGraph<>();
         flatTaxiGraph.addNode(new Node<>(1));
         flatTaxiGraph.addNode(new Node<>(2));
         flatTaxiGraph.addNode(new Node<>(3));
@@ -103,12 +124,12 @@ class FlatCalculator extends Calculator {
         flatTaxiGraph.addNode(new Node<>(5));
         flatTaxiGraph.addNode(new Node<>(6));
         flatTaxiGraph.addNode(new Node<>(7));
-        flatTaxiGraph.addEdge(new Edge<Integer,Transport>(new Node(1), new Node<>(2),Taxi));
-        flatTaxiGraph.addEdge(new Edge<Integer,Transport>(new Node(2), new Node<>(3),Taxi));
-        flatTaxiGraph.addEdge(new Edge<Integer,Transport>(new Node(3), new Node<>(4),Taxi));
-        flatTaxiGraph.addEdge(new Edge<Integer,Transport>(new Node(4), new Node<>(5),Taxi));
-        flatTaxiGraph.addEdge(new Edge<Integer,Transport>(new Node(5), new Node<>(6),Taxi));
-        flatTaxiGraph.addEdge(new Edge<Integer,Transport>(new Node(6), new Node<>(7),Taxi));
+        flatTaxiGraph.addEdge(new Edge<>(new Node<>(1), new Node<>(2),Taxi));
+        flatTaxiGraph.addEdge(new Edge<>(new Node<>(2), new Node<>(3),Taxi));
+        flatTaxiGraph.addEdge(new Edge<>(new Node<>(3), new Node<>(4),Taxi));
+        flatTaxiGraph.addEdge(new Edge<>(new Node<>(4), new Node<>(5),Taxi));
+        flatTaxiGraph.addEdge(new Edge<>(new Node<>(5), new Node<>(6),Taxi));
+        flatTaxiGraph.addEdge(new Edge<>(new Node<>(6), new Node<>(7),Taxi));
         for (int i = 1; i < 8; i++) {
             for (int j = 1; j < 8; j++) {
                 this.graphDistances[i][j] = Calculator.dijkstra(flatTaxiGraph, i, j);
@@ -116,6 +137,12 @@ class FlatCalculator extends Calculator {
         }
     }
 
+    /**
+     * Returns the flat graph distances.
+     * @param x First location.
+     * @param y Second location.
+     * @return The pre-calculated distances of a FlatGraph.
+     */
     @Override
     public int getGraphDistances(int x, int y) {
         return this.graphDistances[x][y];

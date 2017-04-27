@@ -6,10 +6,13 @@ import uk.ac.bris.cs.gamekit.graph.Graph;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by adam on 28/03/2017.
+ * Tests the calculation of the dijkstra algorithm.
  */
 public class dijkstraTests extends AITestBase{
 
+    /**
+     * Tests dijkstra on random locations.
+     */
     @Test
     public void testStandardCaseDijkstra() {
         Graph graph = defaultGraph();
@@ -21,6 +24,9 @@ public class dijkstraTests extends AITestBase{
         assertEquals(5, Calculator.dijkstra(graph, 1, 199));
     }
 
+    /**
+     * Tests dijkstra on trivial distances.
+     */
     @Test
     public void trivialDistanceTest() {
         Graph graph = defaultGraph();
@@ -35,7 +41,10 @@ public class dijkstraTests extends AITestBase{
     }
 
 
-    @Test(expected = IllegalArgumentException.class)        //TODO Placing in a valid dijkstra call still passes test?
+    /**
+     * Tests that invalid nodes should throw an IllegalArgumentException.
+     */
+    @Test(expected = IllegalArgumentException.class)
     public void invalidNodeShouldThrow() {
         Graph graph = defaultGraph();
 
