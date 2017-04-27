@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * Iteratively generates a GameTree.
  */
-class GameTreeBuilder implements Runnable {
+class GameTreeBuilder {
     private GameState startState;
     private boolean playerIsMrX;
     private int levels;
@@ -25,13 +25,6 @@ class GameTreeBuilder implements Runnable {
     private boolean isUsingMaxMrXMoves;
     private int maxDetectiveMoves;
     private boolean isUsingMaxDetectiveMoves;
-
-    /**
-     * Starts building the tree.
-     */
-    public void run() {
-        build();
-    }
 
     /**
      * Makes a new GameTreeBuilder.
@@ -126,7 +119,7 @@ class GameTreeBuilder implements Runnable {
      * Notifies observers about each stage.
      *
      */
-    private void build() {
+    void build() {
         this.observers.forEach(TreeBuilderObserver::onTreeBuildStart);
         GameTree tree = new GameTree(this.startState, this.playerIsMrX);
 
@@ -140,8 +133,6 @@ class GameTreeBuilder implements Runnable {
             tree.accept(scoreVisitorNick);
             this.observers.forEach(TreeBuilderObserver::onScoreVisitorComplete);
 
-            player.updateTree(tree);
-
             PruneVisitor pruneVisitorDave = new PruneVisitor();
             if (this.isUsingMaxDetectiveMoves) pruneVisitorDave.setMaxDetectiveMoves(this.maxDetectiveMoves);
             if (this.isUsingMaxMrXMoves) pruneVisitorDave.setMaxMrXMoves(this.maxMrXMoves);
@@ -151,6 +142,7 @@ class GameTreeBuilder implements Runnable {
             System.out.println("Hey");
         }
         System.out.println("ho");
+        player.updateTree(tree);
         this.observers.forEach(observer -> observer.onTreeBuildFinish(tree));
     }
 

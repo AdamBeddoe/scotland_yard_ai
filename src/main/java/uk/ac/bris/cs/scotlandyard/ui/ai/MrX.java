@@ -44,25 +44,7 @@ class MrX implements Player,AIPlayer {
         this.builder.setNotifyPlayer(this);
         this.builder.setMoves(moves);
 
-        Thread t = new Thread(this.builder);
-        t.start();
-
-        long timeAvailable = 14000;
-        long start = System.currentTimeMillis();
-
-        boolean stopping = false;
-        while (!stopping) {
-            try {
-                t.join(1000);
-                if (((System.currentTimeMillis() - start) > timeAvailable) && t.isAlive()) {
-                    builder.stop();
-                    stopping = true;
-                }
-            } catch(InterruptedException e){
-                    System.out.println("Unknown Error");
-            }
-        }
-        System.out.println(t.isAlive());
+        this.builder.build();
         if (this.bestMove == null) this.bestMove = new ArrayList<>(moves).get(random.nextInt(moves.size()));
         callback.accept(bestMove);
     }

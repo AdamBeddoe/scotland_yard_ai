@@ -51,21 +51,7 @@ class Detective implements Player, AIPlayer {
             this.builder.setNotifyPlayer(this);
             this.builder.setMoves(moves);
 
-            Thread t = new Thread(this.builder);
-            t.start();
-
-            long timeAvailable = 14000;
-            long start = System.currentTimeMillis();
-
-            try {
-                t.join(14000);
-                if (((System.currentTimeMillis() - start) > timeAvailable) && t.isAlive()) {
-                    builder.stop();
-
-                }
-            } catch (InterruptedException e) {
-                // do something here
-            }
+            this.builder.build();
         }
 
         if (this.bestMove == null) this.bestMove = new ArrayList<>(moves).get(random.nextInt(moves.size()));
