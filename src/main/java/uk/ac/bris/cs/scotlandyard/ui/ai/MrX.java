@@ -4,10 +4,8 @@ package uk.ac.bris.cs.scotlandyard.ui.ai;
 import uk.ac.bris.cs.scotlandyard.model.Move;
 import uk.ac.bris.cs.scotlandyard.model.Player;
 import uk.ac.bris.cs.scotlandyard.model.ScotlandYardView;
-import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorView;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -41,8 +39,8 @@ class MrX implements Player,AIPlayer {
         this.builder.setStartState(new GameState(view,location));
         this.builder.setLookAheadLevels(2);
         this.builder.setThreshold(150);
-        //this.builder.setMaxDetectiveMoves(3);
-        //this.builder.setMaxMrXMoves(3);
+        this.builder.setMaxDetectiveMoves(5);
+        this.builder.setMaxMrXMoves(5);
         this.builder.setNotifyPlayer(this);
         this.builder.setMoves(moves);
 

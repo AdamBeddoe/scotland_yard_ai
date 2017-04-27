@@ -53,11 +53,12 @@ class PruneVisitor extends TreeVisitor {
     public void visit(GameTree tree) {
 
         if (this.isUsingThreshold) thresholdPrune(tree);
-        if (!tree.getChildTrees().isEmpty()) {
-            if (this.isUsingMaxDetectiveMoves && !tree.isMrXRound()) maxDetectiveMovePrune(tree);
+        if (!tree.getChildTrees().isEmpty() && !tree.hasBeenMaxMovesPruned()) {
+            if (this.isUsingMaxDetectiveMoves && !tree.isMrXRound()) {
+                maxDetectiveMovePrune(tree);
+            }
             if (this.isUsingMaxMrXMoves && tree.isMrXRound()) maxMrXMovePrune(tree);
         }
-
         for (GameTree childTree : tree.getChildTrees()) {
             if (!childTree.isDeadNode()) visit(childTree);
             else if (childTree.isDeadNode() && !childTree.getChildTrees().isEmpty()) childTree.removeChildren();
@@ -77,21 +78,21 @@ class PruneVisitor extends TreeVisitor {
         List<GameTree> sortedTrees = new ArrayList<>();
         sortedTrees.addAll(rawTrees);
         sortedTrees.sort(Comparator.comparing(GameTree::getScore));
-        for (int i = (sortedTrees.size()-1); i>=this.maxDetectiveMoves; i--) {
+        for (int i = sortedTrees.size()-1; i>this.maxDetectiveMoves; i--) {
             sortedTrees.get(i).isDeadNode(true);
         }
+        tree.setMaxMovesPruned(true);
     }
 
     // Pruning based on max number of child trees for any Detective node.
     private void maxMrXMovePrune(GameTree tree) {
-        List<GameTree> allTrees = tree.getChildTrees();
-        allTrees.sort(Comparator.comparing(GameTree::getScore));
-        List<GameTree> bestTrees;
-        if (this.maxMrXMoves > allTrees.size()) bestTrees = allTrees;
-        else bestTrees = allTrees.subList(allTrees.size()-this.maxMrXMoves, allTrees.size());
-
-        for (GameTree childTree : tree.getChildTrees()) {
-            if (!bestTrees.contains(childTree)) childTree.isDeadNode(true);
+        List<GameTree> rawTrees = tree.getChildTrees();
+        List<GameTree> sortedTrees = new ArrayList<>();
+        sortedTrees.addAll(rawTrees);
+        sortedTrees.sort(Comparator.comparing(GameTree::getScore));
+        for (int i = 0; i<sortedTrees.size()-this.maxMrXMoves; i++) {
+            sortedTrees.get(i).isDeadNode(true);
         }
+        tree.setMaxMovesPruned(true);
     }
 }

@@ -347,7 +347,7 @@ public class GameMonitorView {
 
             if(located) {
                 located = false;
-                clickedNode.setText("Clicked Node Score: " + child.getScore() + " " + child.isDeadNode());
+                clickedNode.setText("Clicked Node Score: " + child.getScore() + " " + child.getMaxPruned());
             }
             else findNodeOnClick(child, x, y, clickedNode);
         }

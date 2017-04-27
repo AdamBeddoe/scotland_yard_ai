@@ -19,6 +19,7 @@ public class GameTree {
     private int score;
     private boolean isMrXRound;
     private boolean isDeadNode;
+    private boolean maxMovesPruned;
 
     /**
      * Make a new GameTree.
@@ -122,6 +123,22 @@ public class GameTree {
      */
     void isDeadNode(boolean isDeadNode) {
         this.isDeadNode = isDeadNode;
+    }
+
+    /**
+     * Whether the node has been MaxMoves pruned.
+     * @return Whether the node has been MaxMoves pruned.
+     */
+    public boolean hasBeenMaxMovesPruned() {
+        return this.maxMovesPruned;
+    }
+
+    /**
+     * Sets whether the node has been MaxMoves pruned.
+     * @param pruned Whether the node has been MaxMoves pruned.
+     */
+    void setMaxMovesPruned(boolean pruned) {
+        this.maxMovesPruned = pruned;
     }
 
     /**

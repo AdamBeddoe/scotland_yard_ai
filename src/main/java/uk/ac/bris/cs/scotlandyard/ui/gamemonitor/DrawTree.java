@@ -16,6 +16,7 @@ class DrawTree {
     private int y;
     private int spaceNeeded;
     private boolean isMrXRound;
+    private boolean maxPruned;
 
     /**
      * Creates a DrawTree from the
@@ -29,6 +30,7 @@ class DrawTree {
         this.spaceNeeded = tree.getChildTrees().size();
         this.x = x;
         this.y = y;
+        this.maxPruned = tree.hasBeenMaxMovesPruned();
 
         for(GameTree child : tree.getChildTrees()) {
             this.childTrees.add(new DrawTree(child));
@@ -134,5 +136,9 @@ class DrawTree {
      */
     boolean getIsMrXRound() {
         return this.isMrXRound;
+    }
+
+    boolean getMaxPruned() {
+        return this.maxPruned;
     }
 }
