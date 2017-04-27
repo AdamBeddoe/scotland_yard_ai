@@ -21,6 +21,7 @@ class NextRoundVisitor extends TreeVisitor {
 
     private Set<Move> moves;
     private int levels;
+    private boolean atStart = true;
 
     /**
      * Makes a new visitor
@@ -38,40 +39,41 @@ class NextRoundVisitor extends TreeVisitor {
      * @param tree The GameTree to visit.
      */
     public void visit(GameTree tree) {
-        if (tree.getChildTrees().isEmpty() && tree.isMrXRound()) {
-            for (Move move : this.moves) {
-                tree.addChild(new GameState(tree.getState(), move), move);
+        if (tree.getChildTrees().isEmpty()) {
+            if (tree.isMrXRound()) addMrXChildren(tree);
+            else addDetectivesChildren(tree);
+        }
+        for (GameTree childTree : tree.getChildTrees()) {
+            if (levels > 0 && !childTree.isDeadNode()) {
+                levels--;
+                visit(childTree);
             }
         }
-
-        if (!tree.isMrXRound()) {
-            tree.addChild(new GameState(tree.getState(), this.moves), this.moves);
-        }
-
-            for (GameTree childTree : tree.getChildTrees()) {
-                if (levels > 0 && !childTree.isDeadNode()) {
-                    if (childTree.isMrXRound()) {
-                        this.moves = childTree.getState().validMoves(Black);
-                        this.levels--;
-                        visit(childTree);
-                    } else {
-
-                        Set<Set<Move>> eachDetectiveMoves = new HashSet<>();
-                        for (Colour colour : childTree.getState().getDetectives()) {
-                            eachDetectiveMoves.add(childTree.getState().validMoves(colour));
-                        }
-
-                        Set<Set<Move>> combinedDetectiveMoves = combinations(eachDetectiveMoves);
-                        for (Set moveSet : combinedDetectiveMoves) {
-                            this.moves = moveSet;
-                            this.levels--;
-                            visit(childTree);
-                        }
-                    }
-                }
-            }
-
+        this.atStart = false;
         this.levels++;
+    }
+
+    // Add child nodes for a MrX
+    private void addMrXChildren(GameTree tree) {
+        Set<Move> moves;
+        if (!atStart) moves = tree.getState().validMoves(Black);
+        else moves = this.moves;
+        for (Move move : moves) {
+            tree.addChild(new GameState(tree.getState(), move), move);
+        }
+    }
+
+    // Add child nodes for all Detectives
+    private void addDetectivesChildren(GameTree tree) {
+        Set<Set<Move>> eachDetectiveMoves = new HashSet<>();
+        for (Colour colour : tree.getState().getDetectives()) {
+            eachDetectiveMoves.add(tree.getState().validMoves(colour));
+        }
+
+        Set<Set<Move>> combinedDetectiveMoves = combinations(eachDetectiveMoves);
+        for (Set moveSet : combinedDetectiveMoves) {
+            tree.addChild(new GameState(tree.getState(), moveSet), moveSet);
+        }
     }
 
     // Generates a set of all possible combinations of each set in original.

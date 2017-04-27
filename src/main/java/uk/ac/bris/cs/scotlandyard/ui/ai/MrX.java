@@ -20,6 +20,7 @@ class MrX implements Player,AIPlayer {
     private Calculator calculator;
     private Move bestMove;
     private Random random = new Random();
+    private int averageScore = 0;
 
     /**
      * Makes a new MrX player.
@@ -37,10 +38,10 @@ class MrX implements Player,AIPlayer {
         this.calculator.updateNodeHistory(view);
 
         this.builder.setStartState(new GameState(view,location));
-        this.builder.setLookAheadLevels(2);
-        //this.builder.setThreshold(150);
-        this.builder.setMaxDetectiveMoves(5);
-        this.builder.setMaxMrXMoves(5);
+        this.builder.setLookAheadLevels(3);
+        //this.builder.setThreshold(this.averageScore);
+        this.builder.setMaxDetectiveMoves(1);
+        //this.builder.setMaxMrXMoves(5);
         this.builder.setNotifyPlayer(this);
         this.builder.setMoves(moves);
 
@@ -63,6 +64,7 @@ class MrX implements Player,AIPlayer {
      */
     public void updateTree(GameTree tree) {
         this.bestMove = selectMove(tree);
+        this.averageScore = getAverageScore(tree);
     }
 
     // Selects the best move from the current tree.
@@ -76,5 +78,14 @@ class MrX implements Player,AIPlayer {
             }
         }
         return tree.getMove(bestTree);
+    }
+
+    // Calculates the average score of child branches of the tree.
+    private int getAverageScore(GameTree tree) {
+        int total = 0;
+        for (GameTree child : tree.getChildTrees()){
+            total = total + child.getScore();
+        }
+        return (3*total)/(4*tree.getChildTrees().size());
     }
 }
