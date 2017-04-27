@@ -22,17 +22,15 @@ class MrX implements Player,AIPlayer {
     private Calculator calculator;
     private Move bestMove;
     private Random random = new Random();
-    private GameMonitorView view;
 
     /**
      * Makes a new MrX player.
      * @param calculator A calculator to use to score the board.
      */
-    MrX(Calculator calculator, GameMonitorView view) {
+    MrX(Calculator calculator) {
         this.calculator = calculator;
         this.calculator.enableSneakyMode();
         this.builder = new GameTreeBuilder(true, this.calculator);
-        this.view = view;
     }
 
     @Override
@@ -67,7 +65,6 @@ class MrX implements Player,AIPlayer {
      */
     public void updateTree(GameTree tree) {
         this.bestMove = selectMove(tree);
-        this.view.drawTree(tree);
     }
 
     // Selects the best move from the current tree.

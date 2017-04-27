@@ -55,7 +55,7 @@ public class MyAI implements PlayerFactory {
 		GameMonitorView view = new GameMonitorView(visualiser, controller);
 		GameMonitorModel model = new GameMonitorModel(view);
 
-		this.mrX = new MrX(this.calculator, view);
+		this.mrX = new MrX(this.calculator);
 		this.mrX.getBuilder().registerObserver(model);
 	}
 }
