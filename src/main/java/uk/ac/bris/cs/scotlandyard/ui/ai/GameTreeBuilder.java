@@ -123,7 +123,7 @@ class GameTreeBuilder {
         this.observers.forEach(TreeBuilderObserver::onTreeBuildStart);
         GameTree tree = new GameTree(this.startState, this.playerIsMrX);
 
-        for (int i = 1; i <= this.levels && !this.stopped; i++) {
+        for (int i = 0; i <= this.levels && !this.stopped; i++) {
 
             NextRoundVisitor nextRoundVisitorTilo = new NextRoundVisitor(this.moves, i);
             tree.accept(nextRoundVisitorTilo);

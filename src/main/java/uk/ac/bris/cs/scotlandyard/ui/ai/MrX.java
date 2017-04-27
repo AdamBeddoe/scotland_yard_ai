@@ -4,8 +4,10 @@ package uk.ac.bris.cs.scotlandyard.ui.ai;
 import uk.ac.bris.cs.scotlandyard.model.Move;
 import uk.ac.bris.cs.scotlandyard.model.Player;
 import uk.ac.bris.cs.scotlandyard.model.ScotlandYardView;
+import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -20,15 +22,17 @@ class MrX implements Player,AIPlayer {
     private Calculator calculator;
     private Move bestMove;
     private Random random = new Random();
+    private GameMonitorView view;
 
     /**
      * Makes a new MrX player.
      * @param calculator A calculator to use to score the board.
      */
-    MrX(Calculator calculator) {
+    MrX(Calculator calculator, GameMonitorView view) {
         this.calculator = calculator;
         this.calculator.enableSneakyMode();
         this.builder = new GameTreeBuilder(true, this.calculator);
+        this.view = view;
     }
 
     @Override
@@ -63,6 +67,7 @@ class MrX implements Player,AIPlayer {
      */
     public void updateTree(GameTree tree) {
         this.bestMove = selectMove(tree);
+        this.view.drawTree(tree);
     }
 
     // Selects the best move from the current tree.

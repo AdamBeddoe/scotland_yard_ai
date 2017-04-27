@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
@@ -39,6 +40,11 @@ public class GameMonitorView {
     private int windowY = 850;
     private int tabNumber = 0;
 
+    /**
+     * Makes a new GameMonitorView
+     * @param visualiser The provided Visualiser object (to setup)
+     * @param controller Controller element of MVC (handles onClick events)
+     */
     public GameMonitorView(Visualiser visualiser, GameMonitorController controller) {
         this.visualiser = visualiser;
         this.controller = controller;
@@ -49,6 +55,9 @@ public class GameMonitorView {
         timeInitGraph();
     }
 
+    /**
+     * Initialises the provided Visualiser
+     */
     private void visualiserInit() {
         Group root = new Group();
         Scene scene = new Scene(root, windowX, windowY);
@@ -57,7 +66,7 @@ public class GameMonitorView {
         tabPane.setBackground(new Background(new BackgroundFill(Color.web("#2a2a2a"), CornerRadii.EMPTY, Insets.EMPTY)));
         BorderPane borderPane = new BorderPane();
 
-        String tabs[] = {"Tree", "Times", "Map", "Heatmap", "Route Tracer"};
+        String tabs[] = {"Tree", "Times"};
 
         for(int i = 0; i < tabs.length; i++) {
             Tab tab = new Tab();
@@ -86,6 +95,9 @@ public class GameMonitorView {
         visualiser.surface().getChildren().add(root);
     }
 
+    /**
+     * Initialises the graph tab of the GameMonitor
+     */
     private void timeInitGraph() {
         Tab tab = returnTab(1);
 
@@ -94,7 +106,7 @@ public class GameMonitorView {
         xAxis.setLabel("Move no.");
         yAxis.setLabel("Time (ms)");
 
-        ScatterChart<Number, Number> chart = new ScatterChart<Number, Number>(xAxis, yAxis);
+        LineChart<Number, Number> chart = new LineChart<Number, Number>(xAxis, yAxis);
         chart.setTitle("Graph Visitor Timing");
 
         Set<Node> axisNode = chart.lookupAll(".axis-label");
@@ -103,6 +115,9 @@ public class GameMonitorView {
         }
         Node title = chart.lookup(".chart-title");
         title.setStyle("-fx-text-fill: white;");
+
+        Node legend = chart.lookup(".chart-legend");
+        legend.setStyle("-fx-background-radius: 0;");
 
         nextRoundSeries.setName("nextRound");
         score.setName("score");
@@ -113,6 +128,11 @@ public class GameMonitorView {
         tab.setContent(chart);
     }
 
+    /**
+     * Provides the tab of given index
+     * @param index Index of required tab
+     * @return Required tab
+     */
     private Tab returnTab(int index) {
         Group root = (Group) visualiser.surface().getChildren().get(0);
         BorderPane borderPane = (BorderPane) root.getChildren().get(0);
@@ -122,31 +142,51 @@ public class GameMonitorView {
         return tab;
     }
 
-    public void nextRoundTime(long time) {
+    /**
+     * Adds the nextRoundVisitor time to the graph
+     * @param time Time taken for nextRoundVisitor execution
+     */
+    void nextRoundTime(long time) {
         this.moveNum++;
         Platform.runLater(() -> {
             this.nextRoundSeries.getData().add(new XYChart.Data(this.moveNum, time));
         });
     }
 
-    public void scoreTime(long time) {
+    /**
+     * Adds the scoreVisitor time to the graph
+     * @param time Time taken for the ScoreVisitor execution
+     */
+    void scoreTime(long time) {
         Platform.runLater(() -> {
             this.score.getData().add(new XYChart.Data(this.moveNum, time));
         });
     }
 
-    public void pruneTime(long time) {
+    /**
+     * Adds the PruneVisitor time to the graph
+     * @param time Time taken for the PruneVisitor execution
+     */
+    void pruneTime(long time) {
         Platform.runLater(() -> {
             this.prune.getData().add(new XYChart.Data(this.moveNum, time));
         });
     }
 
-    public void treeFinishTime(long time) {
+    /**
+     * Adds the time taken for the whole tree to be built to the graph
+     * @param time Time taken for whole tree to be built
+     */
+    void treeFinishTime(long time) {
         Platform.runLater(() -> {
             this.treeFinish.getData().add(new XYChart.Data(this.moveNum, time));
         });
     }
 
+    /**
+     * Will draw the provided tree in a new tab in the GameMonitor
+     * @param tree Tree to be drawn
+     */
     public void drawTree(GameTree tree) {
         Tab tab = drawTreeTab();
         BorderPane bp = new BorderPane();
@@ -179,6 +219,10 @@ public class GameMonitorView {
         controller.mouseClickHandlerInit(clickedNode);
     }
 
+    /**
+     * Sets up the label to display score of a clicked node
+     * @return Initialised label object
+     */
     private Label clickedNodeLabelSetup() {
         Label clickedNode = new Label("Clicked Node Score: ");
         clickedNode.setFont(new Font("Arial", 18));
@@ -189,6 +233,10 @@ public class GameMonitorView {
         return clickedNode;
     }
 
+    /**
+     * Sets up the button to move the graph left
+     * @return Initialised button object
+     */
     private Button leftBSetup() {
         Button leftB = new Button();
         leftB.setMinWidth(100);
@@ -197,6 +245,10 @@ public class GameMonitorView {
         return leftB;
     }
 
+    /**
+     * Sets up the button to move the graph right
+     * @return Initialised button object
+     */
     private Button rightBSetup() {
         Button rightB = new Button();
         rightB.setMinWidth(100);
@@ -206,6 +258,10 @@ public class GameMonitorView {
         return rightB;
     }
 
+    /**
+     * Sets up the button to zoom the graph out
+     * @return Initialised button object
+     */
     private Button zoomOutSetup() {
         Button zoomOut = new Button();
         zoomOut.setLayoutX(200);
@@ -215,6 +271,10 @@ public class GameMonitorView {
         return zoomOut;
     }
 
+    /**
+     * Sets up the buttom to zoom the graph in
+     * @return Initialised button object
+     */
     private Button zoomInSetup() {
         Button zoomIn = new Button();
         zoomIn.setLayoutX(220);
@@ -224,11 +284,20 @@ public class GameMonitorView {
         return zoomIn;
     }
 
-    public void clearCanvas(javafx.scene.canvas.Canvas canvas, GraphicsContext gc) {
+    /**
+     * Resets the canvas to a blank state
+     * @param canvas Canvas to be clear
+     * @param gc GraphicsContext associated with the canvas
+     */
+    void clearCanvas(javafx.scene.canvas.Canvas canvas, GraphicsContext gc) {
         gc.setFill(javafx.scene.paint.Color.web("#2a2a2a"));
         gc.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
     }
 
+    /**
+     * Returns the tab of the currently being drawn tree
+     * @return Required Tab object
+     */
     private Tab drawTreeTab() {
         Tab mainTab = returnTab(0);
         TabPane tabs = (TabPane) mainTab.getContent();
@@ -240,6 +309,12 @@ public class GameMonitorView {
         return tab;
     }
 
+    /**
+     * Instantiates a new tree, calls required visitors to generate a DrawTree from a GameTree
+     * @param tree GameTree to be drawn
+     * @param x X coordinate of tree root in Canvas
+     * @return Initialised DrawTree object
+     */
     private DrawTree initialiseDrawTree(GameTree tree, int x) {
         DrawTree dt = new DrawTree(tree, x, 100);
 
@@ -252,7 +327,14 @@ public class GameMonitorView {
         return dt;
     }
 
-    public void findNodeOnClick(DrawTree tree, int x, int y, Label clickedNode) {
+    /**
+     * Sets the clickedNode label to the score of the clicked Tree Node
+     * @param tree DrawTree on canvas
+     * @param x X coordinate of mouse click
+     * @param y Y coordinate of mouse click
+     * @param clickedNode Label to be altered
+     */
+    void findNodeOnClick(DrawTree tree, int x, int y, Label clickedNode) {
         boolean located = false;
         int threshold = 5;
 
@@ -265,13 +347,18 @@ public class GameMonitorView {
 
             if(located) {
                 located = false;
-                clickedNode.setText("Clicked Node Score: " + child.getScore());
+                clickedNode.setText("Clicked Node Score: " + child.getScore() + " " + child.isDeadNode());
             }
             else findNodeOnClick(child, x, y, clickedNode);
         }
     }
 
-    public void drawTreeFromGraph(DrawTree tree, GraphicsContext gc) {
+    /**
+     * Draws the tree on the canvas, based on the input (initialised) DrawTree
+     * @param tree DrawTree to be drawn
+     * @param gc GraphicsContext associated with the Canvas
+     */
+    void drawTreeFromGraph(DrawTree tree, GraphicsContext gc) {
         drawLines(tree, gc);
         drawCircles(tree, gc);
         highlightChosenMoves(tree, gc);
@@ -282,6 +369,11 @@ public class GameMonitorView {
         gc.strokeOval(dt.getX(), dt.getY(), 8 , 8);
     }
 
+    /**
+     * Used by drawTreeFromGraph, draws the nodes
+     * @param tree DrawTree to be drawn
+     * @param gc GraphicsContext associated with the Canvas
+     */
     private void drawCircles(DrawTree tree, GraphicsContext gc) {
         for (DrawTree child : tree.getChildDrawTrees()) {
             gc.setLineWidth(2);
@@ -293,6 +385,11 @@ public class GameMonitorView {
         }
     }
 
+    /**
+     * Used by drawTreeFromGraph, draws the lines
+     * @param tree DrawTree to be drawn
+     * @param gc GraphicsContext associated with the Canvas
+     */
     private void drawLines(DrawTree tree, GraphicsContext gc) {
         for (DrawTree child : tree.getChildDrawTrees()) {
 
@@ -305,6 +402,11 @@ public class GameMonitorView {
         }
     }
 
+    /**
+     * Used by drawTreeFromGraph, highlights the route chosen by the AI
+     * @param tree DrawTree to be drawn
+     * @param gc GraphicsContext associated with the Canvas
+     */
     private void highlightChosenMoves(DrawTree tree, GraphicsContext gc) {
         int chosenScore = 0;
         DrawTree chosenNode = null;
@@ -325,8 +427,6 @@ public class GameMonitorView {
                 }
             }
         }
-
-
 
         if(chosenNode != null) {
             highlightChosenMoves(chosenNode, gc);

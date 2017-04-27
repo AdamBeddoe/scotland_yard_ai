@@ -48,28 +48,29 @@ class NextRoundVisitor extends TreeVisitor {
             tree.addChild(new GameState(tree.getState(), this.moves), this.moves);
         }
 
-        for (GameTree childTree : tree.getChildTrees()) {
-            if (levels > 0 && !childTree.isDeadNode()) {
-                if (childTree.isMrXRound()) {
-                    this.moves = childTree.getState().validMoves(Black);
-                    this.levels--;
-                    visit(childTree);
-                } else {
-
-                    Set<Set<Move>> eachDetectiveMoves = new HashSet<>();
-                    for (Colour colour : childTree.getState().getDetectives()) {
-                        eachDetectiveMoves.add(childTree.getState().validMoves(colour));
-                    }
-
-                    Set<Set<Move>> combinedDetectiveMoves = combinations(eachDetectiveMoves);
-                    for (Set moveSet : combinedDetectiveMoves) {
-                        this.moves = moveSet;
+            for (GameTree childTree : tree.getChildTrees()) {
+                if (levels > 0 && !childTree.isDeadNode()) {
+                    if (childTree.isMrXRound()) {
+                        this.moves = childTree.getState().validMoves(Black);
                         this.levels--;
                         visit(childTree);
+                    } else {
+
+                        Set<Set<Move>> eachDetectiveMoves = new HashSet<>();
+                        for (Colour colour : childTree.getState().getDetectives()) {
+                            eachDetectiveMoves.add(childTree.getState().validMoves(colour));
+                        }
+
+                        Set<Set<Move>> combinedDetectiveMoves = combinations(eachDetectiveMoves);
+                        for (Set moveSet : combinedDetectiveMoves) {
+                            this.moves = moveSet;
+                            this.levels--;
+                            visit(childTree);
+                        }
                     }
                 }
             }
-        }
+
         this.levels++;
     }
 

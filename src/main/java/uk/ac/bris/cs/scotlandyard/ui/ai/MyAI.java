@@ -49,12 +49,13 @@ public class MyAI implements PlayerFactory {
 	public void ready(Visualiser visualiser, ResourceProvider provider) {
 		this.calculator = new Calculator();
 
-		this.mrX = new MrX(this.calculator);
 
 		this.visualiser = visualiser;
 		GameMonitorController controller = new GameMonitorController();
 		GameMonitorView view = new GameMonitorView(visualiser, controller);
 		GameMonitorModel model = new GameMonitorModel(view);
+
+		this.mrX = new MrX(this.calculator, view);
 		this.mrX.getBuilder().registerObserver(model);
 	}
 }
