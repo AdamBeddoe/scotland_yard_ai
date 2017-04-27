@@ -75,12 +75,11 @@ class PruneVisitor extends TreeVisitor {
     // Pruning based on max number of child trees for any MrX node.
     private void maxDetectiveMovePrune(GameTree tree) {
         List<GameTree> rawTrees = tree.getChildTrees();
-        System.out.println(rawTrees.size());
         List<GameTree> sortedTrees = new ArrayList<>();
         sortedTrees.addAll(rawTrees);
         sortedTrees.sort(Comparator.comparing(GameTree::getScore));
         for (int i = sortedTrees.size()-1; i>=this.maxDetectiveMoves; i--) {
-            tree.getChildTrees().get(i).isDeadNode(true);
+            sortedTrees.get(i).isDeadNode(true);
         }
         tree.setMaxMovesPruned(true);
     }
