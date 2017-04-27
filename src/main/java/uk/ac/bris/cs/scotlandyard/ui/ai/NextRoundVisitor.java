@@ -71,7 +71,7 @@ class NextRoundVisitor extends TreeVisitor {
         }
 
         Set<Set<Move>> combinedDetectiveMoves = combinations(eachDetectiveMoves);
-        for (Set moveSet : combinedDetectiveMoves) {
+        for (Set<Move> moveSet : combinedDetectiveMoves) {
             tree.addChild(new GameState(tree.getState(), moveSet), moveSet);
         }
     }
