@@ -13,7 +13,7 @@ import uk.ac.bris.cs.scotlandyard.ui.gamemonitor.GameMonitorView;
 /**
  * The main AI class, responsible for initialising the AIPlayer and starting the visualiser.
  */
-@ManagedAI(value = "The Tree Surgeon (World)", visualiserType = ManagedAI.VisualiserType.WINDOWED)
+@ManagedAI(value = "MrX gon give it to ya (World)", visualiserType = ManagedAI.VisualiserType.WINDOWED)
 public class MyAI implements PlayerFactory {
 
 	private Calculator calculator;
