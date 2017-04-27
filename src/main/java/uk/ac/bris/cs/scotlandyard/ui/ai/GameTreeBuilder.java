@@ -139,9 +139,7 @@ class GameTreeBuilder {
             if (this.isUsingThreshold) pruneVisitorDave.setThreshold(this.threshold);
             tree.accept(pruneVisitorDave);
             this.observers.forEach(TreeBuilderObserver::onBigPruneComplete);
-            System.out.println("Hey");
         }
-        System.out.println("ho");
         player.updateTree(tree);
         this.observers.forEach(observer -> observer.onTreeBuildFinish(tree));
     }

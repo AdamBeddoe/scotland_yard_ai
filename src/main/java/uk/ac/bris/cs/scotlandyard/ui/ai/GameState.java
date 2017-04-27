@@ -77,9 +77,6 @@ class GameState implements MoveVisitor {
      */
     GameState(GameState state, Set<Move> moves) {
         this.graph = state.getGraph();
-        for (Colour colour : state.getDetectives()) {
-            if (colour != Black) detectives.put(colour,state.getDetectiveLocation(colour));
-        }
         this.mrXLocation = state.getMrXLocation();
 
         for(Move move : moves) {
@@ -176,7 +173,7 @@ class GameState implements MoveVisitor {
     public void visit(TicketMove move) {
         if (move.colour().isMrX()) this.mrXLocation = move.destination();
         else {
-            this.detectives.replace(move.colour(), move.destination());
+            this.detectives.put(move.colour(), move.destination());
         }
     }
 
