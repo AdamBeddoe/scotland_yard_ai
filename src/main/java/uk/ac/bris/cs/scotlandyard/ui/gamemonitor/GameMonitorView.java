@@ -30,11 +30,12 @@ public class GameMonitorView {
 
     private Visualiser visualiser;
     private GameMonitorController controller;
-    private Integer moveNum = 0;
+    private Integer moveNum = 1;
     private XYChart.Series nextRoundSeries = new XYChart.Series();
     private XYChart.Series score = new XYChart.Series();
     private XYChart.Series prune = new XYChart.Series();
     private XYChart.Series treeFinish = new XYChart.Series();
+    private XYChart.Series cumulativeTime = new XYChart.Series();
     private DrawTree dt;
     private int windowX = 1400;
     private int windowY = 850;
@@ -120,11 +121,17 @@ public class GameMonitorView {
         legend.setStyle("-fx-background-radius: 0;");
 
         nextRoundSeries.setName("nextRound");
+        nextRoundSeries.getData().add(new XYChart.Data(0,0));
         score.setName("score");
+        score.getData().add(new XYChart.Data(0,0));
         prune.setName("prune");
+        prune.getData().add(new XYChart.Data(0,0));
         treeFinish.setName("treeFinish");
+        treeFinish.getData().add(new XYChart.Data(0,0));
+        cumulativeTime.setName("cumulativeTime");
+        cumulativeTime.getData().add(new XYChart.Data(0,0));
 
-        chart.getData().addAll(nextRoundSeries, score, prune, treeFinish);
+        chart.getData().addAll(nextRoundSeries, score, prune, treeFinish, cumulativeTime);
         tab.setContent(chart);
     }
 
@@ -147,7 +154,6 @@ public class GameMonitorView {
      * @param time Time taken for nextRoundVisitor execution
      */
     void nextRoundTime(long time) {
-        this.moveNum++;
         Platform.runLater(() -> {
             this.nextRoundSeries.getData().add(new XYChart.Data(this.moveNum, time));
         });
@@ -170,6 +176,7 @@ public class GameMonitorView {
     void pruneTime(long time) {
         Platform.runLater(() -> {
             this.prune.getData().add(new XYChart.Data(this.moveNum, time));
+            this.moveNum++;
         });
     }
 
@@ -179,7 +186,17 @@ public class GameMonitorView {
      */
     void treeFinishTime(long time) {
         Platform.runLater(() -> {
-            this.treeFinish.getData().add(new XYChart.Data(this.moveNum, time));
+            this.treeFinish.getData().add(new XYChart.Data(this.moveNum-1, time));
+        });
+    }
+
+    /**
+     * Adds the cumulative time for each action
+     * @param time Cumulative time
+     */
+    void cumulativeTime(long time) {
+        Platform.runLater(() -> {
+            this.cumulativeTime.getData().add(new XYChart.Data(this.moveNum-1, time));
         });
     }
 
@@ -347,7 +364,7 @@ public class GameMonitorView {
 
             if(located) {
                 located = false;
-                clickedNode.setText("Clicked Node Score: " + child.getScore() + " " + child.getMaxPruned());
+                clickedNode.setText("Clicked Node Score: " + child.getScore());
             }
             else findNodeOnClick(child, x, y, clickedNode);
         }

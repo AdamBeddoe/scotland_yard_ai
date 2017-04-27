@@ -56,6 +56,7 @@ public class GameMonitorModel implements TreeBuilderObserver {
         this.pruneTime = System.nanoTime();
         long pruneTime = (this.pruneTime - this.scoreVisitorTime)/1000000;
         view.pruneTime(pruneTime);
+        view.cumulativeTime((this.pruneTime-this.startTime)/1000000);
     }
 
     /**
@@ -66,7 +67,7 @@ public class GameMonitorModel implements TreeBuilderObserver {
     @Override
     public void onTreeBuildFinish(GameTree tree) {
         this.treeBuildFinishTime = System.nanoTime();
-        long treeFinishTime = (this.treeBuildFinishTime - this.pruneTime)/1000000;
+        long treeFinishTime = (this.treeBuildFinishTime - this.startTime)/1000000;
 
         view.treeFinishTime(treeFinishTime);
         Platform.runLater(() -> view.drawTree(tree));
