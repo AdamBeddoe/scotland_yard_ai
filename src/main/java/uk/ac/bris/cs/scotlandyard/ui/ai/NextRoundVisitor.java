@@ -37,7 +37,7 @@ class NextRoundVisitor extends TreeVisitor {
      * Adds one child for each possible combination of detective moves for detective round.
      * @param tree The GameTree to visit.
      */
-    void visit(GameTree tree) {
+    public void visit(GameTree tree) {
         if (tree.getChildTrees().isEmpty() && tree.isMrXRound()) {
             for (Move move : this.moves) {
                 tree.addChild(new GameState(tree.getState(), move), move);

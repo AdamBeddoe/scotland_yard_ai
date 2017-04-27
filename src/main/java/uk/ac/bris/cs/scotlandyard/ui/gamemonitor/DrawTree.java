@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Adam on 24/04/2017.
+ * Tree data-structure containing information on the drawn tree.
  */
-public class DrawTree {
+class DrawTree {
     private List<DrawTree> childTrees = new ArrayList<>();
     private boolean deadNode;
     private int score;
@@ -17,7 +17,29 @@ public class DrawTree {
     private int spaceNeeded;
     private boolean isMrXRound;
 
-    public DrawTree(GameTree tree) {
+    /**
+     * Creates a DrawTree from the
+     * @param tree The GameTree to generate a DrawTree from.
+     * @param x The x position of the first node in pixels.
+     * @param y The y position of the first node in pixels.
+     */
+    DrawTree(GameTree tree, int x, int y) {
+        this.deadNode = tree.isDeadNode();
+        this.score = tree.getScore();
+        this.spaceNeeded = tree.getChildTrees().size();
+        this.x = x;
+        this.y = y;
+
+        for(GameTree child : tree.getChildTrees()) {
+            this.childTrees.add(new DrawTree(child));
+        }
+    }
+
+    /**
+     * Creates a DrawTree from a GameTree. Used for internal recursion.
+     * @param tree The GameTree to create the DrawTreeFrom.
+     */
+    private DrawTree(GameTree tree) {
 
         this.deadNode = tree.isDeadNode();
         this.score = tree.getScore();
@@ -29,59 +51,88 @@ public class DrawTree {
         }
     }
 
-    public DrawTree(GameTree tree, int x, int y) {
-        this.deadNode = tree.isDeadNode();
-        this.score = tree.getScore();
-        this.spaceNeeded = tree.getChildTrees().size();
-        this.x = x;
-        this.y = y;
-
-        for(GameTree child : tree.getChildTrees()) {
-            this.childTrees.add(new DrawTree(child));
-        }
-    }
-
-    public int getScore() {
+    /**
+     * Returns the score at a node of the DrawTree.
+     * @return The score at a node of the DrawTree.
+     */
+    int getScore() {
         return this.score;
     }
 
-    public boolean isDeadNode() {
+    /**
+     * Returns whether ths node is a dead node.
+     * @return Whether ths node is a dead node.
+     */
+    boolean isDeadNode() {
         return this.deadNode;
     }
 
-    public List<DrawTree> getChildDrawTrees() {
+    /**
+     * Returns a list of all child DrawTrees.
+     * @return List of ChildDrawTrees. Not null.
+     */
+    List<DrawTree> getChildDrawTrees() {
         return this.childTrees;
     }
 
-    public int getSpaceNeeded() {
+    /**
+     * Returns the space needed for a node, that is the combined space needed for all child trees.
+     * @return The space needed for a node.
+     */
+    int getSpaceNeeded() {
         return this.spaceNeeded;
     }
 
-    public void setSpaceNeeded(int space) {
+    /**
+     * Sets the amount of space needed for this tree.
+     * @param space The amount of space needed for this tree in pixels.
+     */
+    void setSpaceNeeded(int space) {
         this.spaceNeeded = space;
     }
 
-    public void accept(DrawTreeVisitor visitor) {
+
+    void accept(DrawTreeVisitor visitor) {
         visitor.visit(this);
     }
 
-    public void setX(int x) {
+    /**
+     * Sets the X location of the tree node.
+     * @param x The X location of the tree node.
+     */
+    void setX(int x) {
         this.x = x;
     }
 
-    public void setY(int y) {
+    /**
+     * Sets the Y location of the tree node.
+     * @param y The Y location of the tree node.
+     */
+    void setY(int y) {
         this.y = y;
     }
 
-    public int getX() {
+    /**
+     * Gets the X location of the tree node.
+     * @return The X location of the tree node.
+     */
+    int getX() {
         return this.x;
     }
 
-    public int getY() {
+    /**
+     * Gets the Y location of the tree node.
+     * @return The Y location of the tree node.
+     */
+    int getY() {
         return this.y;
     }
 
-    public boolean getIsMrXRound() {
+    /**
+     * Returns whether this DrawTree represents a MrX round.
+     * @return Whether this DrawTree represents a MrX round.
+     */
+    boolean getIsMrXRound() {
         return this.isMrXRound;
     }
 }

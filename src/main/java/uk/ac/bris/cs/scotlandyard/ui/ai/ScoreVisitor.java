@@ -21,7 +21,7 @@ class ScoreVisitor extends TreeVisitor {
      * if the detectives are moving.
      * @param tree The GameTree to visit.
      */
-    void visit(GameTree tree) {
+    public void visit(GameTree tree) {
         if (tree.isMrXRound()) {
             int bestScore = Integer.MIN_VALUE;
             for (GameTree childTree : tree.getChildTrees()) {

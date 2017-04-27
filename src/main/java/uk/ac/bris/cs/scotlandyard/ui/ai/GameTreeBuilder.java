@@ -148,8 +148,9 @@ class GameTreeBuilder implements Runnable {
             if (this.isUsingThreshold) pruneVisitorDave.setThreshold(this.threshold);
             tree.accept(pruneVisitorDave);
             this.observers.forEach(TreeBuilderObserver::onBigPruneComplete);
+            System.out.println("Hey");
         }
-
+        System.out.println("ho");
         this.observers.forEach(observer -> observer.onTreeBuildFinish(tree));
     }
 

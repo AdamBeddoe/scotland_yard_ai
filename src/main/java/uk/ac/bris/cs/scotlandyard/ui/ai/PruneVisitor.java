@@ -6,9 +6,9 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Created by Adam on 01/04/2017.
+ * Prunes a GameTree based on one of 3 methods: Threshold, MaxMrMoves and MaxDetectiveMoves.
  */
-public class PruneVisitor extends TreeVisitor {
+class PruneVisitor extends TreeVisitor {
 
     private int threshold = -1;
     private boolean isUsingThreshold;
@@ -17,17 +17,17 @@ public class PruneVisitor extends TreeVisitor {
     private int maxDetectiveMoves = -1;
     private boolean isUsingMaxDetectiveMoves;
 
-    public void setThreshold(int threshold) {
+    void setThreshold(int threshold) {
         this.isUsingThreshold = true;
         this.threshold = threshold;
     }
 
-    public void setMaxMrXMoves(int max) {
+    void setMaxMrXMoves(int max) {
         this.isUsingMaxMrXMoves = true;
         this.maxMrXMoves = max;
     }
 
-    public void setMaxDetectiveMoves(int max) {
+    void setMaxDetectiveMoves(int max) {
         this.isUsingMaxDetectiveMoves = true;
         this.maxDetectiveMoves = max;
     }
@@ -36,14 +36,14 @@ public class PruneVisitor extends TreeVisitor {
     public void visit(GameTree tree) {
 
         if (this.isUsingThreshold) thresholdPrune(tree);
-        if (!tree.getChildTrees().isEmpty() && !hasBeenVisited(tree)) {
+        if (!tree.getChildTrees().isEmpty()) {
             if (this.isUsingMaxDetectiveMoves && !tree.isMrXRound()) maxDetectiveMovePrune(tree);
             if (this.isUsingMaxMrXMoves && tree.isMrXRound()) maxMrXMovePrune(tree);
         }
 
         for (GameTree childTree : tree.getChildTrees()) {
             if (!childTree.isDeadNode()) visit(childTree);
-            else if (childTree.isDeadNode() && !childTree.getChildTrees().isEmpty()) childTree.removeChildren();
+            //else if (childTree.isDeadNode() && !childTree.getChildTrees().isEmpty()) childTree.removeChildren();
         }
     }
 
@@ -82,26 +82,6 @@ public class PruneVisitor extends TreeVisitor {
 
         for (GameTree childTree : tree.getChildTrees()) {
             if (!bestTrees.contains(childTree)) childTree.isDeadNode(true);
-        }
-    }
-
-    private boolean hasBeenVisited(GameTree tree) {
-        for (GameTree child : tree.getChildTrees()) {
-            if (child.isDeadNode()) return true;
-        }
-        return false;
-    }
-
-    public void printTree(GameTree tree) {
-        if (!tree.getChildTrees().isEmpty()) {
-            System.out.print("[");
-            for (GameTree treeee : tree.getChildTrees()) {
-                System.out.print(treeee.isDeadNode() +"-" + treeee.getScore() + ",");
-            }
-            System.out.print("]\n");
-            for (GameTree child: tree.getChildTrees()) {
-                printTree(child);
-            }
         }
     }
 }

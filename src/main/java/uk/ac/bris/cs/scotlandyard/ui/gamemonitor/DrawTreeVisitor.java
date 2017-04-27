@@ -1,11 +1,10 @@
 package uk.ac.bris.cs.scotlandyard.ui.gamemonitor;
 
 /**
- * Created by Adam on 24/04/2017.
+ * A visitor for the DrawTree data-structure.
  */
-public abstract class DrawTreeVisitor {
+abstract class DrawTreeVisitor {
 
-    public abstract void visit (DrawTree tree);
+    abstract void visit (DrawTree tree);
 
-    //www.cs.bris.ac.uk/~dave
 }

@@ -19,7 +19,7 @@ class MrX implements Player,AIPlayer {
     private GameTreeBuilder builder;
     private Calculator calculator;
     private Move bestMove;
-    private Random random = new Random();;
+    private Random random = new Random();
 
     /**
      * Makes a new MrX player.
@@ -37,7 +37,7 @@ class MrX implements Player,AIPlayer {
         this.calculator.updateNodeHistory(view);
 
         this.builder.setStartState(new GameState(view,location));
-        this.builder.setLookAheadLevels(5);
+        this.builder.setLookAheadLevels(3);
         this.builder.setThreshold(100);
         //this.builder.setMaxDetectiveMoves(3);
         //this.builder.setMaxMrXMoves(3);
@@ -50,15 +50,19 @@ class MrX implements Player,AIPlayer {
         long timeAvailable = 14000;
         long start = System.currentTimeMillis();
 
-        try {
-            t.join(14000);
-            if (((System.currentTimeMillis() - start) > timeAvailable) && t.isAlive()) {
-                builder.stop();
+        boolean stopping = false;
+        while (!stopping) {
+            try {
+                t.join(1000);
+                if (((System.currentTimeMillis() - start) > timeAvailable) && t.isAlive()) {
+                    builder.stop();
+                    stopping = true;
+                }
+            } catch(InterruptedException e){
+                    System.out.println("Unknown Error");
             }
-        } catch (InterruptedException e) {
-            System.out.println("Unknown Error");
         }
-
+        System.out.println(t.isAlive());
         if (this.bestMove == null) this.bestMove = new ArrayList<>(moves).get(random.nextInt(moves.size()));
         callback.accept(bestMove);
     }

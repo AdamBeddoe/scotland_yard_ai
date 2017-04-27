@@ -23,7 +23,7 @@ import uk.ac.bris.cs.scotlandyard.ui.ai.GameTree;
 import java.util.*;
 
 /**
- * Created by Adam on 18/04/2017.
+ * Controls the display and rendering for the GameMonitor.
  */
 public class GameMonitorView {
 

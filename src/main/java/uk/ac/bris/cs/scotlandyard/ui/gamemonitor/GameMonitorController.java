@@ -9,7 +9,7 @@ import javafx.scene.paint.*;
 import java.awt.Canvas;
 
 /**
- * Created by Adam on 18/04/2017.
+ * Controls user input from the GameMonitor.
  */
 public class GameMonitorController {
     private javafx.scene.canvas.Canvas canvas;
@@ -17,27 +17,27 @@ public class GameMonitorController {
     private DrawTree dt;
     private GameMonitorView view;
 
-    public void viewAttributes(javafx.scene.canvas.Canvas canvas, GraphicsContext gc, DrawTree dt, GameMonitorView view) {
+    void viewAttributes(javafx.scene.canvas.Canvas canvas, GraphicsContext gc, DrawTree dt, GameMonitorView view) {
         this.canvas = canvas;
         this.gc = gc;
         this.dt = dt;
         this.view = view;
     }
 
-    public void leftBHandlerInit(javafx.scene.control.Button leftB) {
+    void leftBHandlerInit(javafx.scene.control.Button leftB) {
         TransformVisitor leftV = new TransformVisitor(200);
 
-            leftB.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
-                @Override
-                public void handle(javafx.event.ActionEvent event) {
-                    view.clearCanvas(canvas, gc);
-                    dt.accept(leftV);
-                    view.drawTreeFromGraph(dt, gc);
-                }
-            });
+        leftB.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
+            @Override
+            public void handle(javafx.event.ActionEvent event) {
+                view.clearCanvas(canvas, gc);
+                dt.accept(leftV);
+                view.drawTreeFromGraph(dt, gc);
+            }
+        });
     }
 
-    public void rightBHandlerInit(Button rightB) {
+    void rightBHandlerInit(Button rightB) {
         TransformVisitor rightV = new TransformVisitor(-200);
 
         rightB.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
@@ -50,7 +50,7 @@ public class GameMonitorController {
         });
     }
 
-    public void zoomOutHandlerInit(Button zoomOut) {
+    void zoomOutHandlerInit(Button zoomOut) {
         zoomOut.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
             @Override
             public void handle(javafx.event.ActionEvent event) {
@@ -61,7 +61,7 @@ public class GameMonitorController {
         });
     }
 
-    public void zoomInHandlerInit(Button zoomIn) {
+    void zoomInHandlerInit(Button zoomIn) {
         zoomIn.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
             @Override
             public void handle(javafx.event.ActionEvent event) {
@@ -72,7 +72,7 @@ public class GameMonitorController {
         });
     }
 
-    public void mouseClickHandlerInit(Label clickedNode) {
+    void mouseClickHandlerInit(Label clickedNode) {
         canvas.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
