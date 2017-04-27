@@ -1,14 +1,14 @@
 package uk.ac.bris.cs.scotlandyard.ui.gamemonitor;
 
 /**
- * Created by Adam on 24/04/2017.
+ * Visits a DrawTree and calculates
  */
-public class SpaceNeededVisitor extends DrawTreeVisitor {
+class SpaceNeededVisitor extends DrawTreeVisitor {
 
-    public SpaceNeededVisitor() {
-
-    }
-
+    /**
+     * Visits a tree and calculates the space needed for each tree branch.
+     * @param tree The DrawTree to visit.
+     */
     public void visit(DrawTree tree) {
         int calc = 0;
 
