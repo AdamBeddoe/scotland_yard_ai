@@ -25,7 +25,7 @@ public class GameMonitorController {
     }
 
     void leftBHandlerInit(javafx.scene.control.Button leftB) {
-        TransformVisitor leftV = new TransformVisitor(200);
+        TransformVisitor leftV = new TransformVisitor(800);
 
         leftB.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
             @Override
@@ -38,7 +38,7 @@ public class GameMonitorController {
     }
 
     void rightBHandlerInit(Button rightB) {
-        TransformVisitor rightV = new TransformVisitor(-200);
+        TransformVisitor rightV = new TransformVisitor(-800);
 
         rightB.setOnAction(new javafx.event.EventHandler<javafx.event.ActionEvent>() {
             @Override
