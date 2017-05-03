@@ -36,6 +36,7 @@ class MrX implements Player,AIPlayer {
     public void makeMove(ScotlandYardView view, int location, Set<Move> moves,
                          Consumer<Move> callback) {
         this.calculator.updateNodeHistory(view);
+        this.calculator.useStack(true);
 
         this.builder.setStartState(new GameState(view,location));
         this.builder.setLookAheadLevels(3);

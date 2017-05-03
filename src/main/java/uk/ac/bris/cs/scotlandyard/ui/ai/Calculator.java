@@ -29,7 +29,8 @@ class Calculator {
     private final int graphDistances[][] = new int[200][200];
     private int nodeHistory[] = new int[200];
     private boolean sneakyMode;
-    private GameStateStack stack = new GameStateStack(10);
+    private GameStateStack stack = new GameStateStack(5);
+    private boolean useStack;
 
     /**
      * Make a new Calculator, pre-calculates distances.
@@ -51,6 +52,15 @@ class Calculator {
      * @return The score.
      */
     int scoreBoard(GameState state) {
+        if (this.useStack) {
+            return stackScore(state);
+        }
+        else {
+            return regularScore(state);
+        }
+    }
+
+    private int stackScore(GameState state) {
         if (this.stack.contains(state)) {
             return this.stack.getScore(state);
         }
@@ -70,6 +80,22 @@ class Calculator {
             stack.push(state, (int) total);
             return (int) total;
         }
+    }
+
+    private int regularScore(GameState state) {
+        double total = 0;
+        int mrXLocation = state.getMrXLocation();
+        total = total + state.validMoves(Black).size();
+        boolean captured = false;
+
+        for (Colour colour : state.getDetectives()) {
+            int distance = getGraphDistances(mrXLocation,state.getDetectiveLocation(colour));
+            total = total + (Math.pow(distance, 2));
+            if (distance == 0) captured = true;
+        }
+        if (sneakyMode) total = total + (nodeHistory[state.getMrXLocation()]*10);
+        if (captured) return -1000;
+        return (int) total;
     }
 
     /**
@@ -160,5 +186,9 @@ class Calculator {
 
     public void clearStack() {
         this.stack.clear();
+    }
+
+    public void useStack(boolean useStack) {
+        this.useStack = useStack;
     }
 }
