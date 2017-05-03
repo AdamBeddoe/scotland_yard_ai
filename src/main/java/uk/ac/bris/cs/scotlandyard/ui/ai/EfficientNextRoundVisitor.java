@@ -24,7 +24,6 @@ class EfficientNextRoundVisitor extends TreeVisitor {
      * @param levels The depth of the tree required.
      */
     EfficientNextRoundVisitor(Set<Move> moves, int levels, Map<Integer,Set<Set<Move>>> moveSets) {
-        System.out.println("starting " + levels);
         this.levels = levels;
         this.moves = moves;
         this.moveSets = moveSets;
