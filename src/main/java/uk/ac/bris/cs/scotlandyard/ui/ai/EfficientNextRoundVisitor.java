@@ -16,17 +16,14 @@ class EfficientNextRoundVisitor extends TreeVisitor {
     private int levels;
     private boolean atStart = true;
 
-    private Map<Integer,Set<Set<Move>>> moveSets = new HashMap<>();
-
     /**
      * Makes a new visitor
      * @param moves The initial set of moves for the tree.
      * @param levels The depth of the tree required.
      */
-    EfficientNextRoundVisitor(Set<Move> moves, int levels, Map<Integer,Set<Set<Move>>> moveSets) {
+    EfficientNextRoundVisitor(Set<Move> moves, int levels) {
         this.levels = levels;
         this.moves = moves;
-        this.moveSets = moveSets;
     }
 
     /**
@@ -58,11 +55,9 @@ class EfficientNextRoundVisitor extends TreeVisitor {
         for (Move move : moves) {
             tree.addChild(new GameState(tree.getState(), move), move);
         }
-
-
-        if (!this.moveSets.containsKey(this.levels)) {
-            Set<Set<Move>> detectiveMoves = calculateDetectiveMoves(tree);
-            this.moveSets.put(this.levels,detectiveMoves);
+        Set<Set<Move>> detectiveMoves = calculateDetectiveMoves(tree);
+        for (GameTree child : tree.getChildTrees()) {
+            child.setDetectiveMoves(detectiveMoves);
         }
     }
 
@@ -77,7 +72,7 @@ class EfficientNextRoundVisitor extends TreeVisitor {
 
     // Add child nodes for all Detectives
     private void addDetectivesChildren(GameTree tree) {
-        for (Set<Move> moveSet : this.moveSets.get(this.levels)) {
+        for (Set<Move> moveSet : tree.getDetectiveMoves()) {
             tree.addChild(new GameState(tree.getState(), moveSet), moveSet);
         }
     }
@@ -101,15 +96,16 @@ class EfficientNextRoundVisitor extends TreeVisitor {
                 sprinkledMoves.add(newSet);
             }
         }
-        for (Set<Move> set : sprinkled) {
-            for (Move move : moves) {
-                Set<Move> newSet = new HashSet<>();
-                newSet.addAll(set);
-                newSet.add(move);
-                sprinkledMoves.add(newSet);
+        else {
+            for (Set<Move> set : sprinkled) {
+                for (Move move : moves) {
+                    Set<Move> newSet = new HashSet<>();
+                    newSet.addAll(set);
+                    newSet.add(move);
+                    sprinkledMoves.add(newSet);
+                }
             }
         }
-
         return sprinkledMoves;
     }
 }

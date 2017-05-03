@@ -13,6 +13,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
+import java.util.Stack;
 
 import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
 
@@ -27,6 +29,7 @@ class Calculator {
     private final int graphDistances[][] = new int[200][200];
     private int nodeHistory[] = new int[200];
     private boolean sneakyMode;
+    private GameStateStack stack = new GameStateStack(10);
 
     /**
      * Make a new Calculator, pre-calculates distances.
@@ -48,19 +51,25 @@ class Calculator {
      * @return The score.
      */
     int scoreBoard(GameState state) {
-        double total = 0;
-        int mrXLocation = state.getMrXLocation();
-        total = total + state.validMoves(Black).size();
-        boolean captured = false;
-
-        for (Colour colour : state.getDetectives()) {
-            int distance = getGraphDistances(mrXLocation,state.getDetectiveLocation(colour));
-            total = total + (Math.pow(distance, 2));
-            if (distance == 0) captured = true;
+        if (this.stack.contains(state)) {
+            return this.stack.getScore(state);
         }
-        if (sneakyMode) total = total + (nodeHistory[state.getMrXLocation()]*10);
-        if (captured) return -1000;
-        else return (int) total;
+        else {
+            double total = 0;
+            int mrXLocation = state.getMrXLocation();
+            total = total + state.validMoves(Black).size();
+            boolean captured = false;
+
+            for (Colour colour : state.getDetectives()) {
+                int distance = getGraphDistances(mrXLocation,state.getDetectiveLocation(colour));
+                total = total + (Math.pow(distance, 2));
+                if (distance == 0) captured = true;
+            }
+            if (sneakyMode) total = total + (nodeHistory[state.getMrXLocation()]*10);
+            if (captured) return -1000;
+            stack.push(state, (int) total);
+            return (int) total;
+        }
     }
 
     /**
@@ -147,5 +156,9 @@ class Calculator {
         for (Colour player : view.getPlayers()) {
             this.nodeHistory[view.getPlayerLocation(player)]++;
         }
+    }
+
+    public void clearStack() {
+        this.stack.clear();
     }
 }

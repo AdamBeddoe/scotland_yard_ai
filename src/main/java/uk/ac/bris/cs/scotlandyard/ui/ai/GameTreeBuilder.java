@@ -24,8 +24,6 @@ class GameTreeBuilder {
     private int maxDetectiveMoves;
     private boolean isUsingMaxDetectiveMoves;
 
-    private Map<Integer,Set<Set<Move>>> moveSets = new HashMap<>();
-
     /**
      * Makes a new GameTreeBuilder.
      * @param playerIsMrX Whether MrX is is the current player at point of generation.
@@ -81,7 +79,7 @@ class GameTreeBuilder {
      * @param player A class implementing AIPlayer, receives updated tree iterations.
      */
     void setNotifyPlayer(AIPlayer player) {
-     this.player = player;
+        this.player = player;
     }
 
     /**
@@ -124,7 +122,7 @@ class GameTreeBuilder {
         GameTree tree = new GameTree(this.startState, this.playerIsMrX);
         for (int i = 1; i <= this.levels && !this.stopped; i++) {
 
-            EfficientNextRoundVisitor nextRoundVisitorTilo = new EfficientNextRoundVisitor(this.moves, i, moveSets);
+            EfficientNextRoundVisitor nextRoundVisitorTilo = new EfficientNextRoundVisitor(this.moves, i);
             tree.accept(nextRoundVisitorTilo);
             this.observers.forEach(TreeBuilderObserver::onNextRoundVisitorComplete);
 
@@ -139,6 +137,8 @@ class GameTreeBuilder {
             tree.accept(pruneVisitorDave);
             this.observers.forEach(TreeBuilderObserver::onBigPruneComplete);
         }
+
+        calculator.clearStack();
         player.updateTree(tree);
         this.observers.forEach(observer -> observer.onTreeBuildFinish(tree));
     }

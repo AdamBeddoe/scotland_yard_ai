@@ -78,6 +78,9 @@ class GameState implements MoveVisitor {
     GameState(GameState state, Set<Move> moves) {
         this.graph = state.getGraph();
         this.mrXLocation = state.getMrXLocation();
+        for (Colour colour : state.getDetectives()) {
+            if (colour != Black) detectives.put(colour,state.getDetectiveLocation(colour));
+        }
 
         for(Move move : moves) {
             move.visit(this);
@@ -146,7 +149,7 @@ class GameState implements MoveVisitor {
                     .collect(Collectors.toSet());
 
             validMoves.addAll(doubleMoves);
-         }
+        }
 
         return validMoves;
     }
@@ -173,7 +176,7 @@ class GameState implements MoveVisitor {
     public void visit(TicketMove move) {
         if (move.colour().isMrX()) this.mrXLocation = move.destination();
         else {
-            this.detectives.put(move.colour(), move.destination());
+            this.detectives.replace(move.colour(), move.destination());
         }
     }
 
@@ -184,5 +187,15 @@ class GameState implements MoveVisitor {
 
     // Required as part of move visitor.
     public void visit(PassMove move) {}
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof GameState)) return false;
+        if (this.mrXLocation != ((GameState) obj).getMrXLocation()) return false;
+        for (Colour colour:detectives.keySet()) {
+            if (detectives.get(colour) != ((GameState) obj).getDetectiveLocation(colour)) return false;
+        }
+        return true;
+    }
 
 }

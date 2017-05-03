@@ -9,7 +9,7 @@ import uk.ac.bris.cs.scotlandyard.ui.ai.TreeBuilderObserver;
  * Controls the logic for calculating what is displayed by the GameMonitor.
  */
 public class GameMonitorModel implements TreeBuilderObserver {
-    private long startTime, nextRoundTime, scoreVisitorTime, pruneTime, treeBuildFinishTime;
+    private long startTime, nextRoundTime, scoreVisitorTime, pruneTime, treeBuildFinishTime, roundStartTime;
     private GameMonitorView view;
 
     /**
@@ -33,8 +33,9 @@ public class GameMonitorModel implements TreeBuilderObserver {
      */
     @Override
     public void onNextRoundVisitorComplete() {
+        this.roundStartTime = startTime + (pruneTime-roundStartTime);
         this.nextRoundTime = System.nanoTime();
-        long roundTime = (this.nextRoundTime - this.startTime)/1000000;
+        long roundTime = (this.nextRoundTime - this.roundStartTime)/1000000;
         view.nextRoundTime(roundTime);
     }
 
