@@ -38,7 +38,7 @@ class MrX implements Player,AIPlayer {
         this.calculator.updateNodeHistory(view);
 
         this.builder.setStartState(new GameState(view,location));
-        this.builder.setLookAheadLevels(3);
+        this.builder.setLookAheadLevels(5);
         this.builder.setThreshold(this.threshold);
         this.builder.setMaxDetectiveMoves(5);
         this.builder.setMaxMrXMoves(4);

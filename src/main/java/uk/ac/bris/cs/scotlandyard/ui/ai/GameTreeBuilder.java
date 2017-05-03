@@ -2,9 +2,7 @@ package uk.ac.bris.cs.scotlandyard.ui.ai;
 
 import uk.ac.bris.cs.scotlandyard.model.Move;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Iteratively generates a GameTree.
@@ -25,6 +23,8 @@ class GameTreeBuilder {
     private boolean isUsingMaxMrXMoves;
     private int maxDetectiveMoves;
     private boolean isUsingMaxDetectiveMoves;
+
+    private Map<Integer,Set<Set<Move>>> moveSets = new HashMap<>();
 
     /**
      * Makes a new GameTreeBuilder.
@@ -124,7 +124,7 @@ class GameTreeBuilder {
         GameTree tree = new GameTree(this.startState, this.playerIsMrX);
         for (int i = 1; i <= this.levels && !this.stopped; i++) {
 
-            NextRoundVisitor nextRoundVisitorTilo = new NextRoundVisitor(this.moves, i);
+            EfficientNextRoundVisitor nextRoundVisitorTilo = new EfficientNextRoundVisitor(this.moves, i, moveSets);
             tree.accept(nextRoundVisitorTilo);
             this.observers.forEach(TreeBuilderObserver::onNextRoundVisitorComplete);
 

@@ -10,20 +10,24 @@ import static uk.ac.bris.cs.scotlandyard.model.Colour.Black;
 /**
  * Visits a GameTree and generate the child trees for all nodes that are not marked as dead.
  */
-class NextRoundVisitor extends TreeVisitor {
+class EfficientNextRoundVisitor extends TreeVisitor {
 
     private Set<Move> moves;
     private int levels;
     private boolean atStart = true;
+
+    private Map<Integer,Set<Set<Move>>> moveSets = new HashMap<>();
 
     /**
      * Makes a new visitor
      * @param moves The initial set of moves for the tree.
      * @param levels The depth of the tree required.
      */
-    NextRoundVisitor(Set<Move> moves, int levels) {
+    EfficientNextRoundVisitor(Set<Move> moves, int levels, Map<Integer,Set<Set<Move>>> moveSets) {
+        System.out.println("starting " + levels);
         this.levels = levels;
         this.moves = moves;
+        this.moveSets = moveSets;
     }
 
     /**
@@ -51,20 +55,30 @@ class NextRoundVisitor extends TreeVisitor {
         Set<Move> moves;
         if (!atStart) moves = tree.getState().validMoves(Black);
         else moves = this.moves;
+
         for (Move move : moves) {
             tree.addChild(new GameState(tree.getState(), move), move);
         }
+
+
+        if (!this.moveSets.containsKey(this.levels)) {
+            Set<Set<Move>> detectiveMoves = calculateDetectiveMoves(tree);
+            this.moveSets.put(this.levels,detectiveMoves);
+        }
     }
 
-    // Add child nodes for all Detectives
-    private void addDetectivesChildren(GameTree tree) {
+    // Calculates the detectives moves when most optimum in the tree
+    private Set<Set<Move>> calculateDetectiveMoves(GameTree tree) {
         Set<Set<Move>> eachDetectiveMoves = new HashSet<>();
         for (Colour colour : tree.getState().getDetectives()) {
             eachDetectiveMoves.add(tree.getState().validMoves(colour));
         }
+        return combinations(eachDetectiveMoves);
+    }
 
-        Set<Set<Move>> combinedDetectiveMoves = combinations(eachDetectiveMoves);
-        for (Set<Move> moveSet : combinedDetectiveMoves) {
+    // Add child nodes for all Detectives
+    private void addDetectivesChildren(GameTree tree) {
+        for (Set<Move> moveSet : this.moveSets.get(this.levels)) {
             tree.addChild(new GameState(tree.getState(), moveSet), moveSet);
         }
     }
