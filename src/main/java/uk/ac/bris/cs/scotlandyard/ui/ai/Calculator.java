@@ -29,7 +29,7 @@ class Calculator {
     private final int graphDistances[][] = new int[200][200];
     private int nodeHistory[] = new int[200];
     private boolean sneakyMode;
-    private GameStateStack stack = new GameStateStack(5);
+    private GameStateStack stack = new GameStateStack(100);
     private boolean useStack;
 
     /**
